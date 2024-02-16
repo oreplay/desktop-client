@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="OReplayPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>eu.oreplay.db.Answer</class>
+    <class>eu.oreplay.db.Clazz</class>
+    <class>eu.oreplay.db.ClazzControl</class>
+    <class>eu.oreplay.db.Club</class>
+    <class>eu.oreplay.db.Control</class>
+    <class>eu.oreplay.db.ControlType</class>
+    <class>eu.oreplay.db.Course</class>
+    <class>eu.oreplay.db.Event</class>
+    <class>eu.oreplay.db.Federation</class>
+    <class>eu.oreplay.db.KeyCounter</class>
+    <class>eu.oreplay.db.ResultType</class>
+    <class>eu.oreplay.db.Runner</class>
+    <class>eu.oreplay.db.RunnerResult</class>
+    <class>eu.oreplay.db.Split</class>
+    <class>eu.oreplay.db.Stage</class>
+    <class>eu.oreplay.db.StageType</class>
+    <class>eu.oreplay.db.Team</class>
+    <class>eu.oreplay.db.TeamResult</class>
+    <class>eu.oreplay.db.User</class>
+    <class>eu.oreplay.db.UserEvent</class>
+    <class>eu.oreplay.db.UserFederation</class>
+    <class>eu.oreplay.db.RunnerResult_1</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql.jaruori.es:3306/jaruories_bdotras?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.user" value="oreplay"/>
+      <property name="javax.persistence.jdbc.driver" value="org.gjt.mm.mysql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="3ch?x363H"/>
+    </properties>
+  </persistence-unit>
+</persistence>
