@@ -60,7 +60,7 @@ public class Runner implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    private Long id;
+    private String id;
     private String uuid;
     @Column(name = "first_name")
     private String firstName;
@@ -91,6 +91,17 @@ public class Runner implements Serializable {
     private String classUuid;
     @Column(name = "leg_number")
     private Integer legNumber;
+    //Dates for creation, modification and deletion
+    @Column(name = "created", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date created;
+    @Column(name = "modified", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date modified;
+    @Column(name = "deleted", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date deleted;
+    //
     @OneToMany(mappedBy = "runner")
     private List<Split> splitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "runner")
@@ -117,15 +128,15 @@ public class Runner implements Serializable {
     public Runner() {
     }
 
-    public Runner(Long id) {
+    public Runner(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -337,6 +348,30 @@ public class Runner implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
     @Override

@@ -58,7 +58,7 @@ public class RunnerResult implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    private Long id;
+    private String id;
     @Column(name = "stage_order")
     private Integer stageOrder;
     @Column(name = "runner_uuid")
@@ -99,6 +99,17 @@ public class RunnerResult implements Serializable {
     private Integer pointsBonus;
     @Column(name = "leg_number")
     private Integer legNumber;
+    //Dates for creation, modification and deletion
+    @Column(name = "created", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date created;
+    @Column(name = "modified", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date modified;
+    @Column(name = "deleted", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date deleted;
+    //
     @OneToMany(mappedBy = "runnerResult")
     private List<Split> splitList;
     @OneToMany(mappedBy = "runnerResult")
@@ -122,15 +133,15 @@ public class RunnerResult implements Serializable {
     public RunnerResult() {
     }
 
-    public RunnerResult(Long id) {
+    public RunnerResult(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -342,6 +353,30 @@ public class RunnerResult implements Serializable {
 
     public void setResultType(ResultType resultType) {
         this.resultType = resultType;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
     @Override

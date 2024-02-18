@@ -57,7 +57,7 @@ public class TeamResult implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    private Long id;
+    private String id;
     @Column(name = "stage_order")
     private Integer stageOrder;
     @Column(name = "team_uuid")
@@ -96,6 +96,17 @@ public class TeamResult implements Serializable {
     private Integer pointsPenalty;
     @Column(name = "points_bonus")
     private Integer pointsBonus;
+    //Dates for creation, modification and deletion
+    @Column(name = "created", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date created;
+    @Column(name = "modified", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date modified;
+    @Column(name = "deleted", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date deleted;
+    //
     @OneToMany(mappedBy = "teamResult")
     private List<Split> splitList;
     @JoinColumn(name = "event_id", referencedColumnName = "id")
@@ -117,15 +128,15 @@ public class TeamResult implements Serializable {
     public TeamResult() {
     }
 
-    public TeamResult(Long id) {
+    public TeamResult(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -320,6 +331,30 @@ public class TeamResult implements Serializable {
 
     public void setResultType(ResultType resultType) {
         this.resultType = resultType;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
     @Override

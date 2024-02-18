@@ -6,6 +6,7 @@
 package eu.oreplay.db;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,6 +39,17 @@ public class UserEvent implements Serializable {
     protected UserEventPK userEventPK;
     @Column(name = "is_admin")
     private Boolean isAdmin;
+    //Dates for creation, modification and deletion
+    @Column(name = "created", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date created;
+    @Column(name = "modified", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date modified;
+    @Column(name = "deleted", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date deleted;
+    //
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private User user;
@@ -50,7 +64,7 @@ public class UserEvent implements Serializable {
         this.userEventPK = userEventPK;
     }
 
-    public UserEvent(String userId, int eventId) {
+    public UserEvent(String userId, String eventId) {
         this.userEventPK = new UserEventPK(userId, eventId);
     }
 
@@ -84,6 +98,30 @@ public class UserEvent implements Serializable {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
     @Override

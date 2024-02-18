@@ -22,12 +22,12 @@ public class UserEventPK implements Serializable {
     private String userId;
     @Basic(optional = false)
     @Column(name = "event_id")
-    private int eventId;
+    private String eventId;
 
     public UserEventPK() {
     }
 
-    public UserEventPK(String userId, int eventId) {
+    public UserEventPK(String userId, String eventId) {
         this.userId = userId;
         this.eventId = eventId;
     }
@@ -40,11 +40,11 @@ public class UserEventPK implements Serializable {
         this.userId = userId;
     }
 
-    public int getEventId() {
+    public String getEventId() {
         return eventId;
     }
 
-    public void setEventId(int eventId) {
+    public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
@@ -52,7 +52,7 @@ public class UserEventPK implements Serializable {
     public int hashCode() {
         int hash = 0;
         hash += (userId != null ? userId.hashCode() : 0);
-        hash += (int) eventId;
+        hash += (eventId != null ? eventId.hashCode() : 0);
         return hash;
     }
 
@@ -66,7 +66,7 @@ public class UserEventPK implements Serializable {
         if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
             return false;
         }
-        if (this.eventId != other.eventId) {
+        if ((this.eventId == null && other.eventId != null) || (this.eventId != null && !this.eventId.equals(other.eventId))) {
             return false;
         }
         return true;

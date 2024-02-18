@@ -49,7 +49,7 @@ public class Stage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    private Integer id;
+    private String id;
     private String description;
     @Column(name = "base_date", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -63,6 +63,17 @@ public class Stage implements Serializable {
     private Integer serverOffset;
     @Column(name = "utc_value")
     private String utcValue;
+    //Dates for creation, modification and deletion
+    @Column(name = "created", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date created;
+    @Column(name = "modified", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date modified;
+    @Column(name = "deleted", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date deleted;
+    //
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "stage")
     private List<Split> splitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "stage")
@@ -95,15 +106,15 @@ public class Stage implements Serializable {
     public Stage() {
     }
 
-    public Stage(Integer id) {
+    public Stage(String id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -268,6 +279,30 @@ public class Stage implements Serializable {
 
     public void setRunnerList(List<Runner> runnerList) {
         this.runnerList = runnerList;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
     }
 
     @Override

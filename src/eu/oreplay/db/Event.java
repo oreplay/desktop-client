@@ -46,7 +46,7 @@ public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    private Integer id;
+    private String id;
     private String description;
     @Column(name = "initial_date", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -54,6 +54,17 @@ public class Event implements Serializable {
     @Column(name = "final_date", nullable=true)
     @Temporal(TemporalType.DATE)
     private Date finalDate;
+    //Dates for creation, modification and deletion
+    @Column(name = "created", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date created;
+    @Column(name = "modified", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date modified;
+    @Column(name = "deleted", nullable=true)
+    @Temporal(TemporalType.DATE)
+    private Date deleted;
+    //
     @JoinColumn(name = "federation_id", referencedColumnName = "id")
     @ManyToOne
     private Federation federation;
@@ -87,15 +98,15 @@ public class Event implements Serializable {
     public Event() {
     }
 
-    public Event(Integer id) {
+    public Event(String id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -248,6 +259,31 @@ public class Event implements Serializable {
         this.runnerList = runnerList;
     }
 
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    public Date getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;

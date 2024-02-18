@@ -19,10 +19,10 @@ public class ClazzControlPK implements Serializable {
 
     @Basic(optional = false)
     @Column(name = "class_id")
-    private long classId;
+    private String classId;
     @Basic(optional = false)
     @Column(name = "control_id")
-    private long controlId;
+    private String controlId;
     @Basic(optional = false)
     @Column(name = "id_leg")
     private int idLeg;
@@ -33,26 +33,26 @@ public class ClazzControlPK implements Serializable {
     public ClazzControlPK() {
     }
 
-    public ClazzControlPK(long classId, long controlId, int idLeg, int idRevisit) {
+    public ClazzControlPK(String classId, String controlId, int idLeg, int idRevisit) {
         this.classId = classId;
         this.controlId = controlId;
         this.idLeg = idLeg;
         this.idRevisit = idRevisit;
     }
 
-    public long getClassId() {
+    public String getClassId() {
         return classId;
     }
 
-    public void setClassId(long classId) {
+    public void setClassId(String classId) {
         this.classId = classId;
     }
 
-    public long getControlId() {
+    public String getControlId() {
         return controlId;
     }
 
-    public void setControlId(long controlId) {
+    public void setControlId(String controlId) {
         this.controlId = controlId;
     }
 
@@ -75,8 +75,8 @@ public class ClazzControlPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) classId;
-        hash += (int) controlId;
+        hash += (classId != null ? classId.hashCode() : 0);
+        hash += (controlId != null ? controlId.hashCode() : 0);
         hash += (int) idLeg;
         hash += (int) idRevisit;
         return hash;
@@ -89,10 +89,10 @@ public class ClazzControlPK implements Serializable {
             return false;
         }
         ClazzControlPK other = (ClazzControlPK) object;
-        if (this.classId != other.classId) {
+        if ((this.classId == null && other.classId != null) || (this.classId != null && !this.classId.equals(other.classId))) {
             return false;
         }
-        if (this.controlId != other.controlId) {
+        if ((this.controlId == null && other.controlId != null) || (this.controlId != null && !this.controlId.equals(other.controlId))) {
             return false;
         }
         if (this.idLeg != other.idLeg) {
