@@ -20,6 +20,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -33,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "ResultType.findById", query = "SELECT r FROM ResultType r WHERE r.id = :id"),
     @NamedQuery(name = "ResultType.findByDescription", query = "SELECT r FROM ResultType r WHERE r.description = :description"),
 })
+@JsonRootName(value = "result_types")
+@JsonInclude(Include.NON_NULL)
 public class ResultType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -79,6 +85,7 @@ public class ResultType implements Serializable {
         this.description = description;
     }
 
+    @JsonProperty("team_results")
     @XmlTransient
     public List<TeamResult> getTeamResultList() {
         return teamResultList;
@@ -88,6 +95,7 @@ public class ResultType implements Serializable {
         this.teamResultList = teamResultList;
     }
 
+    @JsonProperty("runner_results")
     @XmlTransient
     public List<RunnerResult> getRunnerResultList() {
         return runnerResultList;

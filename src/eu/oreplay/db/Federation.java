@@ -21,6 +21,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -34,6 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Federation.findById", query = "SELECT f FROM Federation f WHERE f.id = :id"),
     @NamedQuery(name = "Federation.findByDescription", query = "SELECT f FROM Federation f WHERE f.description = :description"),
 })
+@JsonRootName(value = "federations")
+@JsonInclude(Include.NON_NULL)
 public class Federation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -80,6 +86,7 @@ public class Federation implements Serializable {
         this.description = description;
     }
 
+    @JsonProperty("events")
     @XmlTransient
     public List<Event> getEventList() {
         return eventList;
@@ -89,6 +96,7 @@ public class Federation implements Serializable {
         this.eventList = eventList;
     }
 
+    @JsonProperty("users_federations")
     @XmlTransient
     public List<UserFederation> getUserFederationList() {
         return userFederationList;

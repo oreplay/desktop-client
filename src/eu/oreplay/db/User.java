@@ -21,6 +21,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -38,6 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByIsAdmin", query = "SELECT u FROM User u WHERE u.isAdmin = :isAdmin"),
     @NamedQuery(name = "User.findByIsSuper", query = "SELECT u FROM User u WHERE u.isSuper = :isSuper"),
 })
+@JsonRootName(value = "users")
+@JsonInclude(Include.NON_NULL)
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -102,6 +108,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    @JsonProperty("first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -110,6 +117,7 @@ public class User implements Serializable {
         this.firstName = firstName;
     }
 
+    @JsonProperty("last_name")
     public String getLastName() {
         return lastName;
     }
@@ -118,6 +126,7 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
+    @JsonProperty("is_admin")
     public boolean getIsAdmin() {
         return isAdmin;
     }
@@ -126,6 +135,7 @@ public class User implements Serializable {
         this.isAdmin = isAdmin;
     }
 
+    @JsonProperty("is_super")
     public boolean getIsSuper() {
         return isSuper;
     }
@@ -134,6 +144,7 @@ public class User implements Serializable {
         this.isSuper = isSuper;
     }
 
+    @JsonProperty("users_federations")
     @XmlTransient
     public List<UserFederation> getUserFederationList() {
         return userFederationList;
@@ -143,6 +154,7 @@ public class User implements Serializable {
         this.userFederationList = userFederationList;
     }
 
+    @JsonProperty("users_events")
     @XmlTransient
     public List<UserEvent> getUserEventList() {
         return userEventList;
@@ -152,6 +164,7 @@ public class User implements Serializable {
         this.userEventList = userEventList;
     }
 
+    @JsonProperty("runners")
     @XmlTransient
     public List<Runner> getRunnerList() {
         return runnerList;

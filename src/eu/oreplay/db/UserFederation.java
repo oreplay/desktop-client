@@ -18,6 +18,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -32,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UserFederation.findByFederationId", query = "SELECT u FROM UserFederation u WHERE u.userFederationPK.federationId = :federationId"),
     @NamedQuery(name = "UserFederation.findByUuidValue", query = "SELECT u FROM UserFederation u WHERE u.uuidValue = :uuidValue"),
 })
+@JsonRootName(value = "users_federations")
+@JsonInclude(Include.NON_NULL)
 public class UserFederation implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,6 +82,7 @@ public class UserFederation implements Serializable {
         this.userFederationPK = userFederationPK;
     }
 
+    @JsonProperty("uuid_value")
     public String getUuidValue() {
         return uuidValue;
     }
@@ -84,6 +91,7 @@ public class UserFederation implements Serializable {
         this.uuidValue = uuidValue;
     }
 
+    @JsonProperty("user")
     public User getUser() {
         return user;
     }
@@ -92,6 +100,7 @@ public class UserFederation implements Serializable {
         this.user = user;
     }
 
+    @JsonProperty("federation")
     public Federation getFederation() {
         return federation;
     }

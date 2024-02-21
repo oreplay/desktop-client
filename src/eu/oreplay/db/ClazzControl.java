@@ -22,6 +22,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -42,6 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "ClazzControl.findByRelativePosition", query = "SELECT c FROM ClazzControl c WHERE c.relativePosition = :relativePosition"),
     @NamedQuery(name = "ClazzControl.findByControls", query = "SELECT c FROM ClazzControl c WHERE c.controls = :controls"),
 })
+@JsonRootName(value = "classes_controls")
+@JsonInclude(Include.NON_NULL)
 public class ClazzControl implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -108,6 +114,7 @@ public class ClazzControl implements Serializable {
         this.description = description;
     }
 
+    @JsonProperty("order_number")
     public Integer getOrderNumber() {
         return orderNumber;
     }
@@ -124,6 +131,7 @@ public class ClazzControl implements Serializable {
         this.kilometer = kilometer;
     }
 
+    @JsonProperty("relative_position")
     public Integer getRelativePosition() {
         return relativePosition;
     }
@@ -140,6 +148,7 @@ public class ClazzControl implements Serializable {
         this.controls = controls;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -149,6 +158,7 @@ public class ClazzControl implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -157,6 +167,7 @@ public class ClazzControl implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -165,6 +176,7 @@ public class ClazzControl implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("class")
     public Clazz getClazz() {
         return clazz;
     }
@@ -173,6 +185,7 @@ public class ClazzControl implements Serializable {
         this.clazz = clazz;
     }
 
+    @JsonProperty("control")
     public Control getControl() {
         return control;
     }

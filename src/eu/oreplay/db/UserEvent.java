@@ -18,6 +18,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -32,6 +36,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UserEvent.findByEventId", query = "SELECT u FROM UserEvent u WHERE u.userEventPK.eventId = :eventId"),
     @NamedQuery(name = "UserEvent.findByIsAdmin", query = "SELECT u FROM UserEvent u WHERE u.isAdmin = :isAdmin"),
 })
+@JsonRootName(value = "users_events")
+@JsonInclude(Include.NON_NULL)
 public class UserEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -76,6 +82,7 @@ public class UserEvent implements Serializable {
         this.userEventPK = userEventPK;
     }
 
+    @JsonProperty("is_admin")
     public Boolean getIsAdmin() {
         return isAdmin;
     }
@@ -84,6 +91,7 @@ public class UserEvent implements Serializable {
         this.isAdmin = isAdmin;
     }
 
+    @JsonProperty("user")
     public User getUser() {
         return user;
     }
@@ -92,6 +100,7 @@ public class UserEvent implements Serializable {
         this.user = user;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }

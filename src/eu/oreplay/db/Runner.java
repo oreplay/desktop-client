@@ -25,6 +25,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -54,6 +58,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Runner.findByEmail", query = "SELECT r FROM Runner r WHERE r.email = :email"),
     @NamedQuery(name = "Runner.findByLegNumber", query = "SELECT r FROM Runner r WHERE r.legNumber = :legNumber"),
 })
+@JsonRootName(value = "runners")
+@JsonInclude(Include.NON_NULL)
 public class Runner implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -148,6 +154,7 @@ public class Runner implements Serializable {
         this.uuid = uuid;
     }
 
+    @JsonProperty("first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -156,6 +163,7 @@ public class Runner implements Serializable {
         this.firstName = firstName;
     }
 
+    @JsonProperty("last_name")
     public String getLastName() {
         return lastName;
     }
@@ -164,6 +172,7 @@ public class Runner implements Serializable {
         this.lastName = lastName;
     }
 
+    @JsonProperty("db_id")
     public String getDbId() {
         return dbId;
     }
@@ -172,6 +181,7 @@ public class Runner implements Serializable {
         this.dbId = dbId;
     }
 
+    @JsonProperty("iof_id")
     public String getIofId() {
         return iofId;
     }
@@ -180,6 +190,7 @@ public class Runner implements Serializable {
         this.iofId = iofId;
     }
 
+    @JsonProperty("bib_number")
     public String getBibNumber() {
         return bibNumber;
     }
@@ -188,6 +199,7 @@ public class Runner implements Serializable {
         this.bibNumber = bibNumber;
     }
 
+    @JsonProperty("bib_alt")
     public String getBibAlt() {
         return bibAlt;
     }
@@ -204,6 +216,7 @@ public class Runner implements Serializable {
         this.sicard = sicard;
     }
 
+    @JsonProperty("sicard_alt")
     public String getSicardAlt() {
         return sicardAlt;
     }
@@ -220,6 +233,7 @@ public class Runner implements Serializable {
         this.license = license;
     }
 
+    @JsonProperty("national_id")
     public String getNationalId() {
         return nationalId;
     }
@@ -228,6 +242,7 @@ public class Runner implements Serializable {
         this.nationalId = nationalId;
     }
 
+    @JsonProperty("birth_date")
     public Date getBirthDate() {
         return birthDate;
     }
@@ -268,6 +283,7 @@ public class Runner implements Serializable {
         this.email = email;
     }
 
+    @JsonProperty("leg_number")
     public Integer getLegNumber() {
         return legNumber;
     }
@@ -276,6 +292,7 @@ public class Runner implements Serializable {
         this.legNumber = legNumber;
     }
 
+    @JsonProperty("class_uuid")
     public String getClassUuid() {
         return classUuid;
     }
@@ -284,6 +301,7 @@ public class Runner implements Serializable {
         this.classUuid = classUuid;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -293,6 +311,7 @@ public class Runner implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("runner_results")
     @XmlTransient
     public List<RunnerResult> getRunnerResultList() {
         return runnerResultList;
@@ -302,6 +321,7 @@ public class Runner implements Serializable {
         this.runnerResultList = runnerResultList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -310,6 +330,7 @@ public class Runner implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -318,6 +339,7 @@ public class Runner implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("class")
     public Clazz getClazz() {
         return clazz;
     }
@@ -326,6 +348,7 @@ public class Runner implements Serializable {
         this.clazz = clazz;
     }
 
+    @JsonProperty("club")
     public Club getClub() {
         return club;
     }
@@ -334,6 +357,7 @@ public class Runner implements Serializable {
         this.club = club;
     }
 
+    @JsonProperty("team")
     public Team getTeam() {
         return team;
     }
@@ -342,6 +366,7 @@ public class Runner implements Serializable {
         this.team = team;
     }
 
+    @JsonProperty("user")
     public User getUser() {
         return user;
     }

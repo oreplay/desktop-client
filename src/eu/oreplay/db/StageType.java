@@ -20,6 +20,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -33,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "StageType.findById", query = "SELECT s FROM StageType s WHERE s.id = :id"),
     @NamedQuery(name = "StageType.findByDescription", query = "SELECT s FROM StageType s WHERE s.description = :description"),
 })
+@JsonRootName(value = "stage_types")
+@JsonInclude(Include.NON_NULL)
 public class StageType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -77,6 +83,7 @@ public class StageType implements Serializable {
         this.description = description;
     }
 
+    @JsonProperty("stages")
     @XmlTransient
     public List<Stage> getStageList() {
         return stageList;

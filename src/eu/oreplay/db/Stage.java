@@ -25,6 +25,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -43,6 +47,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Stage.findByServerOffset", query = "SELECT s FROM Stage s WHERE s.serverOffset = :serverOffset"),
     @NamedQuery(name = "Stage.findByUtcValue", query = "SELECT s FROM Stage s WHERE s.utcValue = :utcValue"),
 })
+@JsonRootName(value = "stages")
+@JsonInclude(Include.NON_NULL)
 public class Stage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -126,6 +132,7 @@ public class Stage implements Serializable {
         this.description = description;
     }
 
+    @JsonProperty("base_date")
     public Date getBaseDate() {
         return baseDate;
     }
@@ -134,6 +141,7 @@ public class Stage implements Serializable {
         this.baseDate = baseDate;
     }
 
+    @JsonProperty("base_time")
     public Date getBaseTime() {
         return baseTime;
     }
@@ -142,6 +150,7 @@ public class Stage implements Serializable {
         this.baseTime = baseTime;
     }
 
+    @JsonProperty("server_offset")
     public Integer getServerOffset() {
         return serverOffset;
     }
@@ -150,6 +159,7 @@ public class Stage implements Serializable {
         this.serverOffset = serverOffset;
     }
 
+    @JsonProperty("order_number")
     public Integer getOrderNumber() {
         return orderNumber;
     }
@@ -158,6 +168,7 @@ public class Stage implements Serializable {
         this.orderNumber = orderNumber;
     }
 
+    @JsonProperty("utc_value")
     public String getUtcValue() {
         return utcValue;
     }
@@ -166,6 +177,7 @@ public class Stage implements Serializable {
         this.utcValue = utcValue;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -175,6 +187,7 @@ public class Stage implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("answers")
     @XmlTransient
     public List<Answer> getAnswerList() {
         return answerList;
@@ -184,6 +197,7 @@ public class Stage implements Serializable {
         this.answerList = answerList;
     }
 
+    @JsonProperty("controls")
     @XmlTransient
     public List<Control> getControlList() {
         return controlList;
@@ -193,6 +207,7 @@ public class Stage implements Serializable {
         this.controlList = controlList;
     }
 
+    @JsonProperty("courses")
     @XmlTransient
     public List<Course> getCourseList() {
         return courseList;
@@ -202,6 +217,7 @@ public class Stage implements Serializable {
         this.courseList = courseList;
     }
 
+    @JsonProperty("clubs")
     @XmlTransient
     public List<Club> getClubList() {
         return clubList;
@@ -211,6 +227,7 @@ public class Stage implements Serializable {
         this.clubList = clubList;
     }
 
+    @JsonProperty("teams")
     @XmlTransient
     public List<Team> getTeamList() {
         return teamList;
@@ -220,6 +237,7 @@ public class Stage implements Serializable {
         this.teamList = teamList;
     }
 
+    @JsonProperty("classes")
     @XmlTransient
     public List<Clazz> getClazzList() {
         return clazzList;
@@ -229,6 +247,7 @@ public class Stage implements Serializable {
         this.clazzList = clazzList;
     }
 
+    @JsonProperty("team_results")
     @XmlTransient
     public List<TeamResult> getTeamResultList() {
         return teamResultList;
@@ -238,6 +257,7 @@ public class Stage implements Serializable {
         this.teamResultList = teamResultList;
     }
 
+    @JsonProperty("classes_controls")
     @XmlTransient
     public List<ClazzControl> getClazzControlList() {
         return clazzControlList;
@@ -247,6 +267,7 @@ public class Stage implements Serializable {
         this.clazzControlList = clazzControlList;
     }
 
+    @JsonProperty("runner_results")
     @XmlTransient
     public List<RunnerResult> getRunnerResultList() {
         return runnerResultList;
@@ -256,6 +277,7 @@ public class Stage implements Serializable {
         this.runnerResultList = runnerResultList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -264,6 +286,7 @@ public class Stage implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage_type")
     public StageType getStageType() {
         return stageType;
     }
@@ -272,6 +295,7 @@ public class Stage implements Serializable {
         this.stageType = stageType;
     }
 
+    @JsonProperty("runners")
     @XmlTransient
     public List<Runner> getRunnerList() {
         return runnerList;

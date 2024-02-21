@@ -5,6 +5,7 @@
  */
 package eu.oreplay.db;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import eu.oreplay.logic.converter.IsoTimestampSerializer;
 
 /**
  *
@@ -52,6 +59,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "RunnerResult.findByPointsBonus", query = "SELECT r FROM RunnerResult r WHERE r.pointsBonus = :pointsBonus"),
     @NamedQuery(name = "RunnerResult.findByLegNumber", query = "SELECT r FROM RunnerResult r WHERE r.legNumber = :legNumber"),
 })
+@JsonRootName(value = "runner_results")
+@JsonInclude(Include.NON_NULL)
 public class RunnerResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -70,6 +79,7 @@ public class RunnerResult implements Serializable {
     private Date checkTime;
     @Column(name = "start_time", nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using = IsoTimestampSerializer.class)
     private Date startTime;
     @Column(name = "finish_time", nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
@@ -145,6 +155,7 @@ public class RunnerResult implements Serializable {
         this.id = id;
     }
 
+    @JsonProperty("check_time")
     public Date getCheckTime() {
         return checkTime;
     }
@@ -153,6 +164,7 @@ public class RunnerResult implements Serializable {
         this.checkTime = checkTime;
     }
 
+    @JsonProperty("start_time")
     public Date getStartTime() {
         return startTime;
     }
@@ -161,6 +173,7 @@ public class RunnerResult implements Serializable {
         this.startTime = startTime;
     }
 
+    @JsonProperty("finish_time")
     public Date getFinishTime() {
         return finishTime;
     }
@@ -169,6 +182,7 @@ public class RunnerResult implements Serializable {
         this.finishTime = finishTime;
     }
 
+    @JsonProperty("time_seconds")
     public Integer getTimeSeconds() {
         return timeSeconds;
     }
@@ -185,6 +199,7 @@ public class RunnerResult implements Serializable {
         this.position = position;
     }
 
+    @JsonProperty("status_code")
     public Character getStatusCode() {
         return statusCode;
     }
@@ -193,6 +208,7 @@ public class RunnerResult implements Serializable {
         this.statusCode = statusCode;
     }
 
+    @JsonProperty("time_behind")
     public Integer getTimeBehind() {
         return timeBehind;
     }
@@ -201,6 +217,7 @@ public class RunnerResult implements Serializable {
         this.timeBehind = timeBehind;
     }
 
+    @JsonProperty("time_neutralization")
     public Integer getTimeNeutralization() {
         return timeNeutralization;
     }
@@ -209,14 +226,16 @@ public class RunnerResult implements Serializable {
         this.timeNeutralization = timeNeutralization;
     }
 
+    @JsonProperty("time_adjusted")
     public Integer getTimeAdjusted() {
         return timeAdjusted;
     }
 
-    public void setTimeAdjustedy(Integer timeAdjusted) {
+    public void setTimeAdjusted(Integer timeAdjusted) {
         this.timeAdjusted = timeAdjusted;
     }
 
+    @JsonProperty("time_penalty")
     public Integer getTimePenalty() {
         return timePenalty;
     }
@@ -225,6 +244,7 @@ public class RunnerResult implements Serializable {
         this.timePenalty = timePenalty;
     }
 
+    @JsonProperty("time_bonus")
     public Integer getTimeBonus() {
         return timeBonus;
     }
@@ -233,6 +253,7 @@ public class RunnerResult implements Serializable {
         this.timeBonus = timeBonus;
     }
 
+    @JsonProperty("points_final")
     public Integer getPointsFinal() {
         return pointsFinal;
     }
@@ -241,6 +262,7 @@ public class RunnerResult implements Serializable {
         this.pointsFinal = pointsFinal;
     }
 
+    @JsonProperty("points_adjusted")
     public Integer getPointsAdjusted() {
         return pointsAdjusted;
     }
@@ -249,6 +271,7 @@ public class RunnerResult implements Serializable {
         this.pointsAdjusted = pointsAdjusted;
     }
 
+    @JsonProperty("points_penalty")
     public Integer getPointsPenalty() {
         return pointsPenalty;
     }
@@ -257,6 +280,7 @@ public class RunnerResult implements Serializable {
         this.pointsPenalty = pointsPenalty;
     }
 
+    @JsonProperty("points_bonus")
     public Integer getPointsBonus() {
         return pointsBonus;
     }
@@ -265,6 +289,7 @@ public class RunnerResult implements Serializable {
         this.pointsBonus = pointsBonus;
     }
 
+    @JsonProperty("leg_number")
     public Integer getLegNumber() {
         return legNumber;
     }
@@ -273,6 +298,7 @@ public class RunnerResult implements Serializable {
         this.legNumber = legNumber;
     }
 
+    @JsonProperty("stage_order")
     public Integer getStageOrder() {
         return stageOrder;
     }
@@ -281,6 +307,7 @@ public class RunnerResult implements Serializable {
         this.stageOrder = stageOrder;
     }
 
+    @JsonProperty("runner_uuid")
     public String getRunnerUuid() {
         return runnerUuid;
     }
@@ -289,6 +316,7 @@ public class RunnerResult implements Serializable {
         this.runnerUuid = runnerUuid;
     }
 
+    @JsonProperty("class_uuid")
     public String getClassUuid() {
         return classUuid;
     }
@@ -297,6 +325,7 @@ public class RunnerResult implements Serializable {
         this.classUuid = classUuid;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -306,6 +335,7 @@ public class RunnerResult implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("answers")
     @XmlTransient
     public List<Answer> getAnswerList() {
         return answerList;
@@ -315,6 +345,7 @@ public class RunnerResult implements Serializable {
         this.answerList = answerList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -323,6 +354,7 @@ public class RunnerResult implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -331,6 +363,7 @@ public class RunnerResult implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("runner")
     public Runner getRunner() {
         return runner;
     }
@@ -339,6 +372,7 @@ public class RunnerResult implements Serializable {
         this.runner = runner;
     }
 
+    @JsonProperty("class")
     public Clazz getClazz() {
         return clazz;
     }
@@ -347,6 +381,7 @@ public class RunnerResult implements Serializable {
         this.clazz = clazz;
     }
 
+    @JsonProperty("result_type")
     public ResultType getResultType() {
         return resultType;
     }

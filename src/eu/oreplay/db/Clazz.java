@@ -25,6 +25,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -41,6 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Clazz.findByShortName", query = "SELECT c FROM Clazz c WHERE c.shortName = :shortName"),
     @NamedQuery(name = "Clazz.findByLongName", query = "SELECT c FROM Clazz c WHERE c.longName = :longName"),
 })
+@JsonRootName(value = "classes")
+@JsonInclude(Include.NON_NULL)
 public class Clazz implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -111,6 +117,7 @@ public class Clazz implements Serializable {
         this.uuid = uuid;
     }
 
+    @JsonProperty("oe_key")
     public String getOeKey() {
         return oeKey;
     }
@@ -119,6 +126,7 @@ public class Clazz implements Serializable {
         this.oeKey = oeKey;
     }
 
+    @JsonProperty("short_name")
     public String getShortName() {
         return shortName;
     }
@@ -127,6 +135,7 @@ public class Clazz implements Serializable {
         this.shortName = shortName;
     }
 
+    @JsonProperty("long_name")
     public String getLongName() {
         return longName;
     }
@@ -135,6 +144,7 @@ public class Clazz implements Serializable {
         this.longName = longName;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -144,6 +154,7 @@ public class Clazz implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("teams")
     @XmlTransient
     public List<Team> getTeamList() {
         return teamList;
@@ -153,6 +164,7 @@ public class Clazz implements Serializable {
         this.teamList = teamList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -161,6 +173,7 @@ public class Clazz implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -169,6 +182,7 @@ public class Clazz implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("course")
     public Course getCourse() {
         return course;
     }
@@ -177,6 +191,7 @@ public class Clazz implements Serializable {
         this.course = course;
     }
 
+    @JsonProperty("team_results")
     @XmlTransient
     public List<TeamResult> getTeamResultList() {
         return teamResultList;
@@ -186,6 +201,7 @@ public class Clazz implements Serializable {
         this.teamResultList = teamResultList;
     }
 
+    @JsonProperty("classes_controls")
     @XmlTransient
     public List<ClazzControl> getClazzControlList() {
         return clazzControlList;
@@ -195,6 +211,7 @@ public class Clazz implements Serializable {
         this.clazzControlList = clazzControlList;
     }
 
+    @JsonProperty("runner_results")
     @XmlTransient
     public List<RunnerResult> getRunnerResultList() {
         return runnerResultList;
@@ -204,6 +221,7 @@ public class Clazz implements Serializable {
         this.runnerResultList = runnerResultList;
     }
 
+    @JsonProperty("runners")
     @XmlTransient
     public List<Runner> getRunnerList() {
         return runnerList;

@@ -25,6 +25,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -51,6 +55,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Course.findByLongitude", query = "SELECT c FROM Course c WHERE c.longitude = :longitude"),
     @NamedQuery(name = "Course.findByZoom", query = "SELECT c FROM Course c WHERE c.zoom = :zoom"),
 })
+@JsonRootName(value = "courses")
+@JsonInclude(Include.NON_NULL)
 public class Course implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -121,6 +127,7 @@ public class Course implements Serializable {
         this.uuid = uuid;
     }
 
+    @JsonProperty("oe_key")
     public String getOeKey() {
         return oeKey;
     }
@@ -129,6 +136,7 @@ public class Course implements Serializable {
         this.oeKey = oeKey;
     }
 
+    @JsonProperty("short_name")
     public String getShortName() {
         return shortName;
     }
@@ -137,6 +145,7 @@ public class Course implements Serializable {
         this.shortName = shortName;
     }
 
+    @JsonProperty("long_name")
     public String getLongName() {
         return longName;
     }
@@ -169,6 +178,7 @@ public class Course implements Serializable {
         this.controls = controls;
     }
 
+    @JsonProperty("coord_system")
     public Character getCoordSystem() {
         return coordSystem;
     }
@@ -185,6 +195,7 @@ public class Course implements Serializable {
         this.datum = datum;
     }
 
+    @JsonProperty("utm_zone")
     public Integer getUtmZone() {
         return utmZone;
     }
@@ -225,6 +236,7 @@ public class Course implements Serializable {
         this.zoom = zoom;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -233,6 +245,7 @@ public class Course implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -241,6 +254,7 @@ public class Course implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("classes")
     @XmlTransient
     public List<Clazz> getClazzList() {
         return clazzList;

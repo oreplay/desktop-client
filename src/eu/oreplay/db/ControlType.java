@@ -20,6 +20,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -33,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "ControlType.findById", query = "SELECT c FROM ControlType c WHERE c.id = :id"),
     @NamedQuery(name = "ControlType.findByDescription", query = "SELECT c FROM ControlType c WHERE c.description = :description"),
 })
+@JsonRootName(value = "control_types")
+@JsonInclude(Include.NON_NULL)
 public class ControlType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -77,6 +83,7 @@ public class ControlType implements Serializable {
         this.description = description;
     }
 
+    @JsonProperty("controls")
     @XmlTransient
     public List<Control> getControlList() {
         return controlList;

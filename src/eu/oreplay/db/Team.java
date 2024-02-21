@@ -25,6 +25,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -44,6 +48,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Team.findBySicardAlt", query = "SELECT t FROM Team t WHERE t.sicardAlt = :sicardAlt"),
     @NamedQuery(name = "Team.findByLegs", query = "SELECT t FROM Team t WHERE t.legs = :legs"),
 })
+@JsonRootName(value = "teams")
+@JsonInclude(Include.NON_NULL)
 public class Team implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -117,6 +123,7 @@ public class Team implements Serializable {
         this.uuid = uuid;
     }
 
+    @JsonProperty("bib_number")
     public String getBibNumber() {
         return bibNumber;
     }
@@ -125,6 +132,7 @@ public class Team implements Serializable {
         this.bibNumber = bibNumber;
     }
 
+    @JsonProperty("bib_alt")
     public String getBibAlt() {
         return bibAlt;
     }
@@ -133,6 +141,7 @@ public class Team implements Serializable {
         this.bibAlt = bibAlt;
     }
 
+    @JsonProperty("team_name")
     public String getTeamName() {
         return teamName;
     }
@@ -149,6 +158,7 @@ public class Team implements Serializable {
         this.sicard = sicard;
     }
 
+    @JsonProperty("sicard_alt")
     public String getSicardAlt() {
         return sicardAlt;
     }
@@ -165,6 +175,7 @@ public class Team implements Serializable {
         this.legs = legs;
     }
 
+    @JsonProperty("class_uuid")
     public String getClassUuid() {
         return classUuid;
     }
@@ -173,6 +184,7 @@ public class Team implements Serializable {
         this.classUuid = classUuid;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -182,6 +194,7 @@ public class Team implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -190,6 +203,7 @@ public class Team implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -198,6 +212,7 @@ public class Team implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("class")
     public Clazz getClazz() {
         return clazz;
     }
@@ -206,6 +221,7 @@ public class Team implements Serializable {
         this.clazz = clazz;
     }
 
+    @JsonProperty("club")
     public Club getClub() {
         return club;
     }
@@ -214,6 +230,7 @@ public class Team implements Serializable {
         this.club = club;
     }
 
+    @JsonProperty("team_results")
     @XmlTransient
     public List<TeamResult> getTeamResultList() {
         return teamResultList;
@@ -223,6 +240,7 @@ public class Team implements Serializable {
         this.teamResultList = teamResultList;
     }
 
+    @JsonProperty("runners")
     @XmlTransient
     public List<Runner> getRunnerList() {
         return runnerList;

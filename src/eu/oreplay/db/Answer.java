@@ -22,6 +22,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -38,6 +42,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Answer.findByCorrect", query = "SELECT a FROM Answer a WHERE a.correct = :correct"),
     @NamedQuery(name = "Answer.findByTimeSeconds", query = "SELECT a FROM Answer a WHERE a.timeSeconds = :timeSeconds"),
 })
+@JsonRootName(value = "answers")
+@JsonInclude(Include.NON_NULL)
 public class Answer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -88,6 +94,7 @@ public class Answer implements Serializable {
         this.id = id;
     }
 
+    @JsonProperty("order_number")
     public Integer getOrderNumber() {
         return orderNumber;
     }
@@ -112,6 +119,7 @@ public class Answer implements Serializable {
         this.correct = correct;
     }
 
+    @JsonProperty("time_seconds")
     public BigDecimal getTimeSeconds() {
         return timeSeconds;
     }
@@ -120,6 +128,7 @@ public class Answer implements Serializable {
         this.timeSeconds = timeSeconds;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -128,6 +137,7 @@ public class Answer implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -136,6 +146,7 @@ public class Answer implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("runner_result")
     public RunnerResult getRunnerResult() {
         return runnerResult;
     }

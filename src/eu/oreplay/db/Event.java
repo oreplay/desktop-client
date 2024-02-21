@@ -25,6 +25,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -40,6 +44,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Event.findByInitialDate", query = "SELECT e FROM Event e WHERE e.initialDate = :initialDate"),
     @NamedQuery(name = "Event.findByFinalDate", query = "SELECT e FROM Event e WHERE e.finalDate = :finalDate"),
 })
+@JsonRootName(value = "events")
+@JsonInclude(Include.NON_NULL)
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -118,6 +124,7 @@ public class Event implements Serializable {
         this.description = description;
     }
 
+    @JsonProperty("initial_date")
     public Date getInitialDate() {
         return initialDate;
     }
@@ -126,6 +133,7 @@ public class Event implements Serializable {
         this.initialDate = initialDate;
     }
 
+    @JsonProperty("final_date")
     public Date getFinalDate() {
         return finalDate;
     }
@@ -134,6 +142,7 @@ public class Event implements Serializable {
         this.finalDate = finalDate;
     }
 
+    @JsonProperty("federation")
     public Federation getFederation() {
         return federation;
     }
@@ -142,6 +151,7 @@ public class Event implements Serializable {
         this.federation = federation;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -151,6 +161,7 @@ public class Event implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("answers")
     @XmlTransient
     public List<Answer> getAnswerList() {
         return answerList;
@@ -160,6 +171,7 @@ public class Event implements Serializable {
         this.answerList = answerList;
     }
 
+    @JsonProperty("controls")
     @XmlTransient
     public List<Control> getControlList() {
         return controlList;
@@ -169,6 +181,7 @@ public class Event implements Serializable {
         this.controlList = controlList;
     }
 
+    @JsonProperty("courses")
     @XmlTransient
     public List<Course> getCourseList() {
         return courseList;
@@ -178,6 +191,7 @@ public class Event implements Serializable {
         this.courseList = courseList;
     }
 
+    @JsonProperty("clubs")
     @XmlTransient
     public List<Club> getClubList() {
         return clubList;
@@ -187,6 +201,7 @@ public class Event implements Serializable {
         this.clubList = clubList;
     }
 
+    @JsonProperty("teams")
     @XmlTransient
     public List<Team> getTeamList() {
         return teamList;
@@ -196,6 +211,7 @@ public class Event implements Serializable {
         this.teamList = teamList;
     }
 
+    @JsonProperty("classes")
     @XmlTransient
     public List<Clazz> getClazzList() {
         return clazzList;
@@ -205,6 +221,7 @@ public class Event implements Serializable {
         this.clazzList = clazzList;
     }
 
+    @JsonProperty("team_results")
     @XmlTransient
     public List<TeamResult> getTeamResultList() {
         return teamResultList;
@@ -214,6 +231,7 @@ public class Event implements Serializable {
         this.teamResultList = teamResultList;
     }
 
+    @JsonProperty("classes_controls")
     @XmlTransient
     public List<ClazzControl> getClazzControlList() {
         return clazzControlList;
@@ -223,6 +241,7 @@ public class Event implements Serializable {
         this.clazzControlList = clazzControlList;
     }
 
+    @JsonProperty("users_events")
     @XmlTransient
     public List<UserEvent> getUserEventList() {
         return userEventList;
@@ -232,6 +251,7 @@ public class Event implements Serializable {
         this.userEventList = userEventList;
     }
 
+    @JsonProperty("runner_results")
     @XmlTransient
     public List<RunnerResult> getRunnerResultList() {
         return runnerResultList;
@@ -241,6 +261,7 @@ public class Event implements Serializable {
         this.runnerResultList = runnerResultList;
     }
 
+    @JsonProperty("stages")
     @XmlTransient
     public List<Stage> getStageList() {
         return stageList;
@@ -250,6 +271,7 @@ public class Event implements Serializable {
         this.stageList = stageList;
     }
 
+    @JsonProperty("runners")
     @XmlTransient
     public List<Runner> getRunnerList() {
         return runnerList;

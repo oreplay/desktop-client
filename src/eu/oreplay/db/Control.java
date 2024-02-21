@@ -26,6 +26,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -48,6 +52,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Control.findByBatteryPerc", query = "SELECT c FROM Control c WHERE c.batteryPerc = :batteryPerc"),
     @NamedQuery(name = "Control.findByLastReading", query = "SELECT c FROM Control c WHERE c.lastReading = :lastReading"),
 })
+@JsonRootName(value = "controls")
+@JsonInclude(Include.NON_NULL)
 public class Control implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -112,6 +118,7 @@ public class Control implements Serializable {
         this.id = id;
     }
 
+    @JsonProperty("control_name")
     public String getControlName() {
         return controlName;
     }
@@ -128,6 +135,7 @@ public class Control implements Serializable {
         this.station = station;
     }
 
+    @JsonProperty("coord_system")
     public Character getCoordSystem() {
         return coordSystem;
     }
@@ -144,6 +152,7 @@ public class Control implements Serializable {
         this.datum = datum;
     }
 
+    @JsonProperty("utm_zone")
     public Integer getUtmZone() {
         return utmZone;
     }
@@ -176,6 +185,7 @@ public class Control implements Serializable {
         this.longitude = longitude;
     }
 
+    @JsonProperty("battery_perc")
     public Integer getBatteryPerc() {
         return batteryPerc;
     }
@@ -184,6 +194,7 @@ public class Control implements Serializable {
         this.batteryPerc = batteryPerc;
     }
 
+    @JsonProperty("last_reading")
     public Date getLastReading() {
         return lastReading;
     }
@@ -192,6 +203,7 @@ public class Control implements Serializable {
         this.lastReading = lastReading;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -201,6 +213,7 @@ public class Control implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -209,6 +222,7 @@ public class Control implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -217,6 +231,7 @@ public class Control implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("control_type")
     public ControlType getControlType() {
         return controlType;
     }
@@ -225,6 +240,7 @@ public class Control implements Serializable {
         this.controlType = controlType;
     }
 
+    @JsonProperty("classes_controls")
     @XmlTransient
     public List<ClazzControl> getClazzControlList() {
         return clazzControlList;

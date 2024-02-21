@@ -23,6 +23,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -47,6 +51,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Split.findByBatteryTime", query = "SELECT s FROM Split s WHERE s.batteryTime = :batteryTime"),
     @NamedQuery(name = "Split.findByRawValue", query = "SELECT s FROM Split s WHERE s.rawValue = :rawValue"),
 })
+@JsonRootName(value = "splits")
+@JsonInclude(Include.NON_NULL)
 public class Split implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -138,6 +144,7 @@ public class Split implements Serializable {
         this.id = id;
     }
 
+    @JsonProperty("stage_order")
     public Integer getStageOrder() {
         return stageOrder;
     }
@@ -162,6 +169,7 @@ public class Split implements Serializable {
         this.station = station;
     }
 
+    @JsonProperty("reading_time")
     public Date getReadingTime() {
         return readingTime;
     }
@@ -170,6 +178,7 @@ public class Split implements Serializable {
         this.readingTime = readingTime;
     }
 
+    @JsonProperty("reading_milli")
     public BigInteger getReadingMilli() {
         return readingMilli;
     }
@@ -186,6 +195,7 @@ public class Split implements Serializable {
         this.points = points;
     }
 
+    @JsonProperty("bib_runner")
     public String getBibRunner() {
         return bibRunner;
     }
@@ -194,6 +204,7 @@ public class Split implements Serializable {
         this.bibRunner = bibRunner;
     }
 
+    @JsonProperty("bib_team")
     public String getBibTeam() {
         return bibTeam;
     }
@@ -202,6 +213,7 @@ public class Split implements Serializable {
         this.bibTeam = bibTeam;
     }
 
+    @JsonProperty("order_number")
     public Integer getOrderNumber() {
         return orderNumber;
     }
@@ -210,6 +222,7 @@ public class Split implements Serializable {
         this.orderNumber = orderNumber;
     }
 
+    @JsonProperty("battery_perc")
     public Integer getBatteryPerc() {
         return batteryPerc;
     }
@@ -218,6 +231,7 @@ public class Split implements Serializable {
         this.batteryPerc = batteryPerc;
     }
 
+    @JsonProperty("battery_time")
     public Date getBatteryTime() {
         return batteryTime;
     }
@@ -226,6 +240,7 @@ public class Split implements Serializable {
         this.batteryTime = batteryTime;
     }
 
+    @JsonProperty("raw_value")
     public String getRawValue() {
         return rawValue;
     }
@@ -234,6 +249,7 @@ public class Split implements Serializable {
         this.rawValue = rawValue;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -242,6 +258,7 @@ public class Split implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("club")
     public Club getClub() {
         return club;
     }
@@ -250,6 +267,7 @@ public class Split implements Serializable {
         this.club = club;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -258,6 +276,7 @@ public class Split implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("runner_result")
     public RunnerResult getRunnerResult() {
         return runnerResult;
     }
@@ -266,6 +285,7 @@ public class Split implements Serializable {
         this.runnerResult = runnerResult;
     }
 
+    @JsonProperty("team_result")
     public TeamResult getTeamResult() {
         return teamResult;
     }
@@ -274,6 +294,7 @@ public class Split implements Serializable {
         this.teamResult = teamResult;
     }
 
+    @JsonProperty("class")
     public Clazz getClazz() {
         return clazz;
     }
@@ -282,6 +303,7 @@ public class Split implements Serializable {
         this.clazz = clazz;
     }
 
+    @JsonProperty("control")
     public Control getControl() {
         return control;
     }
@@ -290,6 +312,7 @@ public class Split implements Serializable {
         this.control = control;
     }
 
+    @JsonProperty("class_control")
     public ClazzControl getClazzControl() {
         return clazzControl;
     }
@@ -298,6 +321,7 @@ public class Split implements Serializable {
         this.clazzControl = clazzControl;
     }
 
+    @JsonProperty("runner")
     public Runner getRunner() {
         return runner;
     }
@@ -306,6 +330,7 @@ public class Split implements Serializable {
         this.runner = runner;
     }
 
+    @JsonProperty("team")
     public Team getTeam() {
         return team;
     }

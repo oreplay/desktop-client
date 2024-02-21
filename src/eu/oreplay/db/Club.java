@@ -25,6 +25,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
  *
@@ -42,6 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Club.findByLongName", query = "SELECT c FROM Club c WHERE c.longName = :longName"),
     @NamedQuery(name = "Club.findByCity", query = "SELECT c FROM Club c WHERE c.city = :city"),
 })
+@JsonRootName(value = "clubs")
+@JsonInclude(Include.NON_NULL)
 public class Club implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -106,6 +112,7 @@ public class Club implements Serializable {
         this.uuid = uuid;
     }
 
+    @JsonProperty("oe_key")
     public String getOeKey() {
         return oeKey;
     }
@@ -114,6 +121,7 @@ public class Club implements Serializable {
         this.oeKey = oeKey;
     }
 
+    @JsonProperty("short_name")
     public String getShortName() {
         return shortName;
     }
@@ -122,6 +130,7 @@ public class Club implements Serializable {
         this.shortName = shortName;
     }
 
+    @JsonProperty("long_name")
     public String getLongName() {
         return longName;
     }
@@ -146,6 +155,7 @@ public class Club implements Serializable {
         this.logo = logo;
     }
 
+    @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
         return splitList;
@@ -155,6 +165,7 @@ public class Club implements Serializable {
         this.splitList = splitList;
     }
 
+    @JsonProperty("event")
     public Event getEvent() {
         return event;
     }
@@ -163,6 +174,7 @@ public class Club implements Serializable {
         this.event = event;
     }
 
+    @JsonProperty("stage")
     public Stage getStage() {
         return stage;
     }
@@ -171,6 +183,7 @@ public class Club implements Serializable {
         this.stage = stage;
     }
 
+    @JsonProperty("teams")
     @XmlTransient
     public List<Team> getTeamList() {
         return teamList;
@@ -180,6 +193,7 @@ public class Club implements Serializable {
         this.teamList = teamList;
     }
 
+    @JsonProperty("runners")
     @XmlTransient
     public List<Runner> getRunnerList() {
         return runnerList;
