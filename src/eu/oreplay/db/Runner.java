@@ -5,6 +5,7 @@
  */
 package eu.oreplay.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import eu.oreplay.logic.converter.IsoDateSerializer;
 
 /**
  *
@@ -88,6 +91,7 @@ public class Runner implements Serializable {
     private String nationalId;
     @Column(name = "birth_date", nullable=true)
     @Temporal(TemporalType.DATE)
+    @JsonSerialize(using = IsoDateSerializer.class)
     private Date birthDate;
     private Character sex;
     private String telephone1;
@@ -375,6 +379,7 @@ public class Runner implements Serializable {
         this.user = user;
     }
 
+    @JsonIgnore
     public Date getCreated() {
         return created;
     }
@@ -383,6 +388,7 @@ public class Runner implements Serializable {
         this.created = created;
     }
 
+    @JsonIgnore
     public Date getModified() {
         return modified;
     }
@@ -391,6 +397,7 @@ public class Runner implements Serializable {
         this.modified = modified;
     }
 
+    @JsonIgnore
     public Date getDeleted() {
         return deleted;
     }

@@ -5,6 +5,7 @@
  */
 package eu.oreplay.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -250,6 +251,7 @@ public class Team implements Serializable {
         this.runnerList = runnerList;
     }
 
+    @JsonIgnore
     public Date getCreated() {
         return created;
     }
@@ -258,6 +260,7 @@ public class Team implements Serializable {
         this.created = created;
     }
 
+    @JsonIgnore
     public Date getModified() {
         return modified;
     }
@@ -266,6 +269,7 @@ public class Team implements Serializable {
         this.modified = modified;
     }
 
+    @JsonIgnore
     public Date getDeleted() {
         return deleted;
     }

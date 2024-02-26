@@ -14,19 +14,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Custom serializer for timestamps to convert a Date into a Strint that complies with ISO 8601
+ * Custom serializer for dates to convert a Date into a String that complies with ISO 8601
  * @author javier.arufe
  */
-public class IsoTimestampSerializer extends StdSerializer<Date> {
-    //OE, OS, SiTiming are not using UTC zones (Z, +01:00, -02:00, etc) so I don't format times including this (X)
-    //private static SimpleDateFormat oFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sssX");
-    private static SimpleDateFormat oFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+public class IsoTimeSerializer extends StdSerializer<Date> {
+    private static SimpleDateFormat oFormat = new SimpleDateFormat("HH:mm:ss.SSS");
 
-    public IsoTimestampSerializer() { 
+    public IsoTimeSerializer() { 
         this(null); 
     } 
 
-    public IsoTimestampSerializer(Class<Date> t) {
+    public IsoTimeSerializer(Class<Date> t) {
         super(t); 
     }
 

@@ -39,7 +39,14 @@ public class ConverterIofToModel {
                 if (poStart.getEvent().getRace()!=null) {
                     if (poStart.getEvent().getRace().size()>0) {
                         voSta.setOrderNumber((poStart.getEvent().getRace().get(0).getRaceNumber()!=null?poStart.getEvent().getRace().get(0).getRaceNumber().intValue():1));
+                        voSta.setDescription((poStart.getEvent().getRace().get(0).getName()!=null?poStart.getEvent().getRace().get(0).getName():""));
+                    } else {
+                        voSta.setOrderNumber(1);
+                        voSta.setDescription(voEve.getDescription());
                     }
+                } else {
+                    voSta.setOrderNumber(1);
+                    voSta.setDescription(voEve.getDescription());
                 }
             }
             //Classes' data
@@ -91,12 +98,12 @@ public class ConverterIofToModel {
                                         eu.oreplay.logic.iof.PersonRaceStart voPrs = voPersonStart.getStart().get(0);
                                         if (voPrs!=null) {
                                             voRun.setBibNumber(voPrs.getBibNumber());
-                                            voRun.setSicard(voPrs.getControlCard()!=null?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):"");
+                                            voRun.setSicard(voPrs.getControlCard()!=null?(voPrs.getControlCard().size()>0?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):""):"");
                                             //Start Time is set in a first element of RunnerResult List
                                             ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<eu.oreplay.db.RunnerResult>();
                                             eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                             voRes.setId("");
-                                            voRes.setStageOrder(1);
+                                            voRes.setStageOrder(voSta.getOrderNumber());
                                             voRes.setLegNumber(1);
                                             //Compose the type of result, which is a Stage Result
                                             eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();

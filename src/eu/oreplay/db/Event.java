@@ -5,6 +5,7 @@
  */
 package eu.oreplay.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import eu.oreplay.logic.converter.IsoDateSerializer;
 
 /**
  *
@@ -56,9 +59,11 @@ public class Event implements Serializable {
     private String description;
     @Column(name = "initial_date", nullable=true)
     @Temporal(TemporalType.DATE)
+    @JsonSerialize(using = IsoDateSerializer.class)
     private Date initialDate;
     @Column(name = "final_date", nullable=true)
     @Temporal(TemporalType.DATE)
+    @JsonSerialize(using = IsoDateSerializer.class)
     private Date finalDate;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
@@ -281,6 +286,7 @@ public class Event implements Serializable {
         this.runnerList = runnerList;
     }
 
+    @JsonIgnore
     public Date getCreated() {
         return created;
     }
@@ -289,6 +295,7 @@ public class Event implements Serializable {
         this.created = created;
     }
 
+    @JsonIgnore
     public Date getModified() {
         return modified;
     }
@@ -297,6 +304,7 @@ public class Event implements Serializable {
         this.modified = modified;
     }
 
+    @JsonIgnore
     public Date getDeleted() {
         return deleted;
     }

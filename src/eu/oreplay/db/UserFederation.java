@@ -5,6 +5,7 @@
  */
 package eu.oreplay.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -109,6 +110,7 @@ public class UserFederation implements Serializable {
         this.federation = federation;
     }
 
+    @JsonIgnore
     public Date getCreated() {
         return created;
     }
@@ -117,6 +119,7 @@ public class UserFederation implements Serializable {
         this.created = created;
     }
 
+    @JsonIgnore
     public Date getModified() {
         return modified;
     }
@@ -125,6 +128,7 @@ public class UserFederation implements Serializable {
         this.modified = modified;
     }
 
+    @JsonIgnore
     public Date getDeleted() {
         return deleted;
     }

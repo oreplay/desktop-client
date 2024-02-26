@@ -6,6 +6,7 @@
 package eu.oreplay.db;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +77,7 @@ public class RunnerResult implements Serializable {
     private String classUuid;
     @Column(name = "check_time", nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using = IsoTimestampSerializer.class)
     private Date checkTime;
     @Column(name = "start_time", nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
@@ -83,6 +85,7 @@ public class RunnerResult implements Serializable {
     private Date startTime;
     @Column(name = "finish_time", nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using = IsoTimestampSerializer.class)
     private Date finishTime;
     @Column(name = "time_seconds")
     private Integer timeSeconds;
@@ -390,6 +393,7 @@ public class RunnerResult implements Serializable {
         this.resultType = resultType;
     }
 
+    @JsonIgnore
     public Date getCreated() {
         return created;
     }
@@ -398,6 +402,7 @@ public class RunnerResult implements Serializable {
         this.created = created;
     }
 
+    @JsonIgnore
     public Date getModified() {
         return modified;
     }
@@ -406,6 +411,7 @@ public class RunnerResult implements Serializable {
         this.modified = modified;
     }
 
+    @JsonIgnore
     public Date getDeleted() {
         return deleted;
     }

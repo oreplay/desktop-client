@@ -5,6 +5,7 @@
  */
 package eu.oreplay.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
@@ -27,6 +28,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import eu.oreplay.logic.converter.IsoTimestampSerializer;
 
 /**
  *
@@ -66,6 +69,7 @@ public class Split implements Serializable {
     private String station;
     @Column(name = "reading_time", nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using = IsoTimestampSerializer.class)
     private Date readingTime;
     @Column(name = "reading_milli")
     private BigInteger readingMilli;
@@ -80,6 +84,7 @@ public class Split implements Serializable {
     private Integer batteryPerc;
     @Column(name = "battery_time", nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonSerialize(using = IsoTimestampSerializer.class)
     private Date batteryTime;
     @Column(name = "raw_value")
     private String rawValue;
@@ -339,6 +344,7 @@ public class Split implements Serializable {
         this.team = team;
     }
 
+    @JsonIgnore
     public Date getCreated() {
         return created;
     }
@@ -347,6 +353,7 @@ public class Split implements Serializable {
         this.created = created;
     }
 
+    @JsonIgnore
     public Date getModified() {
         return modified;
     }
@@ -355,6 +362,7 @@ public class Split implements Serializable {
         this.modified = modified;
     }
 
+    @JsonIgnore
     public Date getDeleted() {
         return deleted;
     }
