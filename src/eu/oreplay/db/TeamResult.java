@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.oreplay.logic.converter.IsoTimestampSerializer;
+import java.math.BigDecimal;
 
 /**
  *
@@ -86,20 +87,20 @@ public class TeamResult implements Serializable {
     @JsonSerialize(using = IsoTimestampSerializer.class)
     private Date finishTime;
     @Column(name = "time_seconds")
-    private Integer timeSeconds;
+    private BigDecimal timeSeconds;
     private Integer position;
     @Column(name = "status_code")
     private Character statusCode;
     @Column(name = "time_behind")
-    private Integer timeBehind;
+    private BigDecimal timeBehind;
     @Column(name = "time_neutralization")
-    private Integer timeNeutralization;
+    private BigDecimal timeNeutralization;
     @Column(name = "time_adjusted")
-    private Integer timeAdjusted;
+    private BigDecimal timeAdjusted;
     @Column(name = "time_penalty")
-    private Integer timePenalty;
+    private BigDecimal timePenalty;
     @Column(name = "time_bonus")
-    private Integer timeBonus;
+    private BigDecimal timeBonus;
     @Column(name = "points_final")
     private Integer pointsFinal;
     @Column(name = "points_adjusted")
@@ -180,11 +181,11 @@ public class TeamResult implements Serializable {
     }
 
     @JsonProperty("time_seconds")
-    public Integer getTimeSeconds() {
+    public BigDecimal getTimeSeconds() {
         return timeSeconds;
     }
 
-    public void setTimeSeconds(Integer timeSeconds) {
+    public void setTimeSeconds(BigDecimal timeSeconds) {
         this.timeSeconds = timeSeconds;
     }
 
@@ -206,47 +207,47 @@ public class TeamResult implements Serializable {
     }
 
     @JsonProperty("time_behind")
-    public Integer getTimeBehind() {
+    public BigDecimal getTimeBehind() {
         return timeBehind;
     }
 
-    public void setTimeBehind(Integer timeBehind) {
+    public void setTimeBehind(BigDecimal timeBehind) {
         this.timeBehind = timeBehind;
     }
 
     @JsonProperty("time_neutralization")
-    public Integer getTimeNeutralization() {
+    public BigDecimal getTimeNeutralization() {
         return timeNeutralization;
     }
 
-    public void setTimeNeutralization(Integer timeNeutralization) {
+    public void setTimeNeutralization(BigDecimal timeNeutralization) {
         this.timeNeutralization = timeNeutralization;
     }
 
     @JsonProperty("time_adjusted")
-    public Integer getTimeAdjusted() {
+    public BigDecimal getTimeAdjusted() {
         return timeAdjusted;
     }
 
-    public void setTimeAdjusted(Integer timeAdjusted) {
+    public void setTimeAdjusted(BigDecimal timeAdjusted) {
         this.timeAdjusted = timeAdjusted;
     }
 
     @JsonProperty("time_penalty")
-    public Integer getTimePenalty() {
+    public BigDecimal getTimePenalty() {
         return timePenalty;
     }
 
-    public void setTimePenalty(Integer timePenalty) {
+    public void setTimePenalty(BigDecimal timePenalty) {
         this.timePenalty = timePenalty;
     }
 
     @JsonProperty("time_bonus")
-    public Integer getTimeBonus() {
+    public BigDecimal getTimeBonus() {
         return timeBonus;
     }
 
-    public void setTimeBonus(Integer timeBonus) {
+    public void setTimeBonus(BigDecimal timeBonus) {
         this.timeBonus = timeBonus;
     }
 

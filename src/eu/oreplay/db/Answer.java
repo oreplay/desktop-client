@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
- *
+ * Class for Trail-O answers
  * @author javier.arufe
  */
 @Entity
