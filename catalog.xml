@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
-    <system systemId="file:/E:/00_SportidentFEDO2013/00_Proyectos/OReplay/IOF.xsd" uri="xml-resources/jaxb/iof/IOF.xsd"/>
-</catalog>
