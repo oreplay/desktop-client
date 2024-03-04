@@ -28,26 +28,6 @@ public class JPrincipal {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        //Try to connect to database and get a list of events
-        try {
-            /*
-            java.util.Map<String, String> oPersMap;
-            oPersMap = new java.util.HashMap<String, String>();
-            oPersMap.put("javax.persistence.jdbc.user", "oreplay");
-            oPersMap.put("javax.persistence.jdbc.password", "3ch?x363H");
-            oPersMap.put("javax.persistence.jdbc.driver", "com.mysql.jdbc.Driver");
-            oPersMap.put("javax.persistence.jdbc.url", "jdbc:mysql://mysql.jaruori.es:3306/jaruories_bdotras?zeroDateTimeBehavior=convertToNull");
-*/
-            EventController voContrEve = new EventController(); //oPersMap);
-            java.util.List<eu.oreplay.db.Event> vlEve = voContrEve.getEvents();
-            if (vlEve!=null) {
-                if (!vlEve.isEmpty()) {
-                    System.out.println("Event: " + vlEve.get(0).getDescription());
-                }
-            }
-        }catch(Exception eDB) {
-            eDB.printStackTrace();
-        }
         try {
             System.out.println("Process started.");
             JAXBContext voContext = null;

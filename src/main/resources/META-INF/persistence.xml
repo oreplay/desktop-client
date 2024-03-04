@@ -24,10 +24,10 @@
     <class>eu.oreplay.db.UserEvent</class>
     <class>eu.oreplay.db.UserFederation</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://mysql.jaruori.es:3306/jaruories_bdotras?zeroDateTimeBehavior=convertToNull"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/jaruories_bdotras?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="oreplay"/>
       <property name="javax.persistence.jdbc.driver" value="org.gjt.mm.mysql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="3ch?x363H"/>
+      <property name="javax.persistence.jdbc.password" value="oreplay"/>
       <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
     </properties>
