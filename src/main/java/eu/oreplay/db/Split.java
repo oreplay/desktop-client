@@ -23,7 +23,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import jakarta.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,7 +42,7 @@ import eu.oreplay.logic.converter.IsoTimestampSerializer;
 @NamedQueries({
     @NamedQuery(name = "Split.findAll", query = "SELECT s FROM Split s"),
     @NamedQuery(name = "Split.findById", query = "SELECT s FROM Split s WHERE s.id = :id"),
-    @NamedQuery(name = "Split.findByStageCounter", query = "SELECT s FROM Split s WHERE s.stageCounter = :stageCounter"),
+    @NamedQuery(name = "Split.findByStageOrder", query = "SELECT s FROM Split s WHERE s.stageOrder = :stageOrder"),
     @NamedQuery(name = "Split.findBySicard", query = "SELECT s FROM Split s WHERE s.sicard = :sicard"),
     @NamedQuery(name = "Split.findByStation", query = "SELECT s FROM Split s WHERE s.station = :station"),
     @NamedQuery(name = "Split.findByReadingTime", query = "SELECT s FROM Split s WHERE s.readingTime = :readingTime"),
@@ -121,10 +122,10 @@ public class Split implements Serializable {
     @ManyToOne
     private Control control;
     @JoinColumns({
-        @JoinColumn(name = "class_id", referencedColumnName = "class_id"),
-        @JoinColumn(name = "control_id", referencedColumnName = "control_id"),
-        @JoinColumn(name = "id_leg", referencedColumnName = "id_leg"),
-        @JoinColumn(name = "id_revisit", referencedColumnName = "id_revisit")})
+        @JoinColumn(name = "class_id", referencedColumnName = "class_id", insertable=false, updatable=false),
+        @JoinColumn(name = "control_id", referencedColumnName = "control_id", insertable=false, updatable=false),
+        @JoinColumn(name = "id_leg", referencedColumnName = "id_leg",insertable=false, updatable=false),
+        @JoinColumn(name = "id_revisit", referencedColumnName = "id_revisit", insertable=false, updatable=false)})
     @ManyToOne
     private ClazzControl clazzControl;
     @JoinColumn(name = "runner_id", referencedColumnName = "id")
