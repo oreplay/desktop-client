@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import org.apache.commons.codec.binary.Hex;
 
@@ -18,10 +19,44 @@ import org.apache.commons.codec.binary.Hex;
  * @author javier.arufe
  */
 public class Utils {
+    public static final String ENCODING_UTF_8 = "UTF-8";
+    public static final String ENCODING_ISO_8859_1 = "ISO-8859-1";
+    
     final static int[] daysmonth = {29,31,28,31,30,31,30,31,31,30,31,30,31};
 
     public Utils() {
     }
+
+/**
+ * Create a dummy event with one dummy stage while we don't have connection
+ * to the backend to get real or test values
+ * @return eu.oreplay.db.Event Dummy event with one dummy stage
+ */
+public static eu.oreplay.db.Event createDummyEventOneStage () {
+    eu.oreplay.db.Event voEveSrc = null;
+    try {
+        //Create a basic event and stage information
+        voEveSrc = new eu.oreplay.db.Event();
+        voEveSrc.setId("8f3b542c-23b9-4790-a113-b83d476c0ad9");
+        voEveSrc.setDescription("First CSV start list, event");
+        voEveSrc.setCreated(new java.util.Date());
+        //The stage
+        eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
+        voSta.setId("51d63e99-5d7c-4382-a541-8567015d8eed");
+        voSta.setOrderNumber(1);
+        voSta.setDescription("First CSV start list, stage");
+        voSta.setBaseDate(Utils.parse("01/02/2024", "dd/MM/yyyy"));
+        voSta.setBaseTime(Utils.parse("11:00:00", "HH:mm:ss"));
+        voSta.setCreated(new java.util.Date());
+        //Add the stage to the event
+        ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<eu.oreplay.db.Stage>();
+        vlSta.add(voSta);
+        voEveSrc.setStageList(vlSta);
+    }catch(Exception e) {
+        voEveSrc = null;
+    }
+    return voEveSrc;
+}
     
 /**
  * Converts a string with hexadecimal representation to a byte array
@@ -573,21 +608,22 @@ public static byte[] getBytesFromInputStream(InputStream poIs) throws IOExceptio
  * @throws IOException 
  */
 public static boolean isFileContainsBOM(File poFile) throws IOException {
-      if(!poFile.exists()) {
-          throw new IllegalArgumentException("File: " + poFile.getName() + " does not exists!");
-      }
-      boolean vbResul = false;
-      byte[] vaBom = new byte[3];
-      try(InputStream voIs = new FileInputStream(poFile)){
-          // read first 3 bytes of a file.
-          voIs.read(vaBom);
-          // BOM encoded as ef bb bf
-          String vcFirstBytes = new String(Hex.encodeHex(vaBom));
-          if ("efbbbf".equalsIgnoreCase(vcFirstBytes)) {
-              vbResul = true;
-          }
-      }
-      return vbResul;
+    boolean vbResul = false;
+    if(!poFile.exists()) {
+        //throw new IllegalArgumentException("File: " + poFile.getName() + " does not exists!");
+    } else {
+        byte[] vaBom = new byte[3];
+        try(InputStream voIs = new FileInputStream(poFile)){
+            // read first 3 bytes of a file.
+            voIs.read(vaBom);
+            // BOM encoded as ef bb bf
+            String vcFirstBytes = new String(Hex.encodeHex(vaBom));
+            if ("efbbbf".equalsIgnoreCase(vcFirstBytes)) {
+                vbResul = true;
+            }
+        }
+    }
+    return vbResul;
   }
 
 /**

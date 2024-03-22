@@ -34,45 +34,87 @@ public class JPrincipal {
             ResultList voResults = null;
             StartList voStarts = null;
             //First, testing XML to DB Model conversion, for Results or Starts file
-            String vcType = "StartList";
-            boolean vbSrcXml = true;
-            boolean vbUtf = true;
-            String vcFicSrc = "./00_Salidas1DiaPocosDatos.xml";
-            String vcFicDstXml = "./00_StartsTest.xml";
-            String vcFicDstJson = "./00_StartsTest.json";
-            if (args.length>=3) {
-                vcType = args[0];
-                vbSrcXml = (args[1].endsWith("xml")?true:false);
-                vcFicSrc = args[1];
-                vcFicDstXml = args[2] + ".xml";
-                vcFicDstJson = args[2] + ".json";
+            boolean vbInternalTest = true;
+            String vcFicSrc = "IOF_Starts1DayFewData.xml";
+            InputStream voIs = JPrincipal.class.getClassLoader().getResourceAsStream("tests/" + vcFicSrc);
+            String vcFicDstXml = "00_StartsTest.xml";
+            String vcFicDstJson = "00_StartsTest.json";
+            String vcFicDstDataStructJson = "00_StartsTest_datastructure.json";
+            //Parse arguments
+            if (args.length>=2) {
+                vbInternalTest = false;
+                vcFicSrc = (args.length>0?args[0]:vcFicSrc);
+                vcFicDstXml = (args.length>1?args[1] + ".xml":vcFicDstXml);
+                vcFicDstJson = (args.length>1?args[1] + ".json":vcFicDstJson);
+                vcFicDstDataStructJson = (args.length>1?args[1] + "_datastructure.json":vcFicDstJson);
             }
             File voFic = new File(vcFicSrc);
-            if (voFic.exists())
-                vbUtf = Utils.isFileContainsBOM(voFic);
-            if (voFic.exists() && vbSrcXml) {
-                InputStream voIs = null;
-                if (vbUtf)
-                    voIs = new BOMInputStream(new FileInputStream(vcFicSrc));
-                else
-                    voIs = new FileInputStream(vcFicSrc);
-                if (vcType.equals("ResultList")) {
-                    voContext = JAXBContext.newInstance(ResultList.class);
-                    voResults = (ResultList) voContext.createUnmarshaller()
-                            .unmarshal(voIs);
-                    if (voResults!=null) {
-                        System.out.println(voResults.getEvent().getName());
-                    }
-                } else {
-                    voContext = JAXBContext.newInstance(StartList.class);
-                    voStarts = (StartList) voContext.createUnmarshaller()
-                            .unmarshal(voIs);
-                    if (voStarts!=null) {
-                        System.out.println(voStarts.getEvent().getName());
-                    }
+            if (vbInternalTest) {
+                java.nio.file.Files.copy(voIs, voFic.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+            ConverterToModel voConv = new ConverterIofToModel();
+            voConv.inspectFile(voFic);
+            if (voConv.getcExtension().equals(ConverterToModel.EXT_CSV)) {
+                voConv = new ConverterCsvOEToModel(voConv);
+            } else if (voConv.getcExtension().equals(ConverterToModel.EXT_XML)) {
+                voConv = new ConverterIofToModel(voConv);
+            }
+            System.out.println(vcFicSrc + ". Exists: " + voConv.isbExists() + 
+                    "; Known data: " + voConv.isbKnownData() + 
+                    "; Extension: " + voConv.getcExtension() + 
+                    "; Contents: " + voConv.getcContents() + 
+                    "; Source: " + voConv.getcSource() + 
+                    "; IOF Version: " + voConv.getcIofVersion() + 
+                    "; Results type: " + voConv.getcResultsType()
+                    );
+            //Object to group configuration and event
+            OReplayDataTransfer voData = new OReplayDataTransfer(voConv,
+            new eu.oreplay.db.Event());
+            //JSON file with Jackson
+            ObjectMapper voMapper = new ObjectMapper();
+            voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+            String vcJson = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
+            BufferedWriter voWriter = new BufferedWriter(new FileWriter(vcFicDstDataStructJson));
+            voWriter.write(vcJson);
+            voWriter.close();
+            
+            /**
+            //If no args, it performs an internal test using a StartList XML from resources
+            if (vbInternalTest) {
+                voIs = new BOMInputStream(voIs);
+                voContext = JAXBContext.newInstance(StartList.class);
+                voStarts = (StartList) voContext.createUnmarshaller()
+                        .unmarshal(voIs);
+                if (voStarts!=null) {
+                    System.out.println(voStarts.getEvent().getName());
                 }
-            } else if (!voFic.exists()) {
-                System.out.println("File doesn't exist");
+            } else {
+                //Check whether file exists
+                if (voFic.exists())
+                    vbUtf = Utils.isFileContainsBOM(voFic);
+                if (voFic.exists() && vbSrcXml) {
+                    if (vbUtf)
+                        voIs = new BOMInputStream(new FileInputStream(vcFicSrc));
+                    else
+                        voIs = new FileInputStream(vcFicSrc);
+                    if (vcType.equals("ResultList")) {
+                        voContext = JAXBContext.newInstance(ResultList.class);
+                        voResults = (ResultList) voContext.createUnmarshaller()
+                                .unmarshal(voIs);
+                        if (voResults!=null) {
+                            System.out.println(voResults.getEvent().getName());
+                        }
+                    } else {
+                        voContext = JAXBContext.newInstance(StartList.class);
+                        voStarts = (StartList) voContext.createUnmarshaller()
+                                .unmarshal(voIs);
+                        if (voStarts!=null) {
+                            System.out.println(voStarts.getEvent().getName());
+                        }
+                    }
+                } else if (!voFic.exists()) {
+                    System.out.println("File doesn't exist");
+                }
             }
             //Second, XML generation
             if (voResults!=null) {
@@ -106,7 +148,7 @@ public class JPrincipal {
             }
             //or creating a CSV for starts
             if (voFic.exists() && !vbSrcXml) {
-                String vcEncoding = (vbUtf?"UTF-8":"ISO-8859-1");
+                String vcEncoding = (vbUtf?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1);
                 ConverterCsvToModel voConv2 = new ConverterCsvToModel();
                 //Create a basic event and stage information
                 eu.oreplay.db.Event voEveSrc = new eu.oreplay.db.Event();
@@ -135,6 +177,7 @@ public class JPrincipal {
                 voWriter.write(vcJson);
                 voWriter.close();
            }
+           */
         }catch(Exception e) {
             e.printStackTrace();
         }

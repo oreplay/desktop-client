@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+ <StartList xmlns="http://www.orienteering.org/datastandard/3.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ iofVersion="3.0"
+ createTime="2023-12-15T10:14:49.045"
+ creator="SportSoftware OE12 (M) V.12.1">
+<Event>
+<Name>Demo - 5 days of Italy 2014</Name>
+<Race>
+<RaceNumber>1</RaceNumber>
+<Name>Day 1 - Turcio</Name>
+<StartTime>
+<Date>2014-07-06</Date>
+<Time>13:00:00.000</Time>
+</StartTime>
+</Race>
+</Event>
+<ClassStart>
+<Class resultListMode="Default" sex="M" minAge="21">
+<Id>10</Id>
+<Name>M Elite</Name>
+<ShortName>ME</ShortName>
+<Fee>
+<Name>Default</Name>
+<Amount>110.00</Amount>
+</Fee>
+<Fee>
+<Name>Startfee 2</Name>
+<Amount>130.00</Amount>
+</Fee>
+<Fee>
+<Name>Fee per stage</Name>
+<Amount>30.00</Amount>
+</Fee>
+</Class>
+<Course>
+<Id>26</Id>
+<Name>ME</Name>
+<Length>5660</Length>
+<Climb>280</Climb>
+<NumberOfControls>22</NumberOfControls>
+</Course>
+<StartName>2</StartName>
+<PersonStart>
+<Person sex="M">
+<Id>143612</Id>
+<Name>
+<Family>Simakov</Family>
+<Given>Maxim</Given>
+</Name>
+<BirthDate>1984-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>24738</Id>
+<Name>BRIGHTNET</Name>
+<ShortName>BRIGHTNET</ShortName>
+<Country code="RUS">RUS</Country>
+</Organisation>
+<Start raceNumber="1">
+<BibNumber>359</BibNumber>
+<StartTime>2014-07-06T13:09:00.000</StartTime>
+<ControlCard>889818</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>130.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Id>151724</Id>
+<Name>
+<Family>Andersson</Family>
+<Given>Jakob</Given>
+</Name>
+<BirthDate>1991-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>21715</Id>
+<Name>Bredaryds SOK</Name>
+<ShortName>Bredaryds SOK</ShortName>
+<Country code="SWE">SWE</Country>
+</Organisation>
+<Start raceNumber="1">
+<BibNumber>255</BibNumber>
+<StartTime>2014-07-06T13:11:00.000</StartTime>
+<ControlCard>820100</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>130.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+</ClassStart>
+<ClassStart>
+<Class resultListMode="Default" sex="F" minAge="21">
+<Id>20</Id>
+<Name>W Elite</Name>
+<ShortName>WE</ShortName>
+<Fee>
+<Name>Default</Name>
+<Amount>110.00</Amount>
+</Fee>
+<Fee>
+<Name>Startfee 2</Name>
+<Amount>130.00</Amount>
+</Fee>
+<Fee>
+<Name>Fee per stage</Name>
+<Amount>30.00</Amount>
+</Fee>
+</Class>
+<Course>
+<Id>30</Id>
+<Name>WE/M20</Name>
+<Length>4710</Length>
+<Climb>230</Climb>
+<NumberOfControls>19</NumberOfControls>
+</Course>
+<StartName>2</StartName>
+<PersonStart>
+<Person sex="M">
+<Id>160122</Id>
+<Name>
+<Family>Heinrup</Family>
+<Given>Rebecka</Given>
+</Name>
+<BirthDate>1992-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>28026</Id>
+<Name>Tullinge SK</Name>
+<ShortName>Tullinge SK</ShortName>
+<Country code="SWE">SWE</Country>
+</Organisation>
+<Start raceNumber="1">
+<BibNumber>1348</BibNumber>
+<StartTime>2014-07-06T13:22:00.000</StartTime>
+<ControlCard>7504274</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>130.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Id>174309</Id>
+<Name>
+<Family>Sklenarova</Family>
+<Given>Radka</Given>
+</Name>
+<BirthDate>1992-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>30303</Id>
+<Name>Hana Orienteering</Name>
+<ShortName>Hana Orienteering</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<BibNumber>1512</BibNumber>
+<StartTime>2014-07-06T13:26:00.000</StartTime>
+<ControlCard>889312</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>90.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+</ClassStart>
+</StartList>
