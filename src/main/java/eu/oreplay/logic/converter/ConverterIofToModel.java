@@ -6,13 +6,60 @@
 package eu.oreplay.logic.converter;
 
 import eu.oreplay.logic.iof.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import javax.xml.bind.JAXBContext;
+import org.apache.commons.io.input.BOMInputStream;
 
 /**
  * Class with methods to convert data in IOF XML format to OReplay data model
  * @author javier.arufe
  */
-public class ConverterIofToModel {
+public class ConverterIofToModel extends ConverterToModel {
+    private eu.oreplay.db.Event oEve = null; //Event/Stage basic information to perform the calculations (UUID, base date, base time, description, etc)
+
+    public ConverterIofToModel() {
+        super();
+    }
+    public ConverterIofToModel (ConverterToModel poSrc) {
+        super.copyValues(poSrc);
+    }
+    public ConverterIofToModel(eu.oreplay.db.Event poEve) {
+        oEve = poEve;
+    }
+    
+    public eu.oreplay.db.Event getoEve() {
+        return oEve;
+    }
+
+    public void setoEve(eu.oreplay.db.Event oEve) {
+        this.oEve = oEve;
+    }
+
+    @Override
+    public eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile, String pcUuidEve, String pcUuidSta) {
+        File voFile = new File(pcFile);
+        return convertStartListSingleStageClassic (voFile, pcUuidEve, pcUuidSta);
+    }
+    @Override
+    public eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile, String pcUuidEve, String pcUuidSta) {
+        eu.oreplay.logic.iof.StartList voStart = null;
+        JAXBContext voContext = null;
+        InputStream voIs = null;
+        try {
+            if (isbUtf())
+                voIs = new BOMInputStream(new FileInputStream(poFile));
+            else
+                voIs = new FileInputStream(poFile);
+            voContext = JAXBContext.newInstance(StartList.class);
+            voStart = (StartList) voContext.createUnmarshaller()
+                    .unmarshal(voIs);
+        }catch(Exception e) {            
+        }
+        return convertStartListSingleStageClassic(voStart, pcUuidEve, pcUuidSta);
+    }
     /**
      * Given a representation of IOF XML for start list, this method creates a 
      * structure following the OReplay data model and feeds with the data that
