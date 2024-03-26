@@ -53,3 +53,11 @@ Although sometimes is better to spend long time with stable versions of products
 # Pushing changes to the GitHub repository (remote)
 
 After making changes, Netbeans lets you push changes to the remote directory after commiting them locally. You have to refer to the GitHub's project URL, your GitHub user and use a developer token as password. From your GitHub's user settings, go to developer settings, personal access tokens and create a token or use an existing one
+
+
+# Testing the desktop-client
+
+A collaborator can compile the source code and get the target files, but also release tags are going to be created regularly in order to facilitate making tests. A release will be in the form of a zip file. Uncompress it and launch the main jar file, OReplayClient.jar
+
+You will need a Java Runtime Environment for version 21 of OpenJDK. In Ubuntu, for example, you can execute from terminal the following sentence: 'sudo apt install openjdk-21-jre'. Then, OReplayClient.jar should be marked as executable. Finally, you can double-clic on the file to execute it using the JRE.
+
