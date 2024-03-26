@@ -59,5 +59,5 @@ After making changes, Netbeans lets you push changes to the remote directory aft
 
 A collaborator can compile the source code and get the target files, but also release tags are going to be created regularly in order to facilitate making tests. A release will be in the form of a zip file. Uncompress it and launch the main jar file, OReplayClient.jar
 
-You will need a Java Runtime Environment for version 21 of OpenJDK. In Ubuntu, for example, you can execute from terminal the following sentence: 'sudo apt install openjdk-21-jre'. Then, OReplayClient.jar should be marked as executable. Finally, you can double-clic on the file to execute it using the JRE.
+You will need a Java Runtime Environment for version 21 of OpenJDK. In Ubuntu, for example, you can execute from terminal the following sentence: `sudo apt install openjdk-21-jre`. Then, OReplayClient.jar should be marked as executable. Finally, you can double-clic on the file to execute it using the JRE.
 
