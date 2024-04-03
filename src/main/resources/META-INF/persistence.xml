@@ -17,6 +17,7 @@
     <class>eu.oreplay.db.RunnerResult</class>
     <class>eu.oreplay.db.Split</class>
     <class>eu.oreplay.db.Stage</class>
+    <class>eu.oreplay.db.StageDiscipline</class>
     <class>eu.oreplay.db.StageType</class>
     <class>eu.oreplay.db.Team</class>
     <class>eu.oreplay.db.TeamResult</class>

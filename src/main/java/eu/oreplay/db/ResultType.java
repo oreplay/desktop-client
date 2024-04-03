@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import eu.oreplay.utils.Utils;
 
 /**
  *
@@ -64,6 +65,8 @@ public class ResultType implements Serializable {
     private List<RunnerResult> runnerResultList;
 
     public ResultType() {
+        id = Utils.RESULT_STAGE_ID;
+        description = Utils.RESULT_STAGE_DESC;
     }
 
     public ResultType(String id) {

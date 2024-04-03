@@ -32,16 +32,16 @@ import eu.oreplay.utils.Utils;
  * @author javier.arufe
  */
 @Entity
-@Table(name = "stage_types")
+@Table(name = "stage_disciplines")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "StageType.findAll", query = "SELECT s FROM StageType s"),
-    @NamedQuery(name = "StageType.findById", query = "SELECT s FROM StageType s WHERE s.id = :id"),
-    @NamedQuery(name = "StageType.findByDescription", query = "SELECT s FROM StageType s WHERE s.description = :description"),
+    @NamedQuery(name = "StageDiscipline.findAll", query = "SELECT s FROM StageDiscipline s"),
+    @NamedQuery(name = "StageDiscipline.findById", query = "SELECT s FROM StageDiscipline s WHERE s.id = :id"),
+    @NamedQuery(name = "StageDiscipline.findByDescription", query = "SELECT s FROM StageDiscipline s WHERE s.description = :description"),
 })
-@JsonRootName(value = "stage_types")
+@JsonRootName(value = "stage_disciplines")
 @JsonInclude(Include.NON_NULL)
-public class StageType implements Serializable {
+public class StageDiscipline implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -59,15 +59,15 @@ public class StageType implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date deleted;
     //
-    @OneToMany(mappedBy = "stageType")
+    @OneToMany(mappedBy = "stageDiscipline")
     private List<Stage> stageList;
 
-    public StageType() {
-        id = Utils.STAGE_TYPE_CLASSIC_ID;
-        description = Utils.STAGE_TYPE_CLASSIC_DESC;
+    public StageDiscipline() {
+        id = Utils.STAGE_DISCIPLINE_FOOTO_ID;
+        description = Utils.STAGE_DISCIPLINE_FOOTO_DESC;
     }
 
-    public StageType(String id) {
+    public StageDiscipline(String id) {
         this.id = id;
     }
 
@@ -134,10 +134,10 @@ public class StageType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof StageType)) {
+        if (!(object instanceof StageDiscipline)) {
             return false;
         }
-        StageType other = (StageType) object;
+        StageDiscipline other = (StageDiscipline) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -146,7 +146,7 @@ public class StageType implements Serializable {
 
     @Override
     public String toString() {
-        return "eu.oreplay.db.StageType[ id=" + id + " ]";
+        return "eu.oreplay.db.StageDiscipline[ id=" + id + " ]";
     }
     
 }

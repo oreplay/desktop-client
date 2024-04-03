@@ -16,7 +16,7 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.1.0"},
+        {"main", "OReplay. Desktop Client 0.1.1"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -48,7 +48,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"number", "Number"},
         {"width", "Width"},
         {"height", "Height"},
-        {"contrl", "Control"},
+        {"control", "Control"},
         {"file_import", "File to import"},
         {"browse", "Browse..."},
         {"initial_time", "Initial time"},
@@ -99,6 +99,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"clear", "Clear"},
         {"check", "Check"},
         {"type", "Type"},
+        {"classic", "Classic"},
         {"normal", "Normal"},
         {"mass_start", "Mass Start"},
         {"chase_start", "Chase Start"},
@@ -154,6 +155,22 @@ public class Messages extends java.util.ListResourceBundle {
         {"radiocontrols", "Radiocontrols"},
         {"other", "Other"},
         {"test", "Test"},
+        {"test_event", "Test Event"},
+        {"test_stage", "Test Stage"},
+        {"score", "Score"},
+        {"preo", "PreO"},
+        {"tempo", "TempO"},
+        {"footo", "Foot-O"},
+        {"mtbo", "MTBO"},
+        {"skio", "Ski-O"},
+        {"trailo", "Trail-O"},
+        {"raid", "Raid"},
+        {"ultrascore_rogaine", "Ultrascore-Rogaine"},
+        {"overall", "Overall"},
+        {"stage", "Stage"},
+        {"trailo_normal", "Trail-O Normal"},
+        {"trailo_timed", "Trail-O Timed"},
+        {"section", "Section"},
 
         {"title_main", "Welcome to OReplay Desktop Client"},
         {"title_splash", "Welcome to OReplay Desktop Client"},
@@ -183,6 +200,8 @@ public class Messages extends java.util.ListResourceBundle {
         {"question_sure_action_undone", "Are you sure? This action can not be undone"},
         {"question_sure", "Are you sure?"},
 
+        {"info_enter_app", "Entering the program"},
+        {"info_exit_app", "Exiting the program"},
         {"info_data_saved_ok", "Data saved Ok"},
         {"info_data_saved_error", "Error while saving data"},
         {"info_enter_code", "Enter a value for the code"},
@@ -202,6 +221,8 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_nothing_to_do", "Nothing to do"},
         {"info_process_started", "Process Started."},
         {"info_process_finished", "Process Finished."},
+
+        {"error_exception", "Something went wrong and the program entered an exception block"},
     };
 protected Object[][] getContents() {
 	return contents;

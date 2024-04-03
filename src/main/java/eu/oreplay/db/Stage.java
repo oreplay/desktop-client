@@ -112,6 +112,9 @@ public class Stage implements Serializable {
     @JoinColumn(name = "stage_type_id", referencedColumnName = "id")
     @ManyToOne
     private StageType stageType;
+    @JoinColumn(name = "stage_discipline_id", referencedColumnName = "id")
+    @ManyToOne
+    private StageDiscipline stageDiscipline;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "stage")
     private List<Runner> runnerList;
 
@@ -299,6 +302,15 @@ public class Stage implements Serializable {
 
     public void setStageType(StageType stageType) {
         this.stageType = stageType;
+    }
+
+    @JsonProperty("stage_discipline")
+    public StageDiscipline getStageDiscipline() {
+        return stageDiscipline;
+    }
+
+    public void setStageDiscipline(StageDiscipline stageDiscipline) {
+        this.stageDiscipline = stageDiscipline;
     }
 
     @JsonProperty("runners")

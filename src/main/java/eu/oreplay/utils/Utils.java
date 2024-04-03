@@ -5,6 +5,8 @@
  */
 package eu.oreplay.utils;
 
+import eu.oreplay.db.StageDiscipline;
+import eu.oreplay.db.StageType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.logging.log4j.*;
 
 /**
  *
@@ -21,12 +24,92 @@ import org.apache.commons.codec.binary.Hex;
 public class Utils {
     public static final String ENCODING_UTF_8 = "UTF-8";
     public static final String ENCODING_ISO_8859_1 = "ISO-8859-1";
-    
+    //UUID for dummy event, stage, etc
+    public static final String DUMMY_EVENT_ID = "8f3b542c-23b9-4790-a113-b83d476c0ad9";
+    public static final String DUMMY_EVENT_DESC = "Test_Event";
+    public static final String DUMMY_STAGE_ID = "51d63e99-5d7c-4382-a541-8567015d8eed";
+    public static final String DUMMY_STAGE_DESC = "Test_Stage";
+    //UUID for stage types
+    public static final String STAGE_TYPE_CLASSIC_ID = "29d5050b-4769-4be5-ace4-7e5973f68e3c";
+    public static final String STAGE_TYPE_CLASSIC_DESC = "Classic";
+    public static final String STAGE_TYPE_MASS_ID = "ce5e95ea-9f2b-4a98-86e1-2b43651adfee";
+    public static final String STAGE_TYPE_MASS_DESC = "Mass_Start";
+    public static final String STAGE_TYPE_CHASE_ID = "080f7e57-9525-4b9a-95ee-b2113f411afd";
+    public static final String STAGE_TYPE_CHASE_DESC = "Chase_Start";
+    public static final String STAGE_TYPE_RELAY_ID = "9a918410-6dda-4c58-bec9-23839b336e59";
+    public static final String STAGE_TYPE_RELAY_DESC = "Relays";
+    public static final String STAGE_TYPE_SCORE_ID = "4";
+    public static final String STAGE_TYPE_SCORE_DESC = "Score";
+    public static final String STAGE_TYPE_PREO_ID = "5";
+    public static final String STAGE_TYPE_PREO_DESC = "PreO";
+    public static final String STAGE_TYPE_TEMPO_ID = "6";
+    public static final String STAGE_TYPE_TEMPO_DESC = "TempO";
+    //UUID for stage disciplines
+    public static final String STAGE_DISCIPLINE_FOOTO_ID = "0";
+    public static final String STAGE_DISCIPLINE_FOOTO_DESC = "FootO";
+    public static final String STAGE_DISCIPLINE_MTBO_ID = "1";
+    public static final String STAGE_DISCIPLINE_MTBO_DESC = "MTBO";
+    public static final String STAGE_DISCIPLINE_SKIO_ID = "2";
+    public static final String STAGE_DISCIPLINE_SKIO_DESC = "SkiO";
+    public static final String STAGE_DISCIPLINE_TRAILO_ID = "de0dd0e7-ffcb-4bdf-9842-327b4ea33e44";
+    public static final String STAGE_DISCIPLINE_TRAILO_DESC = "TrailO";
+    public static final String STAGE_DISCIPLINE_RAID_ID = "a30b2db1-5649-491a-b5a8-ca53e4e58461";
+    public static final String STAGE_DISCIPLINE_RAID_DESC = "Raid";
+    public static final String STAGE_DISCIPLINE_ULTRASCORE_ID= "2b5de3d0-9bc9-435a-8bd9-2d4060b86e45";
+    public static final String STAGE_DISCIPLINE_ULTRASCORE_DESC= "Ultrascore_Rogaine";
+    //UUID for control types
+    public static final String CONTROL_NORMAL_ID = "f3cc5efa-065f-4ad6-844b-74e99612889b";
+    public static final String CONTROL_NORMAL_DESC = "Control";
+    public static final String CONTROL_START_ID = "5570a504-4803-434a-a3b9-44d24e40c30b";
+    public static final String CONTROL_START_DESC = "Start";
+    public static final String CONTROL_FINISH_ID = "670d4407-edeb-4062-85d8-f8f31272096f";
+    public static final String CONTROL_FINISH_DESC = "Finish";
+    public static final String CONTROL_CLEAR_ID = "b62d2a14-6896-4371-80be-55db2160542b";
+    public static final String CONTROL_CLEAR_DESC = "Clear";
+    public static final String CONTROL_CHECK_ID = "7b4b9e47-36ed-4b04-8345-0078bbcd7872";
+    public static final String CONTROL_CHECK_DESC = "Check";
+    //UUID for result types
+    public static final String RESULT_OVERALL_ID = "5542d38b-8bd3-40f4-913d-2c38048a0b04";
+    public static final String RESULT_OVERALL_DESC = "Overall";
+    public static final String RESULT_STAGE_ID = "e4ddfa9d-3347-47e4-9d32-c6c119aeac0e";
+    public static final String RESULT_STAGE_DESC = "Stage";
+    public static final String RESULT_TRAILO_NORMAL_ID = "0ca9c166-929e-4b14-a408-28aa4ddeca81";
+    public static final String RESULT_TRAILO_NORMAL_DESC = "TrailO_Normal";
+    public static final String RESULT_TRAILO_TIMED_ID = "935acae9-1bad-4a79-9010-018008a6766a";
+    public static final String RESULT_TRAILO_TIMED_DESC = "TrailO_Timed";
+    public static final String RESULT_RAID_SECTION_ID = "9ce3b477-ea6a-409e-8516-3cb4fe85ad31";
+    public static final String RESULT_RAID_SECTION_DESC = "Section";
+    //UUID for status
+    public static final Character STATUS_OK_ID = '0';
+    public static final String STATUS_OK_DESC = "OK";
+    public static final Character STATUS_DNS_ID = '1';
+    public static final String STATUS_DNS_DESC = "DidNotStart";
+    public static final Character STATUS_DNF_ID = '2';
+    public static final String STATUS_DNF_DESC = "DidNotFinish";
+    public static final Character STATUS_MISSING_ID = '3';
+    public static final String STATUS_MISSING_DESC = "MissingPunch";
+    public static final Character STATUS_DSQ_ID = '4';
+    public static final String STATUS_DSQ_DESC = "Disqualified";
+    public static final Character STATUS_OVER_ID = '5';
+    public static final String STATUS_OVER_DESC = "OverTime";
+    public static final Character STATUS_FINISHED_ID = 'F';
+    public static final String STATUS_FINISHED_DESC = "Finished";
+    //Values for Split Status
+    public static final String SPLIT_STATUS_MISSING = "Missing";
+        
     final static int[] daysmonth = {29,31,28,31,30,31,30,31,31,30,31,30,31};
+    private static Logger oLog = null;
 
     public Utils() {
     }
 
+    public static Logger getoLog() {
+        return oLog;
+    }
+    public static void setoLog(Logger poLog) {
+        oLog = poLog;
+    }
+    
 /**
  * Create a dummy event with one dummy stage while we don't have connection
  * to the backend to get real or test values
@@ -37,16 +120,18 @@ public static eu.oreplay.db.Event createDummyEventOneStage () {
     try {
         //Create a basic event and stage information
         voEveSrc = new eu.oreplay.db.Event();
-        voEveSrc.setId("8f3b542c-23b9-4790-a113-b83d476c0ad9");
-        voEveSrc.setDescription("First CSV start list, event");
+        voEveSrc.setId(Utils.DUMMY_EVENT_ID);
+        voEveSrc.setDescription(Utils.DUMMY_EVENT_DESC);
         voEveSrc.setCreated(new java.util.Date());
         //The stage
         eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-        voSta.setId("51d63e99-5d7c-4382-a541-8567015d8eed");
+        voSta.setId(Utils.DUMMY_STAGE_ID);
         voSta.setOrderNumber(1);
-        voSta.setDescription("First CSV start list, stage");
+        voSta.setDescription(Utils.DUMMY_STAGE_DESC);
         voSta.setBaseDate(Utils.parse("01/02/2024", "dd/MM/yyyy"));
         voSta.setBaseTime(Utils.parse("11:00:00", "HH:mm:ss"));
+        voSta.setStageDiscipline(new StageDiscipline());
+        voSta.setStageType(new StageType());
         voSta.setCreated(new java.util.Date());
         //Add the stage to the event
         ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<eu.oreplay.db.Stage>();
@@ -54,10 +139,39 @@ public static eu.oreplay.db.Event createDummyEventOneStage () {
         voEveSrc.setStageList(vlSta);
     }catch(Exception e) {
         voEveSrc = null;
+        if (oLog!=null)
+            oLog.error("Error while creating dummy event", e);
     }
     return voEveSrc;
 }
-    
+/**
+ * Given an IOF value for a runner result status, this method converts to the
+ * corresponding OReplay's internal model Id
+ * @param pcValue String IOF value for a status
+ * @return String OReplay's internal Id
+ */
+public static Character convertIofStatusValue (String pcValue) {
+    Character vcResul = Utils.STATUS_OK_ID;
+    try {
+        if (pcValue.toLowerCase().equals(Utils.STATUS_OK_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_OK_ID;
+        } else if (pcValue.toLowerCase().equals(Utils.STATUS_DNS_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_DNS_ID;
+        } else if (pcValue.toLowerCase().equals(Utils.STATUS_DNF_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_DNF_ID;
+        } else if (pcValue.toLowerCase().equals(Utils.STATUS_MISSING_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_MISSING_ID;
+        } else if (pcValue.toLowerCase().equals(Utils.STATUS_DSQ_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_DSQ_ID;
+        } else if (pcValue.toLowerCase().equals(Utils.STATUS_OVER_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_OVER_ID;
+        } else if (pcValue.toLowerCase().equals(Utils.STATUS_FINISHED_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_FINISHED_ID;
+        }
+    }catch(Exception e) {
+    }
+    return vcResul;
+}
 /**
  * Converts a string with hexadecimal representation to a byte array
  * @param s String String with hexadecimal representation
@@ -644,6 +758,39 @@ public static String generateKey () {
           .toString();
     }catch (Exception e) {}
     return vcResul;
+}
+
+/**
+ * Given a file name (path + name), it returns a flag indicating whether the file exists and is a file
+ * @param pcFile String. Path + name
+ * @return boolean Flag with the result
+ */
+public static boolean fileExists (String pcFile) {
+    boolean vbResul = false;
+    try {
+        File voFic = new File(pcFile);
+        if (voFic.isFile())
+            vbResul = true;
+    } 
+    catch(Exception ex) {
+    }
+    return vbResul;
+}
+/**
+ * Given a folder name, it returns a flag indicating whether the folder exists and is a folder
+ * @param pcFolder String. Path of the folder
+ * @return boolean Flag with the result
+ */
+public static boolean folderExists (String pcFolder) {
+    boolean vbResul = false;
+    try {
+        File voFic = new File(pcFolder);
+        if (voFic.isDirectory())
+            vbResul = true;
+    } 
+    catch(Exception ex) {
+    }
+    return vbResul;
 }
 
 }
