@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import eu.oreplay.utils.Utils;
 
 /**
  *
@@ -62,6 +63,8 @@ public class ControlType implements Serializable {
     private List<Control> controlList;
 
     public ControlType() {
+        id = Utils.CONTROL_NORMAL_ID;
+        description = Utils.CONTROL_NORMAL_DESC;
     }
 
     public ControlType(String id) {

@@ -4,12 +4,21 @@
  */
 package eu.oreplay.gui;
 
+import eu.oreplay.logic.FormsParameters;
+import eu.oreplay.logic.xml.FormsParametersXMLHandler;
+import eu.oreplay.utils.Utils;
+import org.apache.logging.log4j.*;
+
 /**
  *
  * @author javier.arufe
  */
 public class JClientMain extends javax.swing.JFrame {
-    private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
+    private boolean bFirstOpen = true;
+    private static String cPathApp = "." + java.io.File.separator;
+    private static FormsParameters oForms = null;
+    private static Logger oLog = LogManager.getLogger(JClientMain.class.getName());
 
     /**
      * Creates new form JClientMain
@@ -17,6 +26,39 @@ public class JClientMain extends javax.swing.JFrame {
     public JClientMain() {
         initComponents();
         this.getContentPane().setBackground(new java.awt.Color(255, 255, 255));
+    }
+    public static String getcPathApp() {
+        return cPathApp;
+    }
+    public static void setcPathApp(String cPathApp) {
+        JClientMain.cPathApp = cPathApp;
+    }
+    public static FormsParameters getoForms() {
+        return oForms;
+    }
+    public static void setoForms(FormsParameters oForms) {
+        JClientMain.oForms = oForms;
+    }
+    public static Logger getoLog() {
+        return oLog;
+    }
+    public static void setoLog(Logger oLog) {
+        JClientMain.oLog = oLog;
+    }
+    public static void updateFormsParameters (String pcName, Object poParam) {
+        try {
+            if (poParam!=null && oForms!=null) {
+                if (pcName.equals("JClientMain")) {
+                    oForms.setoJClientMain((FormsParameters.ParJClientMain)poParam);
+                } else if (pcName.equals("JAbout")) {
+                    oForms.setoJAbout((FormsParameters.ParJAbout)poParam);
+                } else if (pcName.equals("JTest")) {
+                    oForms.setoJTest((FormsParameters.ParJTest)poParam);
+                }
+            }                        
+        } catch (Exception e) {
+            oLog.error(resMessages.getString("error_exception"), e);
+        }
     }
 
     /**
@@ -43,7 +85,16 @@ public class JClientMain extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setBounds(new java.awt.Rectangle(200, 200, 650, 400));
+        setPreferredSize(new java.awt.Dimension(650, 400));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         mnuFile.setText(resMessages.getString("file"));
         mnuFile.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
@@ -113,11 +164,11 @@ public class JClientMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 665, Short.MAX_VALUE)
+            .addGap(0, 677, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 315, Short.MAX_VALUE)
+            .addGap(0, 331, Short.MAX_VALUE)
         );
 
         pack();
@@ -147,6 +198,22 @@ public class JClientMain extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.manageTest();
     }//GEN-LAST:event_mnuTestActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        if (bFirstOpen) {
+            oLog.info(resMessages.getString("info_enter_app"));
+            Utils.setoLog(oLog);  //Sets log file in the Utils static class for using it during the app execution
+            getXmlData();
+            bFirstOpen = false;
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        this.saveFormsParameters();
+        oLog.info(resMessages.getString("info_exit_app"));
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -178,13 +245,31 @@ public class JClientMain extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JClientMain().setVisible(true);
+                JClientMain voPrincipal = new JClientMain();
+                try {
+                    String vcFile = "";
+                    //Configuration parameters
+                    vcFile = cPathApp+"FormsParameters.xml";
+                    if (Utils.fileExists(vcFile)) {
+                        oForms = FormsParametersXMLHandler.getXmlData(vcFile);
+                    } else {
+                        oForms = new FormsParameters();
+                    }
+                    //Set position and size of this form
+                    voPrincipal.setBounds(oForms.getoJClientMain().getoPos().getnPosX(), 
+                            oForms.getoJClientMain().getoPos().getnPosY(), 
+                            oForms.getoJClientMain().getoPos().getnSizeX(),
+                            oForms.getoJClientMain().getoPos().getnSizeY());                
+                }catch (Exception e) {
+                    oLog.error(resMessages.getString("error_exception"), e);
+                }
+                voPrincipal.setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JMenuItem mnuAbout;
     private javax.swing.JMenuItem mnuEnglish;
@@ -211,8 +296,59 @@ public class JClientMain extends javax.swing.JFrame {
             java.util.ResourceBundle.clearCache();
             resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages", voLocale);
             this.initComponents();
-        }catch(Exception e) {}
+        }catch(Exception e) {
+            oLog.error(resMessages.getString("error_exception"), e);
+        }
     }
+    /**
+     * When app starts, read XML configuration files
+     */
+    private void getXmlData() {
+        try {
+            String vcFile = "";
+            //Forms parameters file
+            vcFile = cPathApp+"FormsParameters.xml";
+            if (Utils.fileExists(vcFile)) {
+                oForms = FormsParametersXMLHandler.getXmlData(vcFile);
+                //Sets position and size of the form
+                JClientMain.this.setBounds(oForms.getoJClientMain().getoPos().getnPosX(), 
+                        oForms.getoJClientMain().getoPos().getnPosY(), 
+                        oForms.getoJClientMain().getoPos().getnSizeX(),
+                        oForms.getoJClientMain().getoPos().getnSizeY());
+            } else {
+                oForms = new FormsParameters();
+            }
+        } catch (Exception e) {
+            oLog.error(resMessages.getString("error_exception"), e);
+        }
+    }
+    /**
+     * Saves an XML file with the parameters of the forms
+     */
+    private void saveFormsParameters () {
+        try {
+            if (oForms!=null) {
+                //Tries to save the position and size of the main form
+                try {
+                    int vnPosX = JClientMain.this.getX();
+                    int vnPosY = JClientMain.this.getY();
+                    int vnSizeX = JClientMain.this.getWidth();
+                    int vnSizeY = JClientMain.this.getHeight();
+                    oForms.getoJClientMain().getoPos().setnPosX(vnPosX);
+                    oForms.getoJClientMain().getoPos().setnPosY(vnPosY);
+                    oForms.getoJClientMain().getoPos().setnSizeX(vnSizeX);
+                    oForms.getoJClientMain().getoPos().setnSizeY(vnSizeY);
+                }catch (Exception ePos) {
+                    
+                }
+                String vcFile = cPathApp+"FormsParameters.xml";
+                FormsParametersXMLHandler.writeXmlData(oForms, vcFile);
+            }
+        } catch (Exception eLocal) {
+            oLog.error(resMessages.getString("error_exception"), eLocal);
+        }
+    }
+
     /**
      * Shows a dialog with data about the app
      */
@@ -223,10 +359,12 @@ public class JClientMain extends javax.swing.JFrame {
             voFrame.setBounds(this.getBounds().x, this.getBounds().y, 
                     this.getBounds().width, this.getBounds().height);
             JAbout viForm = new JAbout(voFrame, true);
+            if (oForms!=null)
+                viForm.initFormParameters(oForms.getoJAbout());
             viForm.setModal(true);
             viForm.setVisible(true);
         } catch (Exception e) {
-            //oLog.error(resMessages.getString("error"), e);
+            oLog.error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -239,10 +377,12 @@ public class JClientMain extends javax.swing.JFrame {
             voFrame.setBounds(this.getBounds().x, this.getBounds().y, 
                     this.getBounds().width, this.getBounds().height);
             JTest viForm = new JTest(voFrame, true);
+            if (oForms!=null)
+                viForm.initFormParameters(oForms.getoJTest());
             viForm.setModal(true);
             viForm.setVisible(true);
         } catch (Exception e) {
-            //oLog.error(resMessages.getString("error"), e);
+            oLog.error(resMessages.getString("error_exception"), e);
         }
     }
 

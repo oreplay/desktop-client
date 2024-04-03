@@ -112,6 +112,18 @@
             <version>2.7.12</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.23.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.23.1</version>
+        </dependency>
     </dependencies>
     <name>OReplayClient</name>
     <description>OReplay Desktop Client
@@ -183,7 +195,7 @@ To upload startlists and results from orienteering events</description>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>eu.oreplay.gui.JPrincipal</mainClass>
+                            <mainClass>eu.oreplay.gui.JClientMain</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>.</Class-Path>

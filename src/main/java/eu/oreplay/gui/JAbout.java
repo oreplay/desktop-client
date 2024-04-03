@@ -4,6 +4,8 @@
  */
 package eu.oreplay.gui;
 
+import eu.oreplay.logic.FormsParameters;
+
 /**
  * About form
  * @author javier.arufe
@@ -21,6 +23,16 @@ public class JAbout extends javax.swing.JDialog {
         setBounds(new java.awt.Rectangle(parent.getX()+50, parent.getY()+50, 
                 (int)this.getPreferredSize().getWidth(), (int)this.getPreferredSize().getHeight()));
         setResizable(false);
+    }
+    public void initFormParameters(FormsParameters.ParJAbout poParam) {
+        try {
+            this.setBounds(poParam.getoPos().getnPosX(), 
+                poParam.getoPos().getnPosY(), 
+                poParam.getoPos().getnSizeX(),
+                poParam.getoPos().getnSizeY());
+        }catch (Exception e) {
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+        }
     }
 
     /**
@@ -44,6 +56,12 @@ public class JAbout extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(700, 450));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -113,13 +131,13 @@ public class JAbout extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(lblVersion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDevelopment, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDevelopersTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDevelopersList, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                .addComponent(lblDevelopersList, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -146,6 +164,23 @@ public class JAbout extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        try {
+            //Read the parameters to store
+            FormsParameters voPadre = new FormsParameters();
+            FormsParameters.ParJAbout voParam = voPadre.new ParJAbout();
+            voParam.getoPos().setnPosX(this.getX());
+            voParam.getoPos().setnPosY(this.getY());
+            voParam.getoPos().setnSizeX(this.getWidth());
+            voParam.getoPos().setnSizeY(this.getHeight());
+            //Calls the method in the main form to receive and to store the parameters
+            JClientMain.updateFormsParameters("JAbout", voParam);
+        } catch(Exception e) {
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+        }        
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

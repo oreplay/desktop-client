@@ -68,6 +68,7 @@ public abstract class ConverterToModel {
     }
 
     @JsonProperty("exists")
+    @JsonIgnore
     public boolean isbExists() {
         //If there is a file name, checks the existence of that file; if not, returns the current value of the flag
         if (!cFile.equals("")) {
@@ -444,9 +445,9 @@ public abstract class ConverterToModel {
             cResultsType = OTHER_VALUES;
             //Ask for some values if confirmed that is XML for results
             if (cExtension.equals(EXT_XML) && cContents.equals(CONTENTS_RESULT)) {
-                if (vcTopValues.contains("<SplitTime>")) {
+                if (vcTopValues.contains("<SplitTime")) {
                     cResultsType = RES_BREAKDOWN;
-                    if (vcTopValues.contains("<!--  SplitTimeControls:")) {
+                    if (vcTopValues.contains("SplitTimeControls:")) {
                         cResultsType = RES_RADIO;
                     }
                 } else {
@@ -459,7 +460,9 @@ public abstract class ConverterToModel {
         }
         return vbResul;
     }
-    
-    public abstract eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile, String pcUuidEve, String pcUuidSta);
-    public abstract eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile, String pcUuidEve, String pcUuidSta);
+
+    public abstract eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile);
+    public abstract eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile);
+    public abstract eu.oreplay.db.Event convertResultListSingleStageClassic (String pcFile);
+    public abstract eu.oreplay.db.Event convertResultListSingleStageClassic (File poFile);
 }

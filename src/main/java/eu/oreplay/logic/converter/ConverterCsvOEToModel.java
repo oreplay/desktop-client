@@ -74,45 +74,35 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     }
 
     @Override
-    public eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile, String pcUuidEve, String pcUuidSta) {
+    public eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile) {
         File voFile = new File(pcFile);
-        return convertStartListSingleStageClassic (voFile, pcUuidEve, pcUuidSta);
+        return convertStartListSingleStageClassic (voFile);
     }
     @Override
-    public eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile, String pcUuidEve, String pcUuidSta) {
+    public eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile) {
         eu.oreplay.db.Event voEve = null;
         if (oEve!=null) {
-            if (getcSource().equals(ConverterToModel.SRC_OE2010)) {
-                voEve = convertStartListSingleStageClassicOE2010(poFile);
-            }
+            List<String> plStart = new ArrayList<String>();
+            BufferedReader voBr = null;
+            String vcLine = "";
+            try {
+                //Loops the file and filters line by line
+                voBr = new BufferedReader(new InputStreamReader(new FileInputStream(poFile), cEncoding));
+                while ((vcLine = voBr.readLine()) != null) {
+                    plStart.add(vcLine);
+                }
+                if (getcSource().equals(ConverterToModel.SRC_OE2010)) {
+                    voEve = convertStartListSingleStageClassicOE2010 (plStart);
+                } else if (getcSource().equals(ConverterToModel.SRC_OEV12)) {
+                    voEve = convertStartListSingleStageClassicOEv12 (plStart);
+                }
+            } catch (Exception e) {
+                voEve = null;
+            }        
         }
         return voEve;
     }
     
-    /**
-     * Given a representation of OE2010 CSV for start list, this method creates a 
-     * structure following the OReplay data model and feeds with the data that
-     * came in the CSV file; this method is for 1-stage, classic Foot-O event
-     * @param poFile File The file that contains the CSV for start list
-     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners and runnerresults)
-     */
-    private eu.oreplay.db.Event convertStartListSingleStageClassicOE2010 (File poFile) {
-        eu.oreplay.db.Event voEve = null;
-        List<String> plStart = new ArrayList<String>();
-        BufferedReader voBr = null;
-	String vcLine = "";
-        try {
-            //Loops the file and filters line by line
-            voBr = new BufferedReader(new InputStreamReader(new FileInputStream(poFile), cEncoding));
-            while ((vcLine = voBr.readLine()) != null) {
-                plStart.add(vcLine);
-            }
-            voEve = convertStartListSingleStageClassicOE2010 (plStart);
-        } catch (Exception e) {
-            voEve = null;
-        }        
-        return voEve;
-    }
     /**
      * Given a representation of OE2010 CSV for start list, this method creates a 
      * structure following the OReplay data model and feeds with the data that
@@ -250,58 +240,27 @@ public class ConverterCsvOEToModel extends ConverterToModel{
      * Given a representation of OEv12 CSV for start list, this method creates a 
      * structure following the OReplay data model and feeds with the data that
      * came in the CSV file; this method is for 1-stage, classic Foot-O event
-     * @param pcFile String Path to a file that contains the CSV for start list
-     * @param poEve eu.oreplay.db.Event Event/Stage basic information to perform the calculations (UUID, base date, base time, description, etc)
-     * @param pcSeparator String Field values separator; typically ;
-     * @param pcEncoding String Encoding of the file, typically UTF-8 or ISO-8859-1
-     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners and runnerresults)
-     */
-    public eu.oreplay.db.Event convertStartListSingleStageClassicOEv12 (String pcFile, eu.oreplay.db.Event poEve, 
-            String pcSeparator, String pcEncoding) {
-        eu.oreplay.db.Event voEve = null;
-        List<String> plStart = new ArrayList<String>();
-        BufferedReader voBr = null;
-	String vcLine = "";
-        try {
-            //Loops the file and filters line by line
-            voBr = new BufferedReader(new FileReader(pcFile));
-            voBr = new BufferedReader(new InputStreamReader(new FileInputStream(pcFile), pcEncoding));
-            while ((vcLine = voBr.readLine()) != null) {
-                plStart.add(vcLine);
-            }
-            voEve = convertStartListSingleStageClassicOEv12 (plStart, poEve, pcSeparator);
-        } catch (Exception e) {
-            voEve = null;
-        }        
-        return voEve;
-    }
-    /**
-     * Given a representation of OEv12 CSV for start list, this method creates a 
-     * structure following the OReplay data model and feeds with the data that
-     * came in the CSV file; this method is for 1-stage, classic Foot-O event
      * @param plStart List<String> List with elements for each line of a CSV file for start list
-     * @param poEve eu.oreplay.db.Event Event/Stage basic information to perform the calculations (UUID, base date, base time, description, etc)
-     * @param pcSeparator String Field values separator; typically ;
      * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners and runnerresults)
      */
-    public eu.oreplay.db.Event convertStartListSingleStageClassicOEv12 (List<String> plStart, eu.oreplay.db.Event poEve, String pcSeparator) {
+    public eu.oreplay.db.Event convertStartListSingleStageClassicOEv12 (List<String> plStart) {
         eu.oreplay.db.Event voEve = null;
         //HashMap to store Classes. For each class its runners. Runners shoulb be ordered by class in the CSV but, what if not?...
         HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<String, eu.oreplay.db.Clazz>();
         if (plStart!=null) {
             //Event's data
             voEve = new eu.oreplay.db.Event();
-            voEve.setId(poEve.getId());
-            voEve.setDescription(poEve.getDescription());
+            voEve.setId(oEve.getId());
+            voEve.setDescription(oEve.getDescription());
             //Stage's data
             eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-            if (poEve.getStageList()!=null) {
-                if (poEve.getStageList().size()>0) {
-                    voSta.setId(poEve.getStageList().get(0).getId());
-                    voSta.setOrderNumber(poEve.getStageList().get(0).getOrderNumber());
-                    voSta.setDescription(poEve.getStageList().get(0).getDescription());
-                    voSta.setBaseDate(poEve.getStageList().get(0).getBaseDate());
-                    voSta.setBaseTime(poEve.getStageList().get(0).getBaseTime());
+            if (oEve.getStageList()!=null) {
+                if (oEve.getStageList().size()>0) {
+                    voSta.setId(oEve.getStageList().get(0).getId());
+                    voSta.setOrderNumber(oEve.getStageList().get(0).getOrderNumber());
+                    voSta.setDescription(oEve.getStageList().get(0).getDescription());
+                    voSta.setBaseDate(oEve.getStageList().get(0).getBaseDate());
+                    voSta.setBaseTime(oEve.getStageList().get(0).getBaseTime());
                 }
             }
             //First line contains the name of the columns
@@ -310,7 +269,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                 //Loop starts at second line
                 for (int i=1; i<plStart.size(); i++) {
                     vcLine = plStart.get(i);
-                    String[] vaRecord = vcLine.split(pcSeparator);
+                    String[] vaRecord = vcLine.split(cSeparator);
                     if (vaRecord.length>=61) {
                         String vcClaId = vaRecord[27].trim().replaceAll("\"", "");
                         String vcClaShort = vaRecord[28].trim().replaceAll("\"", "");
@@ -416,4 +375,17 @@ public class ConverterCsvOEToModel extends ConverterToModel{
         return voEve;
     }
 
+    @Override
+    public eu.oreplay.db.Event convertResultListSingleStageClassic (String pcFile) {
+        File voFile = new File(pcFile);
+        return convertResultListSingleStageClassic (voFile);
+    }
+    @Override
+    public eu.oreplay.db.Event convertResultListSingleStageClassic (File poFile) {
+        eu.oreplay.db.Event voEve = null;
+        if (oEve!=null) {
+        }
+        return voEve;
+    }
+    
 }

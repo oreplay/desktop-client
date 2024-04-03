@@ -6,6 +6,7 @@ package eu.oreplay.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.converter.ConverterCsvOEToModel;
 import eu.oreplay.logic.converter.ConverterIofToModel;
 import eu.oreplay.logic.converter.ConverterToModel;
@@ -40,6 +41,19 @@ public class JTest extends javax.swing.JDialog {
         setBounds(new java.awt.Rectangle(parent.getX()+50, parent.getY()+50, 
                 (int)this.getPreferredSize().getWidth(), (int)this.getPreferredSize().getHeight()));
         setResizable(false);
+        //Cleans and set editabilty of metadata fields
+        cleanMetadata();
+        setMetadataEditable(false);
+    }
+    public void initFormParameters(FormsParameters.ParJTest poParam) {
+        try {
+            this.setBounds(poParam.getoPos().getnPosX(), 
+                poParam.getoPos().getnPosY(), 
+                poParam.getoPos().getnSizeX(),
+                poParam.getoPos().getnSizeY());
+        }catch (Exception e) {
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+        }
     }
 
     /**
@@ -79,6 +93,12 @@ public class JTest extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(800, 500));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnlSource.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -211,11 +231,11 @@ public class JTest extends javax.swing.JDialog {
                     .addGroup(pnlInfoLayout.createSequentialGroup()
                         .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlInfoLayout.createSequentialGroup()
-                                .addComponent(chkExists, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(chkUtf, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(42, 42, 42)
-                                .addComponent(chkKnown, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(chkExists, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(chkUtf, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(chkKnown, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlInfoLayout.createSequentialGroup()
                                 .addComponent(lblSource, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -361,6 +381,23 @@ public class JTest extends javax.swing.JDialog {
         this.selectFileForWriting();
     }//GEN-LAST:event_btnDstFileActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        try {
+            //Read the parameters to store
+            FormsParameters voPadre = new FormsParameters();
+            FormsParameters.ParJTest voParam = voPadre.new ParJTest();
+            voParam.getoPos().setnPosX(this.getX());
+            voParam.getoPos().setnPosY(this.getY());
+            voParam.getoPos().setnSizeX(this.getWidth());
+            voParam.getoPos().setnSizeY(this.getHeight());
+            //Calls the method in the main form to receive and to store the parameters
+            JClientMain.updateFormsParameters("JTest", voParam);
+        } catch(Exception e) {
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+        }                
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -446,6 +483,20 @@ public class JTest extends javax.swing.JDialog {
         txtIof.setText("");
     }
     /**
+     * Sets editable property to fields
+     * @param pbFlag boolean Flag to enable or disable metadata fields
+     */
+    public void setMetadataEditable (boolean pbFlag) {
+        chkExists.setEnabled(pbFlag);
+        chkKnown.setEnabled(pbFlag);
+        chkUtf.setEnabled(pbFlag);
+        txtExtension.setEditable(pbFlag);
+        txtContents.setEditable(pbFlag);
+        txtResults.setEditable(pbFlag);
+        txtSource.setEditable(pbFlag);
+        txtIof.setEditable(pbFlag);
+    }
+    /**
      * When the user clics the button, it allows to select a source file for reading
      */
     public void selectFileForReading() {
@@ -462,7 +513,7 @@ public class JTest extends javax.swing.JDialog {
                 this.preProcessFile(vcFile);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -473,12 +524,14 @@ public class JTest extends javax.swing.JDialog {
             String vcFile = JUtils.selectFile(this, ".", 
                     new String[] {"json"}, ".json", false);
             if (vcFile!=null) {
+                if (!vcFile.toLowerCase().endsWith(".json"))
+                    vcFile = vcFile + ".json";
                 txtDstFile.setText(vcFile);
             } else {
                 txtDstFile.setText("");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -488,6 +541,8 @@ public class JTest extends javax.swing.JDialog {
     public void preProcessFile(String pcFile) {
         //Clean previous values of the metadata
         this.cleanMetadata();
+        //And sets the editability
+        this.setMetadataEditable(false);
         //Opens and tries to parse the source file
         File voFile = new File(pcFile);
         oConv = new ConverterIofToModel();
@@ -503,7 +558,7 @@ public class JTest extends javax.swing.JDialog {
         chkUtf.setSelected(oConv.isbUtf());
         txtExtension.setText(oConv.getcExtension());
         txtContents.setText(resMessages.getString(oConv.getcContents().toLowerCase()));
-        if (oConv.getcResultsType().equals(ConverterToModel.CONTENTS_RESULT))
+        if (oConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT))
             txtResults.setText(resMessages.getString(oConv.getcResultsType().toLowerCase()));
         else
             txtResults.setText("");
@@ -525,14 +580,16 @@ public class JTest extends javax.swing.JDialog {
                     //If XML, obtain ResultList or StartList
                     if (oConv.getcExtension().equals(ConverterToModel.EXT_XML) && 
                             oConv.getcIofVersion().equals(ConverterToModel.IOF_VERSION_3)) {
+                        //Creates a dummy event with one stage
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage();
+                        //Set the specific properties for CSV
+                        ((ConverterIofToModel)oConv).setSpecificProperties(voSrcEve);
                         if (oConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
-                            //Not supported this conversion yet
-                            lblStatus.setText(resMessages.getString("info_not_supported"));
+                            //Parses the contents
+                            voEve = oConv.convertResultListSingleStageClassic(oConv.getcFile());
                         } else if (oConv.getcContents().equals(ConverterToModel.CONTENTS_START)) {
-                            //Creates a dummy event with one stage
-                            eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage();
-                            voEve = oConv.convertStartListSingleStageClassic(oConv.getcFile(), 
-                                    voSrcEve.getId(), voSrcEve.getStageList().get(0).getId());
+                            //Parses the contents
+                            voEve = oConv.convertStartListSingleStageClassic(oConv.getcFile());
                         } else {
                             lblStatus.setText(resMessages.getString("info_not_supported"));
                         }
@@ -549,8 +606,7 @@ public class JTest extends javax.swing.JDialog {
                             //Set the specific properties for CSV
                             ((ConverterCsvOEToModel)oConv).setSpecificProperties(";", vcEncoding, voSrcEve);
                             //Parses the contents
-                            voEve = oConv.convertStartListSingleStageClassic(oConv.getcFile(), 
-                                    voSrcEve.getId(), voSrcEve.getStageList().get(0).getId());
+                            voEve = oConv.convertStartListSingleStageClassic(oConv.getcFile());
                         } else {
                             lblStatus.setText(resMessages.getString("info_not_supported"));
                         }
@@ -581,7 +637,7 @@ public class JTest extends javax.swing.JDialog {
                 lblStatus.setText(resMessages.getString("info_nothing_to_do"));
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
 }
