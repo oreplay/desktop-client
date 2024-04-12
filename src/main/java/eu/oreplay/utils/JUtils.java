@@ -11,6 +11,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author javier.arufe
  */
 public class JUtils {
+    public static String cCurDir = "." + java.io.File.separator;
+
+    public static String getcCurDir() {
+        return cCurDir;
+    }
+    public static void setcCurDir(String cCurDir) {
+        JUtils.cCurDir = cCurDir;
+    }
 
 /**
  * Method used to calculate the position for showing a form
@@ -36,6 +44,30 @@ public static void positioningChild (java.awt.Frame poParent, javax.swing.JDialo
 }
 
 /**
+ * Method that allows to select a directory from a dialog box
+ * @param poParent javax.swing.JDialog Parent Window
+ * @param pcFolder String Default folder to search
+ * @return String Path+name of the file, or null if nothing selected
+ */
+public static String selectDirectory (javax.swing.JDialog poParent, String pcFolder) {
+    String vcFile = null;
+    int vnRet = javax.swing.JFileChooser.APPROVE_OPTION;
+    try {
+        final javax.swing.JFileChooser voChooser = new javax.swing.JFileChooser();
+        voChooser.setCurrentDirectory(new java.io.File(pcFolder));
+        voChooser.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        //voChooser.setAcceptAllFileFilterUsed(false);
+        vnRet = voChooser.showOpenDialog(poParent);
+        if (vnRet == javax.swing.JFileChooser.APPROVE_OPTION) {
+            vcFile = voChooser.getSelectedFile().toString();
+            cCurDir = voChooser.getSelectedFile().toString();
+        }
+    } catch (Exception e) {
+        vcFile = null;
+    }
+    return vcFile;
+}
+/**
  * Method that allows to select a file from a dialog box
  * @param poParent javax.swing.JDialog Parent Window
  * @return String Path+name of the file, or null if nothing selected
@@ -49,6 +81,7 @@ public static String selectFile (javax.swing.JDialog poParent) {
         vnRet = voChooser.showOpenDialog(poParent);
         if (vnRet == javax.swing.JFileChooser.APPROVE_OPTION) {
             vcFile = voChooser.getSelectedFile().toString();
+            cCurDir = voChooser.getCurrentDirectory().toString();
         }
     } catch (Exception e) {
         vcFile = null;
@@ -70,7 +103,7 @@ public static String selectFile (javax.swing.JDialog poParent, String pcFolder,
     int vnRet = javax.swing.JFileChooser.APPROVE_OPTION;
     try {
         final javax.swing.JFileChooser voChooser = new javax.swing.JFileChooser();
-        voChooser.setCurrentDirectory(new java.io.File(pcFolder + java.io.File.separator));
+        voChooser.setCurrentDirectory(new java.io.File(pcFolder));
         if (pbOpen)
             voChooser.setDialogType(javax.swing.JFileChooser.OPEN_DIALOG);
         else
@@ -87,6 +120,7 @@ public static String selectFile (javax.swing.JDialog poParent, String pcFolder,
             vnRet = voChooser.showSaveDialog(poParent);
         if (vnRet == javax.swing.JFileChooser.APPROVE_OPTION) {
             vcFile = voChooser.getSelectedFile().toString();
+            cCurDir = voChooser.getCurrentDirectory().toString();
         }
     } catch (Exception e) {
         vcFile = null;

@@ -4,6 +4,7 @@
  */
 package eu.oreplay.gui;
 
+import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.xml.FormsParametersXMLHandler;
 import eu.oreplay.utils.Utils;
@@ -13,12 +14,13 @@ import org.apache.logging.log4j.*;
  *
  * @author javier.arufe
  */
-public class JClientMain extends javax.swing.JFrame {
+public class JClientMain extends javax.swing.JFrame implements ConnBackListener {
     private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
     private boolean bFirstOpen = true;
     private static String cPathApp = "." + java.io.File.separator;
     private static FormsParameters oForms = null;
     private static Logger oLog = LogManager.getLogger(JClientMain.class.getName());
+    private ConnBackStatus oStatus = new ConnBackStatus();
 
     /**
      * Creates new form JClientMain
@@ -45,6 +47,12 @@ public class JClientMain extends javax.swing.JFrame {
     public static void setoLog(Logger oLog) {
         JClientMain.oLog = oLog;
     }
+    public ConnBackStatus getoStatus() {
+        return oStatus;
+    }
+    public void setoStatus(ConnBackStatus oStatus) {
+        this.oStatus = oStatus;
+    }
     public static void updateFormsParameters (String pcName, Object poParam) {
         try {
             if (poParam!=null && oForms!=null) {
@@ -54,6 +62,12 @@ public class JClientMain extends javax.swing.JFrame {
                     oForms.setoJAbout((FormsParameters.ParJAbout)poParam);
                 } else if (pcName.equals("JTest")) {
                     oForms.setoJTest((FormsParameters.ParJTest)poParam);
+                } else if (pcName.equals("ConnBackCheckPanel")) {
+                    oForms.setoConnBackCheckPanel((FormsParameters.ParConnBackCheckPanel)poParam);
+                } else if (pcName.equals("ConnBackLoginPanel")) {
+                    oForms.setoConnBackLoginPanel((FormsParameters.ParConnBackLoginPanel)poParam);
+                } else if (pcName.equals("ConnBackUploadPanel")) {
+                    oForms.setoConnBackUploadPanel((FormsParameters.ParConnBackUploadPanel)poParam);
                 }
             }                        
         } catch (Exception e) {
@@ -70,6 +84,9 @@ public class JClientMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pnlCheck = new eu.oreplay.gui.ConnBackCheckPanel();
+        pnlLogin = new eu.oreplay.gui.ConnBackLoginPanel();
+        pnlUpload = new eu.oreplay.gui.ConnBackUploadPanel();
         mnuMain = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuTest = new javax.swing.JMenuItem();
@@ -83,10 +100,12 @@ public class JClientMain extends javax.swing.JFrame {
         mnuSpanish = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle(resMessages.getString("oreplay"));
         setBackground(new java.awt.Color(255, 255, 255));
-        setBounds(new java.awt.Rectangle(200, 200, 650, 400));
-        setPreferredSize(new java.awt.Dimension(650, 400));
-        setResizable(false);
+        setBounds(new java.awt.Rectangle(200, 200, 675, 590));
+        setIconImage(new javax.swing.ImageIcon(getClass().getResource("/images/LogoOReplay_32.png")).getImage());
+        setMinimumSize(new java.awt.Dimension(675, 590));
+        setPreferredSize(new java.awt.Dimension(675, 590));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -96,10 +115,14 @@ public class JClientMain extends javax.swing.JFrame {
             }
         });
 
-        mnuFile.setText(resMessages.getString("file"));
-        mnuFile.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
+        pnlCheck.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
-        mnuTest.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
+        pnlLogin.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        pnlUpload.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        mnuFile.setText(resMessages.getString("file"));
+
         mnuTest.setText(resMessages.getString("test"));
         mnuTest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,7 +132,6 @@ public class JClientMain extends javax.swing.JFrame {
         mnuFile.add(mnuTest);
         mnuFile.add(jSeparator2);
 
-        mnuExit.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         mnuExit.setText(resMessages.getString("exit"));
         mnuExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,9 +143,7 @@ public class JClientMain extends javax.swing.JFrame {
         mnuMain.add(mnuFile);
 
         mnuHelp.setText(resMessages.getString("help"));
-        mnuHelp.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
 
-        mnuAbout.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         mnuAbout.setText(resMessages.getString("about"));
         mnuAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,9 +154,7 @@ public class JClientMain extends javax.swing.JFrame {
         mnuHelp.add(jSeparator1);
 
         mnuLanguage.setText(resMessages.getString("language"));
-        mnuLanguage.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
 
-        mnuEnglish.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         mnuEnglish.setText(resMessages.getString("english"));
         mnuEnglish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,7 +163,6 @@ public class JClientMain extends javax.swing.JFrame {
         });
         mnuLanguage.add(mnuEnglish);
 
-        mnuSpanish.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         mnuSpanish.setText(resMessages.getString("spanish"));
         mnuSpanish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,11 +181,28 @@ public class JClientMain extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 677, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnlCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(24, 24, 24)
+                        .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnlUpload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 163, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 331, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                    .addComponent(pnlCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnlUpload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12))
         );
 
         pack();
@@ -205,12 +239,41 @@ public class JClientMain extends javax.swing.JFrame {
             oLog.info(resMessages.getString("info_enter_app"));
             Utils.setoLog(oLog);  //Sets log file in the Utils static class for using it during the app execution
             getXmlData();
+            //For each Connection panel, add managing events, set status and pass default values
+            pnlCheck.addEventListener(this);
+            pnlCheck.initialize(oStatus);
+            if (oForms!=null)
+                pnlCheck.initFormParameters(oForms.getoConnBackCheckPanel());
+            pnlLogin.addEventListener(this);
+            pnlLogin.initialize(oStatus);
+            if (oForms!=null)
+                pnlLogin.initFormParameters(oForms.getoConnBackLoginPanel());
+            pnlUpload.addEventListener(this);
+            pnlUpload.initialize(oStatus);
+            if (oForms!=null)
+                pnlUpload.initFormParameters(oForms.getoConnBackUploadPanel());
+            //
             bFirstOpen = false;
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
+        if (pnlCheck!=null) {
+            pnlCheck.saveFormParameters();
+            //Remove listener
+            pnlCheck.removeEventListener(this);
+        }
+        if (pnlLogin!=null) {
+            pnlLogin.saveFormParameters();
+            //Remove listener
+            pnlLogin.removeEventListener(this);
+        }
+        if (pnlUpload!=null) {
+            pnlUpload.saveFormParameters();
+            //Remove listener
+            pnlUpload.removeEventListener(this);
+        }
         this.saveFormsParameters();
         oLog.info(resMessages.getString("info_exit_app"));
     }//GEN-LAST:event_formWindowClosing
@@ -280,6 +343,9 @@ public class JClientMain extends javax.swing.JFrame {
     private javax.swing.JMenuBar mnuMain;
     private javax.swing.JMenuItem mnuSpanish;
     private javax.swing.JMenuItem mnuTest;
+    private eu.oreplay.gui.ConnBackCheckPanel pnlCheck;
+    private eu.oreplay.gui.ConnBackLoginPanel pnlLogin;
+    private eu.oreplay.gui.ConnBackUploadPanel pnlUpload;
     // End of variables declaration//GEN-END:variables
 
     public void exitApp() {
@@ -291,11 +357,25 @@ public class JClientMain extends javax.swing.JFrame {
      */
     private void changeLanguage (String pcLocale) {
         try {
+            //Change the resources locale
             java.util.Locale voLocale = new java.util.Locale(pcLocale);
             java.util.Locale.setDefault(voLocale);
             java.util.ResourceBundle.clearCache();
             resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages", voLocale);
-            this.initComponents();
+            //Set the texts again
+            setTitle(resMessages.getString("oreplay"));
+            mnuFile.setText(resMessages.getString("file"));
+            mnuTest.setText(resMessages.getString("test"));
+            mnuExit.setText(resMessages.getString("exit"));
+            mnuHelp.setText(resMessages.getString("help"));
+            mnuAbout.setText(resMessages.getString("about"));
+            mnuLanguage.setText(resMessages.getString("language"));
+            mnuEnglish.setText(resMessages.getString("english"));
+            mnuSpanish.setText(resMessages.getString("spanish"));
+            //Force the panels to do the same
+            pnlCheck.changeLanguage(pcLocale);
+            pnlLogin.changeLanguage(pcLocale);
+            pnlUpload.changeLanguage(pcLocale);
         }catch(Exception e) {
             oLog.error(resMessages.getString("error_exception"), e);
         }
@@ -349,6 +429,46 @@ public class JClientMain extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Method that receives the event occurred in one of the connection panels;
+     * It's in charge of activating or deactivating panels as things happen,
+     * letting the user interacte with the panels
+     * @param e ConnBackEvent Event that occurred
+     */
+    @Override
+    public void handleConnBackEvent(ConnBackEvent e) {
+        if (e!=null) {
+//System.out.println(e.getoStatus().toString());
+            //If there is no connection, disable the other panels
+            if (e.getoStatus().getnStatus()==ConnBackStatus.CONNECTION_NOOK ||
+                    e.getoStatus().getnStatus()==ConnBackStatus.DISCONNECTED) {
+                pnlLogin.setDefaultValues();
+                pnlUpload.setDefaultValues();
+            //If it wasn't connected and now it's connected, activate second panel for login
+            } else if (e.getoStatus().getnStatus()==ConnBackStatus.CONNECTION_OK) {
+                pnlLogin.setoStatus(oStatus);
+                pnlLogin.enableForLogin();
+                pnlUpload.setDefaultValues();
+            //If login fails, enable for login again
+            } else if (e.getoStatus().getnStatus()==ConnBackStatus.LOGIN_NOOK) {
+                pnlLogin.setoStatus(oStatus);
+                pnlLogin.enableForLogin();
+                pnlUpload.setDefaultValues();
+            //If login ok, enable for stage selection
+            } else if (e.getoStatus().getnStatus()==ConnBackStatus.LOGIN_OK) {
+                pnlLogin.setoStatus(oStatus);
+                pnlLogin.enableForStage();
+                pnlUpload.setDefaultValues();
+            //If a stage is selected, enable for upload
+            } else if (e.getoStatus().getnStatus()==ConnBackStatus.STAGE_SELECTED) {
+                pnlLogin.enableForStage();
+                pnlUpload.setoStatus(oStatus);
+                pnlUpload.enableForUpload();
+            }
+
+        }
+    }
+    
     /**
      * Shows a dialog with data about the app
      */

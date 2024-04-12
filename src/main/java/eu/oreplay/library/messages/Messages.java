@@ -16,7 +16,7 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.1.1"},
+        {"main", "OReplay. Desktop Client 0.2.0"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -130,6 +130,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"delete_temporal_results", "Delete temporal results"},
         {"auto_download_ftp", "Automatic results download by FTP"},
         {"processed", "Processed"},
+        {"process", "Process"},
         {"day_short", "d"},
         {"hour_short", "h"},
         {"minute_short", "m"},
@@ -171,6 +172,17 @@ public class Messages extends java.util.ListResourceBundle {
         {"trailo_normal", "Trail-O Normal"},
         {"trailo_timed", "Trail-O Timed"},
         {"section", "Section"},
+        {"check_connection", "Check Connection to Server"},
+        {"btn_check", "Check"},
+        {"login_event", "Login to Event"},
+        {"event_id", "Event ID"},
+        {"token", "Token"},
+        {"secret", "Secret"},
+        {"select", "Select"},
+        {"upload_data", "Upload data to server"},
+        {"folder", "Folder"},
+        {"waiting", "Waiting"},
+        {"bytes_sent", "bytes sent"},
 
         {"title_main", "Welcome to OReplay Desktop Client"},
         {"title_splash", "Welcome to OReplay Desktop Client"},
@@ -217,12 +229,21 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_not_valid_number", "It's not a valid number"},
         {"info_app_closing", "The application is going to close"},
         {"info_no_new_contents", "No new contents found"},
-        {"info_not_supported", "No supported yet"},
-        {"info_nothing_to_do", "Nothing to do"},
         {"info_process_started", "Process Started."},
         {"info_process_finished", "Process Finished."},
+        {"info_waiting_connection", "Waiting for connection."},
+        {"info_connection_ok", "Connection established."},
+        {"info_connection_nook", "Could not connect."},
+        {"info_login_ok", "Login Ok."},
+        {"info_login_nook", "Login failed."},
+        {"info_data_novalid", "No valid data"},
+        {"info_upload_started", "Upload process started"},
+        {"info_upload_stopped", "Upload process stopped"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},
+        {"error_format_unknown", "Format unknown or not supported yet"},
+        {"error_nothing_to_do", "Nothing to do"},
+        {"error_not_supported", "Not supported yet"},
     };
 protected Object[][] getContents() {
 	return contents;

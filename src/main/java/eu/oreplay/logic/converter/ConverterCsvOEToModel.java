@@ -74,12 +74,14 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     }
 
     @Override
-    public eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile) {
+    public eu.oreplay.db.Event convertStartList (String pcFile) {
         File voFile = new File(pcFile);
-        return convertStartListSingleStageClassic (voFile);
+        eu.oreplay.db.Event voResul = convertStartList (voFile);
+        voFile = null;
+        return voResul;
     }
     @Override
-    public eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile) {
+    public eu.oreplay.db.Event convertStartList (File poFile) {
         eu.oreplay.db.Event voEve = null;
         if (oEve!=null) {
             List<String> plStart = new ArrayList<String>();
@@ -91,6 +93,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                 while ((vcLine = voBr.readLine()) != null) {
                     plStart.add(vcLine);
                 }
+                voBr.close();
                 if (getcSource().equals(ConverterToModel.SRC_OE2010)) {
                     voEve = convertStartListSingleStageClassicOE2010 (plStart);
                 } else if (getcSource().equals(ConverterToModel.SRC_OEV12)) {
@@ -376,12 +379,14 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     }
 
     @Override
-    public eu.oreplay.db.Event convertResultListSingleStageClassic (String pcFile) {
+    public eu.oreplay.db.Event convertResultList (String pcFile) {
         File voFile = new File(pcFile);
-        return convertResultListSingleStageClassic (voFile);
+        eu.oreplay.db.Event voResul = convertResultList (voFile);
+        voFile = null;
+        return voResul;
     }
     @Override
-    public eu.oreplay.db.Event convertResultListSingleStageClassic (File poFile) {
+    public eu.oreplay.db.Event convertResultList (File poFile) {
         eu.oreplay.db.Event voEve = null;
         if (oEve!=null) {
         }

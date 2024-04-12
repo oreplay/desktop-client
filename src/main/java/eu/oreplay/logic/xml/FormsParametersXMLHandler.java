@@ -11,6 +11,8 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.ArrayList;
 
 import eu.oreplay.logic.*;
 import java.nio.charset.StandardCharsets;
@@ -26,6 +28,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
     private int nType = 0;
     /** Buffer for data read */
     protected StringBuffer vcBuffer = new StringBuffer();
+    private List<String> lServers;
 
     public FormsParameters getoRec() {
         return oRec;
@@ -45,6 +48,16 @@ public class FormsParametersXMLHandler extends DefaultHandler {
             nType = 2;
         } else if (lname.toLowerCase().equals("jtest")) {
             nType = 3;
+        } else if (lname.toLowerCase().equals("connbackcheckpanel")) {
+            nType = 4;
+        } else if (lname.toLowerCase().equals("connbackloginpanel")) {
+            nType = 5;
+        } else if (lname.toLowerCase().equals("connbackuploadpanel")) {
+            nType = 6;
+        } else if (lname.toLowerCase().equals("servers")) {
+            if (nType==4) {
+                lServers = new ArrayList<String>();
+            }
         }
     }
 
@@ -120,7 +133,87 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 oRec.getoJAbout().setcVersion(content);
                                 break;
                         }
-                    }catch(Exception e4) {}
+                    }catch(Exception e5) {}
+                } else if (lname.toLowerCase().equals("cpath")) {
+                    try {
+                        switch (nType) {
+                            case 3:
+                                oRec.getoJTest().setcPath(content);
+                                break;
+                        }
+                    }catch(Exception e6) {}
+                } else if (lname.toLowerCase().equals("servers")) {
+                    try {
+                        switch (nType) {
+                            case 4:
+                                oRec.getoConnBackCheckPanel().setlServers(lServers);
+                                break;
+                        }
+                    }catch(Exception e7) {}
+                } else if (lname.toLowerCase().equals("server")) {
+                    try {
+                        switch (nType) {
+                            case 4:
+                                lServers.add(content);
+                                break;
+                        }
+                    }catch(Exception e8) {}
+                } else if (lname.toLowerCase().equals("ceveid")) {
+                    try {
+                        switch (nType) {
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcEveId(content);
+                                break;
+                        }
+                    }catch(Exception e9) {}
+                } else if (lname.toLowerCase().equals("ctoken")) {
+                    try {
+                        switch (nType) {
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcToken(content);
+                                break;
+                        }
+                    }catch(Exception e10) {}
+                } else if (lname.toLowerCase().equals("cstaid")) {
+                    try {
+                        switch (nType) {
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcStaId(content);
+                                break;
+                        }
+                    }catch(Exception e11) {}
+                } else if (lname.toLowerCase().equals("cevedesc")) {
+                    try {
+                        switch (nType) {
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcEveDesc(content);
+                                break;
+                        }
+                    }catch(Exception e9) {}
+                } else if (lname.toLowerCase().equals("cstadesc")) {
+                    try {
+                        switch (nType) {
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcStaDesc(content);
+                                break;
+                        }
+                    }catch(Exception e9) {}
+                } else if (lname.toLowerCase().equals("cfolder")) {
+                    try {
+                        switch (nType) {
+                            case 6:
+                                oRec.getoConnBackUploadPanel().setcFolder(content);
+                                break;
+                        }
+                    }catch(Exception e12) {}
+                } else if (lname.toLowerCase().equals("cextension")) {
+                    try {
+                        switch (nType) {
+                            case 6:
+                                oRec.getoConnBackUploadPanel().setcExtension(content);
+                                break;
+                        }
+                    }catch(Exception e13) {}
                 }
             }
         }
@@ -175,7 +268,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                 voStream.println("    <nSizeX>" + poRec.getoJClientMain().getoPos().getnSizeX()+ "</nSizeX>");
                 voStream.println("    <nSizeY>" + poRec.getoJClientMain().getoPos().getnSizeY()+ "</nSizeY>");
                 voStream.println("  </JClientMain>");
-                //Pantalla JAbout
+                //Form JAbout
                 voStream.println("  <JAbout>");
                 voStream.println("    <nPosX>" + poRec.getoJAbout().getoPos().getnPosX()+ "</nPosX>");
                 voStream.println("    <nPosY>" + poRec.getoJAbout().getoPos().getnPosY()+ "</nPosY>");
@@ -183,13 +276,49 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                 voStream.println("    <nSizeY>" + poRec.getoJAbout().getoPos().getnSizeY()+ "</nSizeY>");
                 voStream.println("    <cVersion>" + poRec.getoJAbout().getcVersion()+ "</cVersion>");
                 voStream.println("  </JAbout>");
-                //Pantalla JTest
+                //Form JTest
                 voStream.println("  <JTest>");
                 voStream.println("    <nPosX>" + poRec.getoJTest().getoPos().getnPosX()+ "</nPosX>");
                 voStream.println("    <nPosY>" + poRec.getoJTest().getoPos().getnPosY()+ "</nPosY>");
                 voStream.println("    <nSizeX>" + poRec.getoJTest().getoPos().getnSizeX()+ "</nSizeX>");
                 voStream.println("    <nSizeY>" + poRec.getoJTest().getoPos().getnSizeY()+ "</nSizeY>");
+                voStream.println("    <cPath>" + poRec.getoJTest().getcPath()+ "</cPath>");
                 voStream.println("  </JTest>");
+                //Panel ConnBackCheckPanel
+                voStream.println("  <ConnBackCheckPanel>");
+                voStream.println("    <nPosX>" + poRec.getoConnBackCheckPanel().getoPos().getnPosX()+ "</nPosX>");
+                voStream.println("    <nPosY>" + poRec.getoConnBackCheckPanel().getoPos().getnPosY()+ "</nPosY>");
+                voStream.println("    <nSizeX>" + poRec.getoConnBackCheckPanel().getoPos().getnSizeX()+ "</nSizeX>");
+                voStream.println("    <nSizeY>" + poRec.getoConnBackCheckPanel().getoPos().getnSizeY()+ "</nSizeY>");
+                if (poRec.getoConnBackCheckPanel().getlServers()!=null) {
+                    voStream.println("    <servers>");
+                    for (String vcServer : poRec.getoConnBackCheckPanel().getlServers()) {
+                        voStream.println("      <server>" + vcServer + "</server>");
+                    }
+                    voStream.println("    </servers>");
+                }
+                voStream.println("  </ConnBackCheckPanel>");
+                //Panel ConnBackLoginPanel
+                voStream.println("  <ConnBackLoginPanel>");
+                voStream.println("    <nPosX>" + poRec.getoConnBackLoginPanel().getoPos().getnPosX()+ "</nPosX>");
+                voStream.println("    <nPosY>" + poRec.getoConnBackLoginPanel().getoPos().getnPosY()+ "</nPosY>");
+                voStream.println("    <nSizeX>" + poRec.getoConnBackLoginPanel().getoPos().getnSizeX()+ "</nSizeX>");
+                voStream.println("    <nSizeY>" + poRec.getoConnBackLoginPanel().getoPos().getnSizeY()+ "</nSizeY>");
+                voStream.println("    <cEveId>" + poRec.getoConnBackLoginPanel().getcEveId()+ "</cEveId>");
+                voStream.println("    <cToken>" + poRec.getoConnBackLoginPanel().getcToken()+ "</cToken>");
+                voStream.println("    <cStaId>" + poRec.getoConnBackLoginPanel().getcStaId()+ "</cStaId>");
+                voStream.println("    <cEveDesc>" + poRec.getoConnBackLoginPanel().getcEveDesc()+ "</cEveDesc>");
+                voStream.println("    <cStaDesc>" + poRec.getoConnBackLoginPanel().getcStaDesc()+ "</cStaDesc>");
+                voStream.println("  </ConnBackLoginPanel>");
+                //Panel ConnBackUploadPanel
+                voStream.println("  <ConnBackUploadPanel>");
+                voStream.println("    <nPosX>" + poRec.getoConnBackUploadPanel().getoPos().getnPosX()+ "</nPosX>");
+                voStream.println("    <nPosY>" + poRec.getoConnBackUploadPanel().getoPos().getnPosY()+ "</nPosY>");
+                voStream.println("    <nSizeX>" + poRec.getoConnBackUploadPanel().getoPos().getnSizeX()+ "</nSizeX>");
+                voStream.println("    <nSizeY>" + poRec.getoConnBackUploadPanel().getoPos().getnSizeY()+ "</nSizeY>");
+                voStream.println("    <cFolder>" + poRec.getoConnBackUploadPanel().getcFolder()+ "</cFolder>");
+                voStream.println("    <cExtension>" + poRec.getoConnBackUploadPanel().getcExtension()+ "</cExtension>");
+                voStream.println("  </ConnBackUploadPanel>");
                 //End of the main tag
                 voStream.println("</FormsParameters>");
                 voStream.close();

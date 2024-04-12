@@ -13,11 +13,17 @@ public class FormsParameters {
     private ParJClientMain oJClientMain;
     private ParJAbout oJAbout;
     private ParJTest oJTest;
+    private ParConnBackCheckPanel oConnBackCheckPanel;
+    private ParConnBackLoginPanel oConnBackLoginPanel;
+    private ParConnBackUploadPanel oConnBackUploadPanel;
 
     public FormsParameters() {
         oJClientMain = new ParJClientMain();
         oJAbout = new ParJAbout();
         oJTest = new ParJTest();
+        oConnBackCheckPanel = new ParConnBackCheckPanel();
+        oConnBackLoginPanel = new ParConnBackLoginPanel();
+        oConnBackUploadPanel = new ParConnBackUploadPanel();
     }
 
     public ParJClientMain getoJClientMain() {
@@ -44,6 +50,30 @@ public class FormsParameters {
         this.oJTest = oJTest;
     }
 
+    public ParConnBackCheckPanel getoConnBackCheckPanel() {
+        return oConnBackCheckPanel;
+    }
+
+    public void setoConnBackCheckPanel(ParConnBackCheckPanel oConnBackCheckPanel) {
+        this.oConnBackCheckPanel = oConnBackCheckPanel;
+    }
+
+    public ParConnBackLoginPanel getoConnBackLoginPanel() {
+        return oConnBackLoginPanel;
+    }
+
+    public void setoConnBackLoginPanel(ParConnBackLoginPanel oConnBackLoginPanel) {
+        this.oConnBackLoginPanel = oConnBackLoginPanel;
+    }
+
+    public ParConnBackUploadPanel getoConnBackUploadPanel() {
+        return oConnBackUploadPanel;
+    }
+
+    public void setoConnBackUploadPanel(ParConnBackUploadPanel oConnBackUploadPanel) {
+        this.oConnBackUploadPanel = oConnBackUploadPanel;
+    }
+    
     /**
      * Internal class to store position and size of a form
      */
@@ -175,7 +205,7 @@ public class FormsParameters {
          * Constructor by default
          */
         public ParJClientMain() {
-            oPos = new ParPosition (200, 200, 650, 400);
+            oPos = new ParPosition (200, 200, 675, 590);
         }
         /**
          * Constructor with parameters
@@ -189,6 +219,7 @@ public class FormsParameters {
      * Internal class that manages the parameters of the JTest
      */
     public class ParJTest extends ParBase{
+        private String cPath = "." + java.io.File.separator;
         /**
          * Constructor by default
          */
@@ -201,6 +232,22 @@ public class FormsParameters {
          */
         public ParJTest(ParPosition oPos) {
             this.oPos = oPos;
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcPath String Additional data
+         */
+        public ParJTest(ParPosition oPos, String pcPath) {
+            this.oPos = oPos;
+            cPath = pcPath;
+        }
+
+        public String getcPath() {
+            return cPath;
+        }
+        public void setcPath(String cPath) {
+            this.cPath = cPath;
         }
     }
     /**
@@ -239,6 +286,207 @@ public class FormsParameters {
         public void setcVersion(String cVersion) {
             this.cVersion = cVersion;
         }
+    }
+    /**
+     * Internal class that manages the parameters of the ConnBackCheckPanel panel
+     */
+    public class ParConnBackCheckPanel extends ParBase{
+        private java.util.List<String> lServers = new java.util.ArrayList<String>();
+        /**
+         * Constructor by default
+         */
+        public ParConnBackCheckPanel() {
+            oPos = new ParPosition (200, 200, 300, 200);
+            lServers.add("127.0.0.1");
+            lServers.add("www.oreplay.es");
+            lServers.add("jaruori.es");
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         */
+        public ParConnBackCheckPanel(ParPosition oPos) {
+            this.oPos = oPos;
+            lServers.add("127.0.0.1");
+            lServers.add("www.oreplay.es");
+            lServers.add("jaruori.es");
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param plServers java.util.List<String> List of servers
+         */
+        public ParConnBackCheckPanel(ParPosition oPos, java.util.List<String> plServers) {
+            this.oPos = oPos;
+            lServers = plServers;
+        }
+
+        public java.util.List<String> getlServers() {
+            return lServers;
+        }
+        public void setlServers(java.util.List<String> plServers) {
+            this.lServers = plServers;
+        }
+    }
+    /**
+     * Internal class that manages the parameters of the ConnBackLoginPanel panel
+     */
+    public class ParConnBackLoginPanel extends ParBase{
+        private String cEveId = "";
+        private String cToken = "";
+        private String cStaId = "";
+        private String cEveDesc = "";
+        private String cStaDesc = "";
+        /**
+         * Constructor by default
+         */
+        public ParConnBackLoginPanel() {
+            oPos = new ParPosition (200, 200, 300, 200);
+            cEveId = "";
+            cToken = "";
+            cStaId = "";
+            cEveDesc = "";
+            cStaDesc = "";
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         */
+        public ParConnBackLoginPanel(ParPosition oPos) {
+            this.oPos = oPos;
+            cEveId = "";
+            cToken = "";
+            cStaId = "";
+            cEveDesc = "";
+            cStaDesc = "";
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcEveId String Event's id
+         * @param pcToken String Event's secret
+         * @param pcStaId String Stage's id
+         */
+        public ParConnBackLoginPanel(ParPosition oPos, String pcEveId, String pcToken, String pcStaId) {
+            this.oPos = oPos;
+            cEveId = pcEveId;
+            cToken = pcToken;
+            cStaId = pcStaId;
+            cEveDesc = "";
+            cStaDesc = "";
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcEveId String Event's id
+         * @param pcToken String Event's secret
+         * @param pcStaId String Stage's id
+         * @param pcEveDesc String Event's description
+         * @param pcStaDesc String Stage's description
+         */
+        public ParConnBackLoginPanel(ParPosition oPos, String pcEveId, String pcToken, 
+                String pcStaId, String pcEveDesc, String pcStaDesc) {
+            this.oPos = oPos;
+            cEveId = pcEveId;
+            cToken = pcToken;
+            cStaId = pcStaId;
+            cEveDesc = pcEveDesc;
+            cStaDesc = pcStaDesc;
+        }
+
+        public String getcEveId() {
+            return cEveId;
+        }
+
+        public void setcEveId(String cEveId) {
+            this.cEveId = cEveId;
+        }
+
+        public String getcToken() {
+            return cToken;
+        }
+
+        public void setcToken(String cToken) {
+            this.cToken = cToken;
+        }
+
+        public String getcStaId() {
+            return cStaId;
+        }
+
+        public void setcStaId(String cStaId) {
+            this.cStaId = cStaId;
+        }
+
+        public String getcEveDesc() {
+            return cEveDesc;
+        }
+
+        public void setcEveDesc(String cEveDesc) {
+            this.cEveDesc = cEveDesc;
+        }
+
+        public String getcStaDesc() {
+            return cStaDesc;
+        }
+
+        public void setcStaDesc(String cStaDesc) {
+            this.cStaDesc = cStaDesc;
+        }
+
+        
+    }
+    /**
+     * Internal class that manages the parameters of the ConnBackUploadPanel panel
+     */
+    public class ParConnBackUploadPanel extends ParBase{
+        private String cFolder = "";
+        private String cExtension = "";
+        /**
+         * Constructor by default
+         */
+        public ParConnBackUploadPanel() {
+            oPos = new ParPosition (200, 200, 300, 200);
+            cFolder = "";
+            cExtension = "";
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         */
+        public ParConnBackUploadPanel(ParPosition oPos) {
+            this.oPos = oPos;
+            cFolder = "";
+            cExtension = "";
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcFolder String Folder to search files
+         * @param pcExtension String File extension to search
+         */
+        public ParConnBackUploadPanel(ParPosition oPos, String pcFolder, String pcExtension) {
+            this.oPos = oPos;
+            cFolder = pcFolder;
+            cExtension = pcExtension;
+        }
+
+        public String getcFolder() {
+            return cFolder;
+        }
+
+        public void setcFolder(String cFolder) {
+            this.cFolder = cFolder;
+        }
+
+        public String getcExtension() {
+            return cExtension;
+        }
+
+        public void setcExtension(String cExtension) {
+            this.cExtension = cExtension;
+        }
+        
     }
     
 }
