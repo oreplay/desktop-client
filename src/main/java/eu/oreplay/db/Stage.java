@@ -117,6 +117,8 @@ public class Stage implements Serializable {
     private StageDiscipline stageDiscipline;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "stage")
     private List<Runner> runnerList;
+    //Dummy needed for not breaking the communication between Back and Client
+    private Link _links;
 
     public Stage() {
     }
@@ -348,6 +350,15 @@ public class Stage implements Serializable {
 
     public void setDeleted(Date deleted) {
         this.deleted = deleted;
+    }
+
+    //Dummy needed
+    @JsonProperty("_links")
+    public Link getLinks() {
+        return _links;
+    }
+    public void setLinks(Link _links) {
+        this._links = _links;
     }
 
     @Override

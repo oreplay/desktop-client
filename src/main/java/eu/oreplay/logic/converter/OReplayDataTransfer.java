@@ -11,7 +11,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import eu.oreplay.utils.Utils;
+import java.io.File;
 
 
 /**
@@ -55,5 +59,161 @@ public class OReplayDataTransfer {
         this.oConf = oConf;
     }
     
+    /**
+     * First inspects a file, gets its metadata and then process it to obtain
+     * a JSON (or an error message)
+     * @param pcFile String File to process
+     * @return String JSON or error message
+     */
+    public String getJsonFromFile (String pcFile) {
+        String vcResul = getJsonFromFile(pcFile, "", "", "", "");
+        return vcResul;
+    }
+    /**
+     * First inspects a file, gets its metadata and then process it to obtain
+     * a JSON (or an error message)
+     * @param pcFile String File to process
+     * @param pcEveId String Event's Id
+     * @param pcEveDesc String Event's description
+     * @param pcStaId String Stage's Id
+     * @param pcStaDesc String Stage's description
+     * @return String JSON or error message
+     */
+    public String getJsonFromFile (String pcFile, String pcEveId, String pcEveDesc, 
+            String pcStaId, String pcStaDesc) {
+        String vcResul = processFile(preProcessFile(pcFile), pcEveId, pcEveDesc, 
+                pcStaId, pcStaDesc);
+        return vcResul;
+    }
+    /**
+     * Inspects a file to decide which kind of data comes in it; this is needed
+     * before processing it because fills some metadata
+     * @param pcFile String File to inspect
+     * @return ConverterToModel Object with the metadata describing the file contents
+     */
+    public ConverterToModel preProcessFile(String pcFile) {
+        //Opens and tries to parse the source file
+        File voFile = new File(pcFile);
+        oConf = new ConverterIofToModel();
+        oConf.inspectFile(voFile);
+        voFile = null;
+        if (oConf.getcExtension().equals(ConverterToModel.EXT_CSV)) {
+            oConf = new ConverterCsvOEToModel(oConf);
+        } else if (oConf.getcExtension().equals(ConverterToModel.EXT_XML)) {
+            oConf = new ConverterIofToModel(oConf);
+        }
+        return oConf;
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @return String JSON or error message
+     */
+    public String processFile() {
+        String vcResul = "";
+        vcResul = processFile(oConf, "", "", "", "");
+        return vcResul;
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @param poConv ConverterToModel Metadata obtained previously
+     * @return String JSON or error message
+     */
+    public String processFile(ConverterToModel poConv) {
+        String vcResul = "";
+        vcResul = processFile(poConv, "", "", "", "");
+        return vcResul;
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @param pcEveId String Event's Id
+     * @param pcEveDesc String Event's description
+     * @param pcStaId String Stage's Id
+     * @param pcStaDesc String Stage's description
+     * @return String JSON or error message
+     */
+    public String processFile(String pcEveId, String pcEveDesc, 
+            String pcStaId, String pcStaDesc) {
+        return processFile (oConf, pcEveId, pcEveDesc, pcStaId, pcStaDesc);
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @param poConv ConverterToModel Metadata obtained previously
+     * @param pcEveId String Event's Id
+     * @param pcEveDesc String Event's description
+     * @param pcStaId String Stage's Id
+     * @param pcStaDesc String Stage's description
+     * @return String JSON or error message
+     */
+    public String processFile(ConverterToModel poConv, String pcEveId, String pcEveDesc, 
+            String pcStaId, String pcStaDesc) {
+        String vcResul = "";
+        eu.oreplay.db.Event voEve = null;
+        try {
+            //If a source file has been inspected, process it
+            if (poConv!=null) {
+                if (poConv.isbExists()) {
+                    //If XML, obtain ResultList or StartList
+                    if (poConv.getcExtension().equals(ConverterToModel.EXT_XML) && 
+                            poConv.getcIofVersion().equals(ConverterToModel.IOF_VERSION_3)) {
+                        //Creates a dummy event with one stage
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc);
+                        //Set the specific properties for CSV
+                        ((ConverterIofToModel)poConv).setSpecificProperties(voSrcEve);
+                        if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
+                            //Parses the contents
+                            voEve = poConv.convertResultList(poConv.getcFile());
+                        } else if (poConv.getcContents().equals(ConverterToModel.CONTENTS_START)) {
+                            //Parses the contents
+                            voEve = poConv.convertStartList(poConv.getcFile());
+                        } else {
+                            vcResul = "error_not_supported";
+                        }
+                    //If CSV, parse contents
+                    } else if (poConv.getcExtension().equals(ConverterToModel.EXT_CSV)) {
+                        if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
+                            //Not supported this conversion yet
+                            vcResul = "error_not_supported";
+                        } else if (poConv.getcContents().equals(ConverterToModel.CONTENTS_START)) {
+                            //Gets an encoding for the text file depending on the UTF mark
+                            String vcEncoding = (poConv.isbUtf()?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1);
+                            //Creates a dummy event with one stage
+                            eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc);
+                            //Set the specific properties for CSV
+                            ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                            //Parses the contents
+                            voEve = poConv.convertStartList(poConv.getcFile());
+                        } else {
+                            vcResul = "error_not_supported";
+                        }
+                    } else {
+                        vcResul = "error_not_supported";
+                    }
+                    //Creates the output in JSON by merging metadata and event
+                    if (voEve!=null) {
+                        //---- Final steps, write the output ---
+                        //Object to group configuration and event
+                        OReplayDataTransfer voData = new OReplayDataTransfer(poConv, voEve);
+                        //JSON file with Jackson
+                        ObjectMapper voMapper = new ObjectMapper();
+                        voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+                        vcResul = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
+                    } else {
+                        vcResul = "error_nothing_to_do";
+                    }
+                } else {
+                    vcResul = "error_nothing_to_do";
+                }
+            } else {
+                vcResul = "error_nothing_to_do";
+            }
+        } catch(Exception e) {
+            vcResul = "error_exception" + ". " + e.getMessage();
+        }
+        return vcResul;
+    }
     
 }

@@ -47,7 +47,7 @@ import eu.oreplay.logic.converter.IsoDateSerializer;
     @NamedQuery(name = "Event.findByInitialDate", query = "SELECT e FROM Event e WHERE e.initialDate = :initialDate"),
     @NamedQuery(name = "Event.findByFinalDate", query = "SELECT e FROM Event e WHERE e.finalDate = :finalDate"),
 })
-@JsonRootName(value = "events")
+@JsonRootName(value = "event")
 @JsonInclude(Include.NON_NULL)
 public class Event implements Serializable {
 
@@ -105,6 +105,9 @@ public class Event implements Serializable {
     private List<Stage> stageList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private List<Runner> runnerList;
+    //Dummy needed for not breaking the communication between Back and Client
+    private String federation_id = "";
+    private Link _links;
 
     public Event() {
     }
@@ -311,6 +314,23 @@ public class Event implements Serializable {
 
     public void setDeleted(Date deleted) {
         this.deleted = deleted;
+    }
+
+    //Dummy needed
+    @JsonIgnore
+    @JsonProperty("federation_id")
+    public String getFederation_id() {
+        return federation_id;
+    }
+    public void setFederation_id(String federation_id) {
+        this.federation_id = federation_id;
+    }
+    @JsonProperty("_links")
+    public Link getLinks() {
+        return _links;
+    }
+    public void setLinks(Link _links) {
+        this._links = _links;
     }
 
     

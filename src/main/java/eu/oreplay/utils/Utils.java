@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.*;
 
@@ -116,22 +117,38 @@ public class Utils {
  * @return eu.oreplay.db.Event Dummy event with one dummy stage
  */
 public static eu.oreplay.db.Event createDummyEventOneStage () {
+    eu.oreplay.db.Event voEveSrc = Utils.createDummyEventOneStage("", "", "", "");
+    return voEveSrc;
+}
+/**
+ * Create a dummy event with one dummy stage while we don't have connection
+ * to the backend to get real or test values
+ * @param pcEveId String Event's Id
+ * @param pcEveDesc String Event's description
+ * @param pcStaId String Stage's Id
+ * @param pcStaDesc String Stage's description
+ * @return eu.oreplay.db.Event Dummy event with one dummy stage
+ */
+public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId, 
+        String pcEveDesc, String pcStaId, String pcStaDesc) {
     eu.oreplay.db.Event voEveSrc = null;
     try {
         //Create a basic event and stage information
         voEveSrc = new eu.oreplay.db.Event();
-        voEveSrc.setId(Utils.DUMMY_EVENT_ID);
-        voEveSrc.setDescription(Utils.DUMMY_EVENT_DESC);
+        voEveSrc.setId(pcEveId.equals("")?Utils.DUMMY_EVENT_ID:pcEveId);
+        voEveSrc.setDescription(pcEveDesc.equals("")?Utils.DUMMY_EVENT_DESC:pcEveDesc);
         voEveSrc.setCreated(new java.util.Date());
         //The stage
         eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-        voSta.setId(Utils.DUMMY_STAGE_ID);
-        voSta.setOrderNumber(1);
-        voSta.setDescription(Utils.DUMMY_STAGE_DESC);
-        voSta.setBaseDate(Utils.parse("01/02/2024", "dd/MM/yyyy"));
-        voSta.setBaseTime(Utils.parse("11:00:00", "HH:mm:ss"));
-        voSta.setStageDiscipline(new StageDiscipline());
-        voSta.setStageType(new StageType());
+        voSta.setId(pcStaId.equals("")?Utils.DUMMY_STAGE_ID:pcStaId);
+        voSta.setDescription(pcStaDesc.equals("")?Utils.DUMMY_STAGE_DESC:pcStaDesc);
+        if (pcStaId.equals("")) {
+            voSta.setOrderNumber(1);
+            voSta.setBaseDate(Utils.parse("01/02/2024", "dd/MM/yyyy"));
+            voSta.setBaseTime(Utils.parse("11:00:00", "HH:mm:ss"));
+            voSta.setStageDiscipline(new StageDiscipline());
+            voSta.setStageType(new StageType());
+        }
         voSta.setCreated(new java.util.Date());
         //Add the stage to the event
         ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<eu.oreplay.db.Stage>();
@@ -789,6 +806,61 @@ public static boolean folderExists (String pcFolder) {
             vbResul = true;
     } 
     catch(Exception ex) {
+    }
+    return vbResul;
+}
+
+/**
+ * Searches for files with a given extension in a given directory and returns
+ * a list of file names that match the condition; it can search in subdirectories
+ * @param pcPath String Path to search
+ * @param pcExtension String Extension to find
+ * @param pbSubdir boolean flag to indicate if search in subfolders
+ * @return List<String> List of the found files
+ */
+public static List<String> findFilesInDir (String pcPath, String pcExtension, boolean pbSubdir) {
+    List<String> vlResul = null;
+    int vnDepth = (pbSubdir?1000:1);
+    try (java.util.stream.Stream<java.nio.file.Path> walk = java.nio.file.Files.walk(java.nio.file.Paths.get(pcPath), vnDepth)) {
+        vlResul = walk
+                .filter(p -> !java.nio.file.Files.isDirectory(p))   // not a directory
+                .map(p -> p.toString().toLowerCase())               // convert path to string
+                .filter(f -> f.endsWith(pcExtension))               // check end with
+                .collect(java.util.stream.Collectors.toList());     // collect all matched to a List
+    }catch (Exception e) {
+        vlResul = null;
+    }
+    return vlResul;
+}
+/**
+ * Searches for files with a given extension in a given directory and returns
+ * the name of the first file that matches the condition; it can search in subdirectories
+ * @param pcPath String Path to search
+ * @param pcExtension String Extension to find
+ * @param pbSubdir boolean flag to indicate if search in subfolders
+ * @return String Name of the first file found
+ */
+public static String findFirstFileInDir (String pcPath, String pcExtension, boolean pbSubdir) {
+    String vcResul = null;
+    List<String> vlResul = Utils.findFilesInDir(pcPath, pcExtension, pbSubdir);
+    if (vlResul!=null) {
+        if (vlResul.size()>0) {
+            vcResul = vlResul.get(0);
+        }
+    }    
+    return vcResul;
+}
+/**
+ * Delete a file it exists
+ * @param pcFile String Path+name of the file
+ * @return boolean Flag indicating the result
+ */
+public static boolean deleteFile (String pcFile) {
+    boolean vbResul = false;
+    try {
+        vbResul = java.nio.file.Files.deleteIfExists(java.nio.file.Paths.get(pcFile));
+    }catch(Exception e) {
+        vbResul = false;
     }
     return vbResul;
 }

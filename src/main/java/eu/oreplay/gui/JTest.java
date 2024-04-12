@@ -6,6 +6,7 @@ package eu.oreplay.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import eu.oreplay.controller.EventController;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.converter.ConverterCsvOEToModel;
 import eu.oreplay.logic.converter.ConverterIofToModel;
@@ -29,7 +30,8 @@ import org.apache.commons.io.input.BOMInputStream;
  */
 public class JTest extends javax.swing.JDialog {
     private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
-    ConverterToModel oConv = null;
+    private ConverterToModel oConv = null;
+    private String cPath = "." + java.io.File.separator;
     
     /**
      * Creates new form JAbout
@@ -51,6 +53,8 @@ public class JTest extends javax.swing.JDialog {
                 poParam.getoPos().getnPosY(), 
                 poParam.getoPos().getnSizeX(),
                 poParam.getoPos().getnSizeY());
+            if (Utils.folderExists(poParam.getcPath()))                
+                cPath = poParam.getcPath();
         }catch (Exception e) {
             JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
@@ -90,6 +94,7 @@ public class JTest extends javax.swing.JDialog {
         pnlButtons = new javax.swing.JPanel();
         btnAccept = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        btnProcess = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -103,10 +108,7 @@ public class JTest extends javax.swing.JDialog {
         pnlSource.setBackground(new java.awt.Color(255, 255, 255));
 
         lblSrcFile.setBackground(new java.awt.Color(255, 255, 255));
-        lblSrcFile.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblSrcFile.setText(resMessages.getString("src_file"));
-
-        txtSrcFile.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
 
         btnSrcFile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_browse.png"))); // NOI18N
         btnSrcFile.setText(resMessages.getString("browse"));
@@ -117,10 +119,7 @@ public class JTest extends javax.swing.JDialog {
         });
 
         lblDstFile.setBackground(new java.awt.Color(255, 255, 255));
-        lblDstFile.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblDstFile.setText(resMessages.getString("dst_file"));
-
-        txtDstFile.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
 
         btnDstFile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_browse.png"))); // NOI18N
         btnDstFile.setText(resMessages.getString("browse"));
@@ -156,10 +155,9 @@ public class JTest extends javax.swing.JDialog {
             .addGroup(pnlSourceLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSourceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlSourceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtSrcFile, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                        .addComponent(btnSrcFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(lblSrcFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnSrcFile, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSrcFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtSrcFile))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlSourceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnDstFile, javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,54 +169,60 @@ public class JTest extends javax.swing.JDialog {
         pnlInfo.setBackground(new java.awt.Color(255, 255, 255));
 
         lblExtension.setBackground(new java.awt.Color(255, 255, 255));
-        lblExtension.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblExtension.setText(resMessages.getString("extension"));
-        lblExtension.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblExtension.setMaximumSize(new java.awt.Dimension(70, 25));
+        lblExtension.setMinimumSize(new java.awt.Dimension(70, 25));
+        lblExtension.setPreferredSize(new java.awt.Dimension(70, 25));
 
         chkExists.setBackground(new java.awt.Color(255, 255, 255));
-        chkExists.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         chkExists.setText(resMessages.getString("exists"));
 
         chkUtf.setBackground(new java.awt.Color(255, 255, 255));
-        chkUtf.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         chkUtf.setText(resMessages.getString("utf"));
 
         chkKnown.setBackground(new java.awt.Color(255, 255, 255));
-        chkKnown.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         chkKnown.setText(resMessages.getString("known_data"));
 
-        txtExtension.setFont(new java.awt.Font("Gabriola", 0, 14)); // NOI18N
+        txtExtension.setMinimumSize(new java.awt.Dimension(64, 25));
+        txtExtension.setPreferredSize(new java.awt.Dimension(64, 25));
 
         lblContents.setBackground(new java.awt.Color(255, 255, 255));
-        lblContents.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblContents.setText(resMessages.getString("contents"));
-        lblContents.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblContents.setMaximumSize(new java.awt.Dimension(70, 25));
+        lblContents.setMinimumSize(new java.awt.Dimension(70, 25));
+        lblContents.setPreferredSize(new java.awt.Dimension(70, 25));
 
-        txtContents.setFont(new java.awt.Font("Gabriola", 0, 14)); // NOI18N
+        txtContents.setMinimumSize(new java.awt.Dimension(64, 25));
+        txtContents.setPreferredSize(new java.awt.Dimension(64, 25));
 
         lblSource.setBackground(new java.awt.Color(255, 255, 255));
-        lblSource.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblSource.setText(resMessages.getString("source"));
-        lblSource.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblSource.setMaximumSize(new java.awt.Dimension(70, 25));
+        lblSource.setMinimumSize(new java.awt.Dimension(70, 25));
+        lblSource.setPreferredSize(new java.awt.Dimension(70, 25));
 
-        txtSource.setFont(new java.awt.Font("Gabriola", 0, 14)); // NOI18N
+        txtSource.setMinimumSize(new java.awt.Dimension(64, 25));
+        txtSource.setPreferredSize(new java.awt.Dimension(64, 25));
 
         lblIof.setBackground(new java.awt.Color(255, 255, 255));
-        lblIof.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblIof.setText(resMessages.getString("iof_version"));
-        lblIof.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblIof.setMaximumSize(new java.awt.Dimension(70, 25));
+        lblIof.setMinimumSize(new java.awt.Dimension(70, 25));
+        lblIof.setPreferredSize(new java.awt.Dimension(70, 25));
 
-        txtIof.setFont(new java.awt.Font("Gabriola", 0, 14)); // NOI18N
+        txtIof.setMinimumSize(new java.awt.Dimension(64, 25));
+        txtIof.setPreferredSize(new java.awt.Dimension(64, 25));
 
         lblResults.setBackground(new java.awt.Color(255, 255, 255));
-        lblResults.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblResults.setText(resMessages.getString("results_type"));
-        lblResults.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        lblResults.setMaximumSize(new java.awt.Dimension(70, 25));
+        lblResults.setMinimumSize(new java.awt.Dimension(70, 25));
+        lblResults.setPreferredSize(new java.awt.Dimension(70, 25));
 
-        txtResults.setFont(new java.awt.Font("Gabriola", 0, 14)); // NOI18N
+        txtResults.setMinimumSize(new java.awt.Dimension(64, 25));
+        txtResults.setPreferredSize(new java.awt.Dimension(64, 25));
 
         lblStatus.setBackground(new java.awt.Color(255, 255, 255));
-        lblStatus.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
 
         javax.swing.GroupLayout pnlInfoLayout = new javax.swing.GroupLayout(pnlInfo);
         pnlInfo.setLayout(pnlInfoLayout);
@@ -270,32 +274,27 @@ public class JTest extends javax.swing.JDialog {
                     .addComponent(chkKnown))
                 .addGap(21, 21, 21)
                 .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblIof, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtIof, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblExtension, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtExtension, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txtIof, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtExtension, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblExtension, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblIof, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblResults, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtResults, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblContents, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtContents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txtResults, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblContents, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtContents, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblResults, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSource, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblSource, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSource, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pnlButtons.setBackground(new java.awt.Color(255, 255, 255));
 
-        btnAccept.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         btnAccept.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_yes.png"))); // NOI18N
         btnAccept.setText(resMessages.getString("accept"));
         btnAccept.addActionListener(new java.awt.event.ActionListener() {
@@ -304,12 +303,19 @@ public class JTest extends javax.swing.JDialog {
             }
         });
 
-        btnCancel.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         btnCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_no.png"))); // NOI18N
         btnCancel.setText(resMessages.getString("cancel"));
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelActionPerformed(evt);
+            }
+        });
+
+        btnProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_gear.png"))); // NOI18N
+        btnProcess.setText(resMessages.getString("process"));
+        btnProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcessActionPerformed(evt);
             }
         });
 
@@ -322,14 +328,18 @@ public class JTest extends javax.swing.JDialog {
                 .addComponent(btnAccept)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCancel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnProcess)
+                .addContainerGap())
         );
         pnlButtonsLayout.setVerticalGroup(
             pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlButtonsLayout.createSequentialGroup()
                 .addContainerGap(24, Short.MAX_VALUE)
                 .addGroup(pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlButtonsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnProcess, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btnAccept, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -363,7 +373,8 @@ public class JTest extends javax.swing.JDialog {
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
         // TODO add your handling code here:
-        this.processFile();
+        this.saveFormParameters();
+        this.dispose();
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -383,20 +394,13 @@ public class JTest extends javax.swing.JDialog {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        try {
-            //Read the parameters to store
-            FormsParameters voPadre = new FormsParameters();
-            FormsParameters.ParJTest voParam = voPadre.new ParJTest();
-            voParam.getoPos().setnPosX(this.getX());
-            voParam.getoPos().setnPosY(this.getY());
-            voParam.getoPos().setnSizeX(this.getWidth());
-            voParam.getoPos().setnSizeY(this.getHeight());
-            //Calls the method in the main form to receive and to store the parameters
-            JClientMain.updateFormsParameters("JTest", voParam);
-        } catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
-        }                
+        this.saveFormParameters();
     }//GEN-LAST:event_formWindowClosing
+
+    private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
+        // TODO add your handling code here:
+        this.processFile();
+    }//GEN-LAST:event_btnProcessActionPerformed
 
     /**
      * @param args the command line arguments
@@ -445,6 +449,7 @@ public class JTest extends javax.swing.JDialog {
     private javax.swing.JButton btnAccept;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnDstFile;
+    private javax.swing.JButton btnProcess;
     private javax.swing.JButton btnSrcFile;
     private javax.swing.JCheckBox chkExists;
     private javax.swing.JCheckBox chkKnown;
@@ -496,15 +501,32 @@ public class JTest extends javax.swing.JDialog {
         txtSource.setEditable(pbFlag);
         txtIof.setEditable(pbFlag);
     }
+    public void saveFormParameters() {
+        try {
+            //Read the parameters to store
+            FormsParameters voParent = new FormsParameters();
+            FormsParameters.ParJTest voParam = voParent.new ParJTest();
+            voParam.getoPos().setnPosX(this.getX());
+            voParam.getoPos().setnPosY(this.getY());
+            voParam.getoPos().setnSizeX(this.getWidth());
+            voParam.getoPos().setnSizeY(this.getHeight());
+            voParam.setcPath(cPath);
+            //Calls the method in the main form to receive and to store the parameters
+            JClientMain.updateFormsParameters("JTest", voParam);
+        } catch(Exception e) {
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+        }                
+    }
     /**
      * When the user clics the button, it allows to select a source file for reading
      */
     public void selectFileForReading() {
         try {
-            String vcFile = JUtils.selectFile(this, ".", 
+            String vcFile = JUtils.selectFile(this, cPath, 
                     new String[] {"csv", "xml", "htm", "html"}, ".csv, .xml, .htm, .html", true);
             if (vcFile!=null) {
                 txtSrcFile.setText(vcFile);
+                cPath = JUtils.getcCurDir();
             } else {
                 txtSrcFile.setText("");
             }
@@ -521,12 +543,13 @@ public class JTest extends javax.swing.JDialog {
      */
     public void selectFileForWriting() {
         try {
-            String vcFile = JUtils.selectFile(this, ".", 
+            String vcFile = JUtils.selectFile(this, cPath, 
                     new String[] {"json"}, ".json", false);
             if (vcFile!=null) {
                 if (!vcFile.toLowerCase().endsWith(".json"))
                     vcFile = vcFile + ".json";
                 txtDstFile.setText(vcFile);
+                cPath = JUtils.getcCurDir();
             } else {
                 txtDstFile.setText("");
             }
@@ -544,14 +567,8 @@ public class JTest extends javax.swing.JDialog {
         //And sets the editability
         this.setMetadataEditable(false);
         //Opens and tries to parse the source file
-        File voFile = new File(pcFile);
-        oConv = new ConverterIofToModel();
-        oConv.inspectFile(voFile);
-        if (oConv.getcExtension().equals(ConverterToModel.EXT_CSV)) {
-            oConv = new ConverterCsvOEToModel(oConv);
-        } else if (oConv.getcExtension().equals(ConverterToModel.EXT_XML)) {
-            oConv = new ConverterIofToModel(oConv);
-        }
+        OReplayDataTransfer voTransf = new OReplayDataTransfer();
+        oConv = voTransf.preProcessFile(pcFile);
         //Show the results
         chkExists.setSelected(oConv.isbExists());
         chkKnown.setSelected(oConv.isbKnownData());
@@ -576,65 +593,24 @@ public class JTest extends javax.swing.JDialog {
         try {
             //If a source file has been inspected and a destination file has value, process it
             if (oConv!=null && !txtDstFile.getText().equals("")) {
-                if (oConv.isbExists()) {
-                    //If XML, obtain ResultList or StartList
-                    if (oConv.getcExtension().equals(ConverterToModel.EXT_XML) && 
-                            oConv.getcIofVersion().equals(ConverterToModel.IOF_VERSION_3)) {
-                        //Creates a dummy event with one stage
-                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage();
-                        //Set the specific properties for CSV
-                        ((ConverterIofToModel)oConv).setSpecificProperties(voSrcEve);
-                        if (oConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
-                            //Parses the contents
-                            voEve = oConv.convertResultListSingleStageClassic(oConv.getcFile());
-                        } else if (oConv.getcContents().equals(ConverterToModel.CONTENTS_START)) {
-                            //Parses the contents
-                            voEve = oConv.convertStartListSingleStageClassic(oConv.getcFile());
-                        } else {
-                            lblStatus.setText(resMessages.getString("info_not_supported"));
-                        }
-                    //If CSV, parse contents
-                    } else if (oConv.getcExtension().equals(ConverterToModel.EXT_CSV)) {
-                        if (oConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
-                            //Not supported this conversion yet
-                            lblStatus.setText(resMessages.getString("info_not_supported"));
-                        } else if (oConv.getcContents().equals(ConverterToModel.CONTENTS_START)) {
-                            //Gets an encoding for the text file depending on the UTF mark
-                            String vcEncoding = (oConv.isbUtf()?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1);
-                            //Creates a dummy event with one stage
-                            eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage();
-                            //Set the specific properties for CSV
-                            ((ConverterCsvOEToModel)oConv).setSpecificProperties(";", vcEncoding, voSrcEve);
-                            //Parses the contents
-                            voEve = oConv.convertStartListSingleStageClassic(oConv.getcFile());
-                        } else {
-                            lblStatus.setText(resMessages.getString("info_not_supported"));
-                        }
-                    } else {
-                        lblStatus.setText(resMessages.getString("info_not_supported"));
-                    }
-                    //Creates the output in JSON by merging metadata and event
-                    if (voEve!=null) {
-                        //---- Final steps, write the output ---
-                        //Object to group configuration and event
-                        OReplayDataTransfer voData = new OReplayDataTransfer(oConv, voEve);
-                        //JSON file with Jackson
-                        ObjectMapper voMapper = new ObjectMapper();
-                        voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-                        String vcJson = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
-                        BufferedWriter voWriter = new BufferedWriter(new FileWriter(txtDstFile.getText()));
-                        voWriter.write(vcJson);
-                        voWriter.close();
-                        //Write a text in the status label
-                        lblStatus.setText(resMessages.getString("info_process_finished"));
-                    } else {
-                        lblStatus.setText(resMessages.getString("info_nothing_to_do"));
-                    }
+                OReplayDataTransfer voTransf = new OReplayDataTransfer();
+                String vcJson = voTransf.processFile(oConv);
+                if (!vcJson.toLowerCase().startsWith("error")) {
+                    BufferedWriter voWriter = new BufferedWriter(new FileWriter(txtDstFile.getText()));
+                    voWriter.write(vcJson);
+                    voWriter.close();
+                    //Write a text in the status label
+                    lblStatus.setText(resMessages.getString("info_process_finished"));
                 } else {
-                    lblStatus.setText(resMessages.getString("info_nothing_to_do"));
+                    if (!vcJson.toLowerCase().startsWith("error_exception")) {
+                        lblStatus.setText(resMessages.getString(vcJson));
+                    } else {
+                        lblStatus.setText(resMessages.getString("error_exception"));
+                        JClientMain.getoLog().error(vcJson);
+                    }
                 }
             } else {
-                lblStatus.setText(resMessages.getString("info_nothing_to_do"));
+                lblStatus.setText(resMessages.getString("error_nothing_to_do"));
             }
         } catch(Exception e) {
             JClientMain.getoLog().error(resMessages.getString("error_exception"), e);

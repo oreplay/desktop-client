@@ -88,26 +88,24 @@ public class JAbout extends javax.swing.JDialog {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        lblVersion.setFont(new java.awt.Font("Garamond", 1, 14)); // NOI18N
+        lblVersion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblVersion.setText(resMessages.getString("main"));
 
         txtDescription.setEditable(false);
         txtDescription.setBackground(new java.awt.Color(255, 255, 255));
         txtDescription.setContentType("text/html"); // NOI18N
-        txtDescription.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         txtDescription.setText(resMessages.getString("about_description") + "<BR>" + resMessages.getString("about_github"));
         jScrollPane1.setViewportView(txtDescription);
 
         lblDevelopment.setBackground(new java.awt.Color(255, 255, 255));
-        lblDevelopment.setFont(new java.awt.Font("Garamond", 1, 14)); // NOI18N
+        lblDevelopment.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblDevelopment.setText(resMessages.getString("about_development"));
 
         lblDevelopersTitle.setBackground(new java.awt.Color(255, 255, 255));
-        lblDevelopersTitle.setFont(new java.awt.Font("Garamond", 1, 12)); // NOI18N
+        lblDevelopersTitle.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblDevelopersTitle.setText(resMessages.getString("about_developers_title"));
 
         lblDevelopersList.setBackground(new java.awt.Color(255, 255, 255));
-        lblDevelopersList.setFont(new java.awt.Font("Garamond", 0, 12)); // NOI18N
         lblDevelopersList.setText(resMessages.getString("about_developers_list"));
         lblDevelopersList.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
@@ -169,8 +167,8 @@ public class JAbout extends javax.swing.JDialog {
         // TODO add your handling code here:
         try {
             //Read the parameters to store
-            FormsParameters voPadre = new FormsParameters();
-            FormsParameters.ParJAbout voParam = voPadre.new ParJAbout();
+            FormsParameters voParent = new FormsParameters();
+            FormsParameters.ParJAbout voParam = voParent.new ParJAbout();
             voParam.getoPos().setnPosX(this.getX());
             voParam.getoPos().setnPosY(this.getY());
             voParam.getoPos().setnSizeX(this.getWidth());

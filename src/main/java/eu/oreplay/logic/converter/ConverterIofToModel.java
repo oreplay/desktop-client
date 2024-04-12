@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.xml.bind.JAXBContext;
 import org.apache.commons.io.input.BOMInputStream;
 
@@ -47,12 +48,15 @@ public class ConverterIofToModel extends ConverterToModel {
     }
 
     @Override
-    public eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile) {
+    public eu.oreplay.db.Event convertStartList (String pcFile) {
         File voFile = new File(pcFile);
-        return convertStartListSingleStageClassic (voFile);
+        eu.oreplay.db.Event voResul = convertStartList (voFile);
+        voFile = null;
+        return voResul;
     }
     @Override
-    public eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile) {
+    public eu.oreplay.db.Event convertStartList (File poFile) {
+        eu.oreplay.db.Event voEve = null;
         eu.oreplay.logic.iof.StartList voStart = null;
         JAXBContext voContext = null;
         InputStream voIs = null;
@@ -64,9 +68,16 @@ public class ConverterIofToModel extends ConverterToModel {
             voContext = JAXBContext.newInstance(StartList.class);
             voStart = (StartList) voContext.createUnmarshaller()
                     .unmarshal(voIs);
-        }catch(Exception e) {            
+            voIs.close();
+            if (getcSource().equals(ConverterToModel.SRC_OE2010) ||
+                    getcSource().equals(ConverterToModel.SRC_OEV12) ||
+                    getcSource().equals(ConverterToModel.SRC_GENERICXML)) {
+                voEve = convertStartListSingleStageClassic (voStart);
+            }
+        }catch(Exception e) { 
+            voEve = null;
         }
-        return convertStartListSingleStageClassic(voStart);
+        return voEve;
     }
     /**
      * Given a representation of IOF XML for start list, this method creates a 
@@ -207,12 +218,15 @@ public class ConverterIofToModel extends ConverterToModel {
     }
 
     @Override
-    public eu.oreplay.db.Event convertResultListSingleStageClassic (String pcFile) {
+    public eu.oreplay.db.Event convertResultList (String pcFile) {
         File voFile = new File(pcFile);
-        return convertResultListSingleStageClassic (voFile);
+        eu.oreplay.db.Event voResul = convertResultList (voFile);
+        voFile = null;
+        return voResul;
     }
     @Override
-    public eu.oreplay.db.Event convertResultListSingleStageClassic (File poFile) {
+    public eu.oreplay.db.Event convertResultList (File poFile) {
+        eu.oreplay.db.Event voEve = null;
         eu.oreplay.logic.iof.ResultList voResult = null;
         JAXBContext voContext = null;
         InputStream voIs = null;
@@ -224,9 +238,16 @@ public class ConverterIofToModel extends ConverterToModel {
             voContext = JAXBContext.newInstance(StartList.class);
             voResult = (ResultList) voContext.createUnmarshaller()
                     .unmarshal(voIs);
+            voIs.close();
+            if (getcSource().equals(ConverterToModel.SRC_OE2010) ||
+                    getcSource().equals(ConverterToModel.SRC_OEV12) ||
+                    getcSource().equals(ConverterToModel.SRC_GENERICXML)) {
+                voEve = convertResultListSingleStageClassic (voResult);
+            }
         }catch(Exception e) {            
+            voEve = null;
         }
-        return convertResultListSingleStageClassic(voResult);
+        return voEve;
     }
     /**
      * Given a representation of IOF XML for result list, this method creates a 
@@ -237,8 +258,14 @@ public class ConverterIofToModel extends ConverterToModel {
      */
     public eu.oreplay.db.Event convertResultListSingleStageClassic (eu.oreplay.logic.iof.ResultList poResult) {
         eu.oreplay.db.Event voEve = null;
+        ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<eu.oreplay.db.Control>();
+        HashMap<String, String> vlStations = new HashMap<String, String>();
         String vcUuidEve = "";
         String vcUuidSta = "";
+        boolean vbRadio = false;
+        //Flag to say whether the results include radiocontrols
+        if (getcResultsType().equals(ConverterToModel.RES_RADIO))
+            vbRadio = true;
         if (oEve!=null) {
             vcUuidEve = oEve.getId();
             vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
@@ -270,6 +297,9 @@ public class ConverterIofToModel extends ConverterToModel {
                 //Process each class in the ResultList
                 ArrayList<eu.oreplay.db.Clazz> vlCla = new ArrayList<eu.oreplay.db.Clazz>();
                 for (eu.oreplay.logic.iof.ClassResult voClassResult : poResult.getClassResult()) {
+                    //List to store the radiocontrols of the class
+                    ArrayList<eu.oreplay.db.ClazzControl> vlClaCon = new ArrayList<eu.oreplay.db.ClazzControl>();
+                    //Creates a class
                     eu.oreplay.db.Clazz voCla = new eu.oreplay.db.Clazz();
                     voCla.setId("");
                     voCla.setUuid("");
@@ -299,6 +329,7 @@ public class ConverterIofToModel extends ConverterToModel {
                         if (voClassResult.getPersonResult()!=null) {
                             //Process each runner of the class
                             ArrayList<eu.oreplay.db.Runner> vlRun = new ArrayList<eu.oreplay.db.Runner>();
+                            int vnContRun = 0;
                             for (eu.oreplay.logic.iof.PersonResult voPersonResult : voClassResult.getPersonResult()) {
                                 eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
                                 voRun.setId("");
@@ -373,6 +404,21 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voSpl.setStageOrder(voSta.getOrderNumber());
                                                         //Add the object to the list
                                                         vlSpl.add(voSpl);
+                                                        //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
+                                                        if (vbRadio) {
+                                                            eu.oreplay.db.Control voCon = new eu.oreplay.db.Control();
+                                                            voCon.setStation(voSplitTime.getControlCode());
+                                                            if (!vlStations.containsKey(voSplitTime.getControlCode())) {
+                                                                vlStations.put(voSplitTime.getControlCode(), voSplitTime.getControlCode());
+                                                                vlCon.add(voCon);
+                                                            }
+                                                            //If it's the first runner of the class, add the control to the list of controls of the class
+                                                            if (vnContRun==0) {
+                                                                eu.oreplay.db.ClazzControl voClaCon = new eu.oreplay.db.ClazzControl();
+                                                                voClaCon.setControl(voCon);
+                                                                vlClaCon.add(voClaCon);
+                                                            }
+                                                        }
                                                         //Increase the counter of the split order
                                                         vnSplOrder++;
                                                     }
@@ -401,9 +447,15 @@ public class ConverterIofToModel extends ConverterToModel {
                                 }
                                 //Add the runner to the list of runners
                                 vlRun.add(voRun);
+                                //Increase the counter of runners
+                                vnContRun++;
                             }
                             //Set the list of runners to the class
                             voCla.setRunnerList(vlRun);
+                        }
+                        //If it's a result with radiocontrols, add the list of class-controls to the class
+                        if (vbRadio && !vlClaCon.isEmpty()) {
+                            voCla.setClazzControlList(vlClaCon);
                         }
                     }
                     //Add the class to the list of classes
@@ -411,6 +463,10 @@ public class ConverterIofToModel extends ConverterToModel {
                 }
                 //Set the list of classes to the stage
                 voSta.setClazzList(vlCla);
+                //If it's a result with radiocontrols, add the list of controls to the stage
+                if (vbRadio && !vlCon.isEmpty()) {
+                    voSta.setControlList(vlCon);
+                }
             }
             //Add the stage to the event
             ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<eu.oreplay.db.Stage>();

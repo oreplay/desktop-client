@@ -74,6 +74,7 @@ public abstract class ConverterToModel {
         if (!cFile.equals("")) {
             File voFile = new File(cFile);
             bExists = voFile.exists();
+            voFile = null;
         }
         return bExists;
     }
@@ -200,6 +201,7 @@ public abstract class ConverterToModel {
     public void inspectFile (String pcFile) {
         File voFile = new File(pcFile);
         inspectFile (voFile);
+        voFile = null;
     }
     /**
      * Makes some initial inspection to get the kind of contents of the file;
@@ -410,6 +412,7 @@ public abstract class ConverterToModel {
                     vbResul = true;
                 }
             }
+            voIs.close();
         } catch (Exception e) {
             vbResul = false;
         }
@@ -455,14 +458,15 @@ public abstract class ConverterToModel {
                 }               
                 vbResul = true;
             }
+            voIs.close();
         } catch (Exception e) {
             vbResul = false;
         }
         return vbResul;
     }
 
-    public abstract eu.oreplay.db.Event convertStartListSingleStageClassic (String pcFile);
-    public abstract eu.oreplay.db.Event convertStartListSingleStageClassic (File poFile);
-    public abstract eu.oreplay.db.Event convertResultListSingleStageClassic (String pcFile);
-    public abstract eu.oreplay.db.Event convertResultListSingleStageClassic (File poFile);
+    public abstract eu.oreplay.db.Event convertStartList (String pcFile);
+    public abstract eu.oreplay.db.Event convertStartList (File poFile);
+    public abstract eu.oreplay.db.Event convertResultList (String pcFile);
+    public abstract eu.oreplay.db.Event convertResultList (File poFile);
 }
