@@ -9,6 +9,7 @@ import eu.oreplay.controller.EventController;
 import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.connection.BasicStrings;
+import eu.oreplay.logic.connection.UploadResponse;
 import eu.oreplay.logic.converter.OReplayDataTransfer;
 import eu.oreplay.utils.JUtils;
 import eu.oreplay.utils.Utils;
@@ -391,7 +392,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 //Sets the request to the current server
                                 HttpRequest voReq = HttpRequest.newBuilder()
                                     .POST(HttpRequest.BodyPublishers.ofString(vcJson))
-                                    .uri(new URI("http://" + oStatus.getcServer() + 
+                                    .uri(new URI("https://" + oStatus.getcServer() + 
                                             "/api/v1/events/" + oStatus.getcEveId() + "/uploads"))
                                     .header("Authorization", "Bearer " + oStatus.getcToken())
                                     .header("Content-Type", "application/json")
@@ -406,15 +407,19 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                         String vcContents = voResp.body();
                                         //JSON file with Jackson
                                         ObjectMapper voMapper = new ObjectMapper();
-                                        BasicStrings voData = voMapper.readValue(vcContents, BasicStrings.class);
-                                        //If there are data, the first element is the size in bytes of the json previously sent
+                                        UploadResponse voData = voMapper.readValue(vcContents, UploadResponse.class);
+                                        //If there are data, get the human readable strings
                                         if (voData!=null) {
-                                            if (voData.getlData()!=null) {
-                                                if (voData.getlData().size()>0) {
-                                                    String vcData = voData.getlData().get(0);
-                                                    //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                                                    publish(vcData + " " + resMessages.getString("bytes_sent") + "\n");
-                                                    vbFound = true;
+                                            if (voData.getoMeta()!=null) {
+                                                if (voData.getoMeta().getlHuman()!=null) {
+                                                    if (voData.getoMeta().getlHuman().size()>0) {
+                                                        for (int i=0; i<voData.getoMeta().getlHuman().size(); i++) {
+                                                            String vcData = voData.getoMeta().getlHuman().get(i);
+                                                            //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                                            publish(vcData + "\n");
+                                                        }
+                                                        vbFound = true;
+                                                    }
                                                 }
                                             }
                                         }
@@ -450,9 +455,13 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             // Method called when using "publish" in the doInBackground, to refresh the GUI with new data
             @Override protected void process(java.util.List plChunks) 
             { 
-                String vcValue = (String)plChunks.get(plChunks.size() - 1); 
-                txtStatus.insert(vcValue, 0);
-                txtStatus.setCaretPosition(0);
+                if (plChunks!=null) {
+                    for (int i=0; i<plChunks.size(); i++) {
+                        String vcValue = (String)plChunks.get(i); 
+                        txtStatus.insert(vcValue, 0);
+                        txtStatus.setCaretPosition(0);
+                    }
+                }
             }   
             // Method called when doInBackground finishes
             @Override protected void done() 

@@ -214,7 +214,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                                 //Sets the request to the current server
                                 HttpRequest voReq = HttpRequest.newBuilder()
                                     .GET()
-                                    .uri(new URI("http://" + vcServer + "/api/v1/ping/pong"))
+                                    .uri(new URI("https://" + vcServer + "/api/v1/ping/pong"))
                                     .build();
                                 //Sends the request an gets the response
                                 HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());

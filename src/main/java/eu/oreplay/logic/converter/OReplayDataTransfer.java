@@ -174,16 +174,16 @@ public class OReplayDataTransfer {
                         }
                     //If CSV, parse contents
                     } else if (poConv.getcExtension().equals(ConverterToModel.EXT_CSV)) {
+                        //Gets an encoding for the text file depending on the UTF mark
+                        String vcEncoding = (poConv.isbUtf()?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1);
+                        //Creates a dummy event with one stage
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc);
+                        //Set the specific properties for CSV
+                        ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
                         if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
-                            //Not supported this conversion yet
-                            vcResul = "error_not_supported";
+                            //Parses the contents
+                            voEve = poConv.convertResultList(poConv.getcFile());
                         } else if (poConv.getcContents().equals(ConverterToModel.CONTENTS_START)) {
-                            //Gets an encoding for the text file depending on the UTF mark
-                            String vcEncoding = (poConv.isbUtf()?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1);
-                            //Creates a dummy event with one stage
-                            eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc);
-                            //Set the specific properties for CSV
-                            ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
                             //Parses the contents
                             voEve = poConv.convertStartList(poConv.getcFile());
                         } else {

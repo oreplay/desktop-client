@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.oreplay.logic.converter.IsoTimestampSerializer;
+import java.math.BigDecimal;
 
 /**
  *
@@ -74,6 +75,9 @@ public class Split implements Serializable {
     private Date readingTime;
     @Column(name = "reading_milli")
     private BigInteger readingMilli;
+    @Column(name = "time_seconds")
+    private BigDecimal timeSeconds;
+    private Integer position;
     private Integer points;
     @Column(name = "bib_runner")
     private String bibRunner;
@@ -191,6 +195,23 @@ public class Split implements Serializable {
 
     public void setReadingMilli(BigInteger readingMilli) {
         this.readingMilli = readingMilli;
+    }
+
+    @JsonProperty("time_seconds")
+    public BigDecimal getTimeSeconds() {
+        return timeSeconds;
+    }
+
+    public void setTimeSeconds(BigDecimal timeSeconds) {
+        this.timeSeconds = timeSeconds;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public Integer getPoints() {

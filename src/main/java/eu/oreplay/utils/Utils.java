@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -458,23 +460,39 @@ public static double formatStringAsDistanceInMeters (String pcValue) {
     return vnResul;
 }
 /**
- * Giving a String that contains a valid time HH:mm:ss,
+ * Giving a String that contains a valid time HH:mm:ss or HH:mm:ss.sss,
  * it returns a value in seconds
- * @param pcValue String. Time in HH:mm:ss
- * @return long. Value in seconds
+ * @param pcSrc String. Time in HH:mm:ss or HH:mm:ss.sss
+ * @return double. Value in seconds
  */
-public static long formatTimeInSeconds (String pcValue) {
-    long vnResul = 0;
+public static double formatTimeInSeconds (String pcSrc) {
+    double vnResul = 0;
+    double vnTime = 0;
+    double vnMilli = 0;
     try {
-        if (pcValue!=null) {
-            if (pcValue.length()==8) {
-                String vcHours = pcValue.substring(0, 2);
-                String vcMinutes = pcValue.substring(3, 5);
-                String vcSeconds = pcValue.substring(6, 8);
-                vnResul = (Integer.parseInt(vcHours)*3600) + 
-                            (Integer.parseInt(vcMinutes)*60) +
-                            Integer.parseInt(vcSeconds);
+        if (pcSrc!=null) {
+            //First, split hh:mm:ss and milliseconds
+            String[] vaSrc1 = pcSrc.split("\\.");
+            //Computes milliseconds
+            if (vaSrc1.length==2) {
+                vnMilli = Long.parseLong(vaSrc1[1].replaceAll("\"", "")) / 1000.0;
             }
+            //Computes main part, hh:mm:ss
+            if (vaSrc1.length>0) {
+                //Second, splits hours, minutes and seconds
+                String[] vaSrc = vaSrc1[0].split(":");
+                if (vaSrc.length==3) {
+                    vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*3600;
+                    vnTime = vnTime + Long.parseLong(vaSrc[1].replaceAll("\"", ""))*60;
+                    vnTime = vnTime + Long.parseLong(vaSrc[2].replaceAll("\"", ""));
+                } else if (vaSrc.length==2) {
+                    vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*60;
+                    vnTime = vnTime + Long.parseLong(vaSrc[1].replaceAll("\"", ""));
+                } else if (vaSrc.length==1) {
+                    vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""));
+                }
+            }
+            vnResul = vnTime + vnMilli;
         }
     } catch (Exception e) {}
     return vnResul;
@@ -591,16 +609,26 @@ public static Date formatRelativeTimeFromBase (String pcSrc, Date poBaseDateTime
         long vnBase = poBaseDateTime.getTime();
         if (!pcSrc.equals("")) {
             //Converts time to milliseconds
-            String[] vaSrc = pcSrc.split(":");
-            if (vaSrc.length==3) {
-                vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*3600000;
-                vnTime = vnTime + Long.parseLong(vaSrc[1].replaceAll("\"", ""))*60000;
-                vnTime = vnTime + Long.parseLong(vaSrc[2].replaceAll("\"", ""))*1000;
-            } else if (vaSrc.length==2) {
-                vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*60000;
-                vnTime = vnTime + Long.parseLong(vaSrc[1].replaceAll("\"", ""))*1000;
-            } else if (vaSrc.length==1) {
-                vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*1000;
+            //First, split hh:mm:ss and milliseconds
+            String[] vaSrc1 = pcSrc.split("\\.");
+            //Computes milliseconds
+            if (vaSrc1.length==2) {
+                vnTime = vnTime + Long.parseLong(vaSrc1[1].replaceAll("\"", ""));
+            }
+            //Computes main part, hh:mm:ss
+            if (vaSrc1.length>0) {
+                //Second, splits hours, minutes and seconds
+                String[] vaSrc = vaSrc1[0].split(":");
+                if (vaSrc.length==3) {
+                    vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*3600000;
+                    vnTime = vnTime + Long.parseLong(vaSrc[1].replaceAll("\"", ""))*60000;
+                    vnTime = vnTime + Long.parseLong(vaSrc[2].replaceAll("\"", ""))*1000;
+                } else if (vaSrc.length==2) {
+                    vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*60000;
+                    vnTime = vnTime + Long.parseLong(vaSrc[1].replaceAll("\"", ""))*1000;
+                } else if (vaSrc.length==1) {
+                    vnTime = vnTime + Long.parseLong(vaSrc[0].replaceAll("\"", ""))*1000;
+                }
             }
             long vnResul = vnBase + vnTime;
             vdResul = new Date(vnResul);
@@ -863,6 +891,14 @@ public static boolean deleteFile (String pcFile) {
         vbResul = false;
     }
     return vbResul;
+}
+/**
+ * Returns true if a BigDecimal value has no decimals
+ * @param pnValue BigDecimal Value to check
+ * @return boolean Flag that indicates if it has no decimals
+ */
+public static boolean isWhole(BigDecimal pnValue) {
+    return pnValue.setScale(0, RoundingMode.HALF_UP).compareTo(pnValue) == 0;
 }
 
 }
