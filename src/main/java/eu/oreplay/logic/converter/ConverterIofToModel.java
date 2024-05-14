@@ -12,7 +12,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import javax.xml.bind.JAXBContext;
 import org.apache.commons.io.input.BOMInputStream;
@@ -389,13 +391,19 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         //Get the time, but only if the status is not missing
                                                         if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
                                                             try {
-                                                                Double vnTime = Math.floor(voSplitTime.getTime()*1000);
-                                                                voSpl.setReadingMilli(java.math.BigInteger.valueOf(vnTime.intValue()));
+                                                                Date vdSplitTime = new Date((long)voRes.getStartTime().getTime() + (long)(voSplitTime.getTime() * 1000.0));
+                                                                voSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
+                                                                voSpl.setReadingTime(vdSplitTime);
+                                                                BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
+                                                                //If it has no decimals, stores only the integer part
+                                                                voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
                                                             }catch (Exception eMilli) {
                                                                 voSpl.setReadingMilli(null);
+                                                                voSpl.setTimeSeconds(null);
                                                             }
                                                         } else {
                                                             voSpl.setReadingMilli(null);
+                                                            voSpl.setTimeSeconds(null);
                                                         }
                                                         voSpl.setBibRunner(voRun.getBibNumber());
                                                         voSpl.setOrderNumber(vnSplOrder);

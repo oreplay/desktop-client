@@ -309,7 +309,6 @@ public class FormsParameters {
             this.oPos = oPos;
             lServers.add("127.0.0.1");
             lServers.add("www.oreplay.es");
-            lServers.add("jaruori.es");
         }
         /**
          * Constructor with parameters

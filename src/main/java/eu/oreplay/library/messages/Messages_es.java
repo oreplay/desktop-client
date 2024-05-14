@@ -16,7 +16,7 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.2.0"},
+        {"main", "OReplay. Cliente de Escritorio 0.2.1"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
