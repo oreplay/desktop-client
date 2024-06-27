@@ -392,7 +392,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 //Sets the request to the current server
                                 HttpRequest voReq = HttpRequest.newBuilder()
                                     .POST(HttpRequest.BodyPublishers.ofString(vcJson))
-                                    .uri(new URI("https://" + oStatus.getcServer() + 
+                                    .uri(new URI(oStatus.getcServer() + 
                                             "/api/v1/events/" + oStatus.getcEveId() + "/uploads"))
                                     .header("Authorization", "Bearer " + oStatus.getcToken())
                                     .header("Content-Type", "application/json")

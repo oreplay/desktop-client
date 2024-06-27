@@ -206,6 +206,11 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                     while (i<lServers.size() && !vbFound) {
                         vcServer = lServers.get(i);
                         if (!vcServer.equals("")) {
+                            //If it's only a server name without protocol, adds https at the beguining
+                            if (!vcServer.toLowerCase().startsWith("http://") && 
+                                    !vcServer.toLowerCase().startsWith("https://")) {
+                                vcServer = "https://" + vcServer;
+                            }
                             try {
                                 //Gets an HTTP Client to make a request
                                 HttpClient voClient = HttpClient.newBuilder()
@@ -214,7 +219,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                                 //Sets the request to the current server
                                 HttpRequest voReq = HttpRequest.newBuilder()
                                     .GET()
-                                    .uri(new URI("https://" + vcServer + "/api/v1/ping/pong"))
+                                    .uri(new URI(vcServer + "/api/v1/ping/pong"))
                                     .build();
                                 //Sends the request an gets the response
                                 HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());

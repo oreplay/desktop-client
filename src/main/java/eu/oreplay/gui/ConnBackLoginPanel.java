@@ -325,7 +325,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             //Sets the request to the current server
             HttpRequest voReq = HttpRequest.newBuilder()
                 .GET()
-                .uri(new URI("https://" + oStatus.getcServer() + "/api/v1/events/" + txtEveId.getText()))
+                .uri(new URI(oStatus.getcServer() + "/api/v1/events/" + txtEveId.getText()))
                 .header("Authorization", "Bearer " + txtToken.getText())
                 .build();
             //Sends the request an gets the response
