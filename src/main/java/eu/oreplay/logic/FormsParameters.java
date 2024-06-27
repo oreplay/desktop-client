@@ -307,8 +307,9 @@ public class FormsParameters {
          */
         public ParConnBackCheckPanel(ParPosition oPos) {
             this.oPos = oPos;
-            lServers.add("127.0.0.1");
-            lServers.add("www.oreplay.es");
+            lServers.add("http://127.0.0.1");
+            lServers.add("http://localhost");
+            lServers.add("https://www.oreplay.es");
         }
         /**
          * Constructor with parameters
