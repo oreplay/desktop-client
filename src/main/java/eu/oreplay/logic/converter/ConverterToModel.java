@@ -12,7 +12,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.apache.logging.log4j.*;
+
 
 /**
  * Superclass that represents various types of converters from timekeeping
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonRootName(value = "data_structure")
 @JsonInclude(Include.NON_NULL)
 public abstract class ConverterToModel {
+    Logger oLog = null;
     public static final String OTHER_VALUES = "Other";
     public static final String EXT_HTML = "HTML";
     public static final String EXT_CSV = "CSV";
@@ -56,6 +58,14 @@ public abstract class ConverterToModel {
 
     public ConverterToModel() {
         initializeValues();
+    }
+
+    @JsonIgnore
+    public Logger getoLog() {
+        return oLog;
+    }
+    public void setoLog(Logger poLog) {
+        oLog = poLog;
     }
 
     @JsonProperty("file")
@@ -182,6 +192,7 @@ public abstract class ConverterToModel {
      * @param poSrc ConverterToModel Source object
      */
     public void copyValues (ConverterToModel poSrc) {
+        oLog = poSrc.getoLog();
         cFile = poSrc.cFile;
         bExists = poSrc.isbExists();
         cExtension = poSrc.getcExtension();
@@ -415,6 +426,9 @@ public abstract class ConverterToModel {
             voIs.close();
         } catch (Exception e) {
             vbResul = false;
+            if (oLog!=null)
+                oLog.error("error_exception", e);
+
         }
         return vbResul;
     }
@@ -461,6 +475,8 @@ public abstract class ConverterToModel {
             voIs.close();
         } catch (Exception e) {
             vbResul = false;
+            if (oLog!=null)
+                oLog.error("error_exception", e);
         }
         return vbResul;
     }

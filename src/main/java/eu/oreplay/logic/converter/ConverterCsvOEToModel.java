@@ -11,11 +11,9 @@ import eu.oreplay.utils.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -586,7 +584,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         }
                         voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
                         voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]].length()>0?vaRecord[11].trim().replaceAll("\"", "").charAt(0):' '):' '));
+                        voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]].length()>0?vaRecord[COL_SEX[vnColIndex]].trim().replaceAll("\"", "").charAt(0):' '):' '));
                         voRun.setTelephone1(COL_TEL1[vnColIndex]>=0?vaRecord[COL_TEL1[vnColIndex]].trim().replaceAll("\"", ""):"");
                         voRun.setTelephone2(COL_TEL2[vnColIndex]>=0?vaRecord[COL_TEL2[vnColIndex]].trim().replaceAll("\"", ""):"");
                         voRun.setEmail(COL_MAIL[vnColIndex]>=0?vaRecord[COL_MAIL[vnColIndex]].trim().replaceAll("\"", ""):"");

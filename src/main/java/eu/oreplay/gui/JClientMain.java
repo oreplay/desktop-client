@@ -349,6 +349,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     // End of variables declaration//GEN-END:variables
 
     public void exitApp() {
+        oLog.info(resMessages.getString("info_exit_app"));
         System.exit(0);
     }
     /**

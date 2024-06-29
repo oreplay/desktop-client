@@ -16,7 +16,7 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.2.2"},
+        {"main", "OReplay. Desktop Client 0.2.3"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -243,7 +243,13 @@ public class Messages extends java.util.ListResourceBundle {
         {"error_exception", "Something went wrong and the program entered an exception block"},
         {"error_format_unknown", "Format unknown or not supported yet"},
         {"error_nothing_to_do", "Nothing to do"},
+        {"error_nothing_to_do_noevent", "No event info - Nothing to do"},
+        {"error_nothing_to_do_nofile", "No file - Nothing to do"},
+        {"error_nothing_to_do_noconf", "File inspection failed - Nothing to do"},
         {"error_not_supported", "Not supported yet"},
+        {"error_not_supported_xml_contents", "XML Contents - Not supported yet"},
+        {"error_not_supported_csv_contents", "CSV Contents - Not supported yet"},
+        {"error_not_supported_filetype", "Type of file - Not supported yet"},
     };
 protected Object[][] getContents() {
 	return contents;

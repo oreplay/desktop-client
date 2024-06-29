@@ -4,25 +4,13 @@
  */
 package eu.oreplay.gui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import eu.oreplay.controller.EventController;
 import eu.oreplay.logic.FormsParameters;
-import eu.oreplay.logic.converter.ConverterCsvOEToModel;
-import eu.oreplay.logic.converter.ConverterIofToModel;
 import eu.oreplay.logic.converter.ConverterToModel;
 import eu.oreplay.logic.converter.OReplayDataTransfer;
-import eu.oreplay.logic.iof.ResultList;
-import eu.oreplay.logic.iof.StartList;
 import eu.oreplay.utils.JUtils;
 import eu.oreplay.utils.Utils;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.io.InputStream;
-import javax.xml.bind.JAXBContext;
-import org.apache.commons.io.input.BOMInputStream;
 
 /**
  * Basic test form to inspect files, their contents and getting JSON exchange data
