@@ -5,11 +5,10 @@
 package eu.oreplay.gui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.oreplay.controller.EventController;
 import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
-import eu.oreplay.logic.connection.BasicStrings;
 import eu.oreplay.logic.connection.UploadResponse;
+import eu.oreplay.logic.converter.ConverterToModel;
 import eu.oreplay.logic.converter.OReplayDataTransfer;
 import eu.oreplay.utils.JUtils;
 import eu.oreplay.utils.Utils;
@@ -380,7 +379,9 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         if (vcFile!=null) {
                             //Second, parse the contents to generate a JSON
                             OReplayDataTransfer voTransf = new OReplayDataTransfer();
-                            String vcJson = voTransf.getJsonFromFile(vcFile);
+                            voTransf.setoLog(JClientMain.getoLog());
+                            ConverterToModel voConv = voTransf.preProcessFile(vcFile);
+                            String vcJson = voTransf.processFile(voConv);
                             //Communication with backend
                             if (!vcJson.toLowerCase().startsWith("error")) {
                                 //Third, send the contents to the backend
@@ -437,13 +438,17 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 }
                             } else {
                                 //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                                publish(resMessages.getString("error_format_unknown") + "\n");
+                                if (vcJson.startsWith("error_exception")) {
+                                    publish(vcJson + "\n");
+                                } else {
+                                    publish(resMessages.getString(vcJson) + "\n");
+                                }
                             }
                             //Before communicating with the backend, delete the file
                             Utils.deleteFile(vcFile);
                         }
                     } catch (Exception eNet) {
-                        eNet.printStackTrace();
+                        JClientMain.getoLog().error(resMessages.getString("error_exception"), eNet);
                         //This calls the method "process" in the SwingWorker, to set a status text in the panel
                         publish(resMessages.getString("info_connection_nook") + "\n");
                     }
@@ -476,10 +481,10 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                     }
                 } 
                 catch (InterruptedException e) { 
-                    e.printStackTrace(); 
+                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
                 } 
                 catch (ExecutionException e) { 
-                    e.printStackTrace(); 
+                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
                 } 
             } 
         }; 

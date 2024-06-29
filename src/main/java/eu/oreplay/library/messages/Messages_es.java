@@ -16,7 +16,7 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.2.2"},
+        {"main", "OReplay. Cliente de Escritorio 0.2.3"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
@@ -243,7 +243,13 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"error_exception", "Algo fue mal y el programa entró en un bloque de excepción"},
         {"error_format_unknown", "Formato desconocido o no soportado aún"},
         {"error_nothing_to_do", "Nada por hacer"},
+        {"error_nothing_to_do_noevent", "No info de evento - Nada por hacer"},
+        {"error_nothing_to_do_nofile", "No hay fichero - Nada por hacer"},
+        {"error_nothing_to_do_noconf", "Falló inspección del fichero - Nada por hacer"},
         {"error_not_supported", "No soportado todavía"},
+        {"error_not_supported_xml_contents", "Contenidos XML - No soportado todavía"},
+        {"error_not_supported_csv_contents", "Contenidos CSV - No soportado todavía"},
+        {"error_not_supported_filetype", "Tipo de fichero - No soportado todavía"},
     };
 protected Object[][] getContents() {
 	return contents;

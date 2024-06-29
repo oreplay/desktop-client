@@ -5,7 +5,6 @@
 package eu.oreplay.logic.converter;
 
 import eu.oreplay.db.Event;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,9 +12,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.oreplay.utils.Utils;
 import java.io.File;
+import org.apache.logging.log4j.*;
 
 
 /**
@@ -31,6 +30,7 @@ import java.io.File;
 public class OReplayDataTransfer {
     Event oEve = null;
     ConverterToModel oConf = null;
+    Logger oLog = null;
 
     public OReplayDataTransfer() {
         super();
@@ -57,6 +57,13 @@ public class OReplayDataTransfer {
 
     public void setoConf(ConverterToModel oConf) {
         this.oConf = oConf;
+    }
+
+    public Logger getoLog() {
+        return oLog;
+    }
+    public void setoLog(Logger poLog) {
+        oLog = poLog;
     }
     
     /**
@@ -92,15 +99,23 @@ public class OReplayDataTransfer {
      * @return ConverterToModel Object with the metadata describing the file contents
      */
     public ConverterToModel preProcessFile(String pcFile) {
-        //Opens and tries to parse the source file
-        File voFile = new File(pcFile);
-        oConf = new ConverterIofToModel();
-        oConf.inspectFile(voFile);
-        voFile = null;
-        if (oConf.getcExtension().equals(ConverterToModel.EXT_CSV)) {
-            oConf = new ConverterCsvOEToModel(oConf);
-        } else if (oConf.getcExtension().equals(ConverterToModel.EXT_XML)) {
-            oConf = new ConverterIofToModel(oConf);
+        oConf = null;
+        try {
+            //Opens and tries to parse the source file
+            File voFile = new File(pcFile);
+            oConf = new ConverterIofToModel();
+            oConf.setoLog(oLog);
+            oConf.inspectFile(voFile);
+            voFile = null;
+            if (oConf.getcExtension().equals(ConverterToModel.EXT_CSV)) {
+                oConf = new ConverterCsvOEToModel(oConf);
+            } else if (oConf.getcExtension().equals(ConverterToModel.EXT_XML)) {
+                oConf = new ConverterIofToModel(oConf);
+            }
+        }catch(Exception e) {
+            oConf = null;
+            if (oLog!=null)
+                oLog.error("error_exception", e);
         }
         return oConf;
     }
@@ -170,7 +185,7 @@ public class OReplayDataTransfer {
                             //Parses the contents
                             voEve = poConv.convertStartList(poConv.getcFile());
                         } else {
-                            vcResul = "error_not_supported";
+                            vcResul = "error_not_supported_xml_contents";
                         }
                     //If CSV, parse contents
                     } else if (poConv.getcExtension().equals(ConverterToModel.EXT_CSV)) {
@@ -187,10 +202,10 @@ public class OReplayDataTransfer {
                             //Parses the contents
                             voEve = poConv.convertStartList(poConv.getcFile());
                         } else {
-                            vcResul = "error_not_supported";
+                            vcResul = "error_not_supported_csv_contents";
                         }
                     } else {
-                        vcResul = "error_not_supported";
+                        vcResul = "error_not_supported_filetype";
                     }
                     //Creates the output in JSON by merging metadata and event
                     if (voEve!=null) {
@@ -202,13 +217,13 @@ public class OReplayDataTransfer {
                         voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
                         vcResul = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
                     } else {
-                        vcResul = "error_nothing_to_do";
+                        vcResul = "error_nothing_to_do_noevent";
                     }
                 } else {
-                    vcResul = "error_nothing_to_do";
+                    vcResul = "error_nothing_to_do_nofile";
                 }
             } else {
-                vcResul = "error_nothing_to_do";
+                vcResul = "error_nothing_to_do_noconf";
             }
         } catch(Exception e) {
             vcResul = "error_exception" + ". " + e.getMessage();
