@@ -29,7 +29,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"configuration", "Configuración"},
         {"event", "Evento"},
         {"server", "Servidor"},
-        {"server_value", "jaruori.es"},
+        {"server_value", "www.oreplay.es"},
         {"runners", "Corredores"},
         {"runners_list", "Listado de corredores"},
         {"follow_up", "Seguimiento"},
