@@ -65,6 +65,17 @@ public class Event implements Serializable {
     @Temporal(TemporalType.DATE)
     @JsonSerialize(using = IsoDateSerializer.class)
     private Date finalDate;
+    //Dummy needed for not breaking the communication between Back and Client
+    private String federation_id = "";
+    private Link _links;
+    @Basic(optional = false)
+    @Column(name = "is_hidden")
+    private boolean isHidden;
+    private String website;
+    private String picture;
+    private String scope;
+    private String location;
+    
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -105,9 +116,6 @@ public class Event implements Serializable {
     private List<Stage> stageList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private List<Runner> runnerList;
-    //Dummy needed for not breaking the communication between Back and Client
-    private String federation_id = "";
-    private Link _links;
 
     public Event() {
     }
@@ -331,6 +339,46 @@ public class Event implements Serializable {
     }
     public void setLinks(Link _links) {
         this._links = _links;
+    }
+    @JsonProperty("is_hidden")
+    public boolean getIsHidden() {
+        return isHidden;
+    }
+
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     
