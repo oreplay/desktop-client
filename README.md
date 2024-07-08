@@ -10,6 +10,12 @@ Timekeeping software directly connected to oreplay api for logging in, communica
 
 A client is going to be needed in order to transfer data from timekeeping software to oreplay. Login into an oreplay event or getting an authorization. Then, sending data to oreplay and getting the response
 
+## Description of connection flow
+
+1. When clicking the "**Check**"/"**Connect**" button the client makes `GET` to `/api/v1/ping/pong` to ensure server is properly running
+2. After the user adds the "**Event ID**" and the "**Token**", a new `GET` request is made to `/api/v1/events/<Event ID>` to retrieve the list of available **Stages**.
+3. The files are finally uploaded to using a `POST` request to `/api/v1/events/<Event ID>/uploads`
+
 # Data transfer
 
 Timekeeping software (OE, OS, OEScore, SiTiming, etc) is capable of exporting data in several formats, mainly IOF XML. Important data is starting times, intermediate results and provisional/official results. The desktop-client should get the files, convert the data into an intermediate format, for example JSON, and then upload to the server through the Backend API

@@ -402,7 +402,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 //Sends the request an gets the response
                                 HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());
                                 //If there is a correct response, finish the process to fire the event
-                                if (voResp.statusCode()==200) {
+                                if (voResp.statusCode()==200 || voResp.statusCode() == 202) {
                                     try {
                                         //First, parse the response (a list of strings with data)
                                         String vcContents = voResp.body();
