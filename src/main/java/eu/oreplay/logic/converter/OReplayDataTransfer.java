@@ -107,9 +107,12 @@ public class OReplayDataTransfer {
             oConf.setoLog(oLog);
             oConf.inspectFile(voFile);
             voFile = null;
-            if (oConf.getcExtension().equals(ConverterToModel.EXT_CSV)) {
-                oConf = new ConverterCsvOEToModel(oConf);
-            } else if (oConf.getcExtension().equals(ConverterToModel.EXT_XML)) {
+            if (oConf.isCsv()) {
+                if (oConf.isClassic())
+                    oConf = new ConverterCsvOEToModel(oConf);
+                else if (oConf.isRelay())
+                    oConf = new ConverterCsvOSToModel(oConf);
+            } else if (oConf.isXml()) {
                 oConf = new ConverterIofToModel(oConf);
             }
         }catch(Exception e) {
@@ -194,7 +197,10 @@ public class OReplayDataTransfer {
                         //Creates a dummy event with one stage
                         eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc);
                         //Set the specific properties for CSV
-                        ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                        if (poConv.isClassic())
+                            ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                        else if (poConv.isRelay())
+                            ((ConverterCsvOSToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
                         if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
                             //Parses the contents
                             voEve = poConv.convertResultList(poConv.getcFile());

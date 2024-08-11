@@ -204,6 +204,47 @@ public abstract class ConverterToModel {
         cSource = poSrc.getcSource();
         cIofVersion = poSrc.getcIofVersion();
     }
+    @JsonIgnore
+    public boolean isCsv () {
+        return (getcExtension()!=null?getcExtension().equals(ConverterToModel.EXT_CSV):false);
+    }
+    @JsonIgnore
+    public boolean isXml () {
+        return (getcExtension()!=null?getcExtension().equals(ConverterToModel.EXT_XML):false);
+    }
+    @JsonIgnore
+    public boolean isClassic () {
+        boolean vbResul = false;
+        if (getcSource()!=null) {
+            if (getcSource().equals(ConverterToModel.SRC_OE2010) ||
+                    getcSource().equals(ConverterToModel.SRC_OEV12)) {
+                vbResul = true;
+            }
+        }
+        return vbResul;
+    }    
+    @JsonIgnore
+    public boolean isRelay () {
+        boolean vbResul = false;
+        if (getcSource()!=null) {
+            if (getcSource().equals(ConverterToModel.SRC_OS2010) ||
+                    getcSource().equals(ConverterToModel.SRC_OSV12)) {
+                vbResul = true;
+            }
+        }
+        return vbResul;
+    }    
+    @JsonIgnore
+    public boolean isScoring () {
+        boolean vbResul = false;
+        if (getcSource()!=null) {
+            if (getcSource().equals(ConverterToModel.SRC_OESCORE2010) ||
+                    getcSource().equals(ConverterToModel.SRC_OESCOREV12)) {
+                vbResul = true;
+            }
+        }
+        return vbResul;
+    }    
     /**
      * Makes some initial inspection to get the kind of contents of the file;
      * the information is stored in the properties of this class
@@ -353,6 +394,10 @@ public abstract class ConverterToModel {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_BREAKDOWN;
                     cSource = SRC_OSV12;
+                } else if (vcTopValues.startsWith("OS0016a_V12")) {
+                    cContents = CONTENTS_RESULT;
+                    cResultsType = RES_RADIO;
+                    cSource = SRC_OSV12;
                 } else if (vcTopValues.startsWith("OS0012")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_TOTALS;
@@ -360,6 +405,10 @@ public abstract class ConverterToModel {
                 } else if (vcTopValues.startsWith("OS0014")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_BREAKDOWN;
+                    cSource = SRC_OS2010;
+                } else if (vcTopValues.startsWith("OS0016a")) {
+                    cContents = CONTENTS_RESULT;
+                    cResultsType = RES_RADIO;
                     cSource = SRC_OS2010;
                 } else if (vcTopValues.startsWith("RaceNumber;CardNumbers;MembershipNumbers;Name;Category;Club;Country;CourseClass;StartTime;FinishTime")) {
                     cContents = CONTENTS_RESULT;

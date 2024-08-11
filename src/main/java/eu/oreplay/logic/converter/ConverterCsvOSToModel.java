@@ -19,71 +19,82 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Class with methods to convert data in CSV OE format to OReplay data model;
- * in this case, for classic orienteering competitions
+ * Class with methods to convert data in CSV OE format to OReplay data model; 
+ * in this case, for relay competitions
  * @author javier.arufe
  */
-public class ConverterCsvOEToModel extends ConverterToModel{
+public class ConverterCsvOSToModel extends ConverterToModel{
     private String cSeparator = ";";
     private String cEncoding = Utils.ENCODING_UTF_8;
     private eu.oreplay.db.Event oEve = null; //Event/Stage basic information to perform the calculations (UUID, base date, base time, description, etc)
-    private final String[] FILE = {"OE0012", "OE0014", "OE0016", "OE0012_V12", "OE0014_V12", "OE0016_V12"};
-    private final int[] COL_BIB = {1, 1, 1, 2, 2, 2};
-    private final int[] COL_BIBALT = {2, 2, 2, 3, 3, 3};
-    private final int[] COL_SICARD = {3, 3, 3, 4, 4, 4};
-    private final int[] COL_SICARDALT = {-1, -1, -1, -1, -1, -1};
-    private final int[] COL_DBID = {4, 4, 4, 5, 5, 5};
-    private final int[] COL_IOFID = {-1, -1, -1, 6, 6, 6};
-    private final int[] COL_IOFID_FEDO = {33, 33, 33, 36, 36, 36};
-    private final int[] COL_LASTNAME = {5, 5, 5, 7, 7, 7};
-    private final int[] COL_FIRSTNAME = {6, 6, 6, 8, 8, 8};
-    private final int[] COL_BIRTH = {-1, -1, -1, 9, 9, 9};
-    private final int[] COL_BIRTH_FEDO = {37, 37, 37, 9, 9, 9};
-    private final int[] COL_SEX = {8, 8, 8, 11, 11, 11};
-    private final int[] COL_START = {11, 11, 11, 14, 14, 14};
-    private final int[] COL_FINISH = {12, 12, 12, 15, 15, 15};
-    private final int[] COL_TIME = {13, 13, 13, 16, 16, 16};
-    private final int[] COL_STATUS = {14, 14, 14, 17, 17, 17};
-    private final int[] COL_BEHIND = {-1, -1, -1, -1, -1, -1};
-    private final int[] COL_CLU_ID = {18, 18, 18, 21, 21, 21};
-    private final int[] COL_CLU_CITY = {19, 19, 19, 22, 22, 22};
-    private final int[] COL_CLU_SHORT = {20, 20, 20, 23, 23, 23};
+    private final String[] FILE = {"OS0012", "OS0014", "OS0016a", "OS0012_V12", "OS0014_V12", "OS0016a_V12"};
+    private final int[] COL_TEA_BIB = {1, 1, 1, -1, -1, -1};
+    private final int[] COL_TEA_BIBALT = {-1, -1, -1, -1, -1, -1};
+    private final int[] COL_TEA_NAME = {3, 18, 18, -1, -1, -1};
+    private final int[] COL_TEA_START = {6, -1, -1, -1, -1, -1};
+    private final int[] COL_TEA_TIME = {7, -1, 30, -1, -1, -1};
+    private final int[] COL_TEA_STATUS = {8, -1, 31, -1, -1, -1};
+    private final int[] COL_TEA_POSITION = {9, -1, 32, -1, -1, -1};
+    private final int[] COL_CLU_ID = {13, 17, 17, -1, -1, -1};
+    private final int[] COL_CLU_CITY = {14, -1, -1, -1, -1, -1};
+    private final int[] COL_CLU_SHORT = {15, -1, -1, -1, -1, -1};
     private final int[] COL_CLU_LONG = {-1, -1, -1, -1, -1, -1};
-    private final int[] COL_CAT_ID = {24, 24, 24, 27, 27, 27};
-    private final int[] COL_CAT_SHORT = {25, 25, 25, 28, 28, 28};
-    private final int[] COL_CAT_LONG = {26, 26, 26, 29, 29, 29};
-    private final int[] COL_LIC_FEDO = {32, 32, 32, 35, 35, 35};
-    private final int[] COL_DNI_FEDO = {35, 35, 35, 38, 38, 38};
-    private final int[] COL_TEL1 = {44, 44, 44, 47, 47, 47};
-    private final int[] COL_TEL2 = {45, 45, 45, 48, 48, 48};
-    private final int[] COL_MAIL = {47, 47, 47, 50, 50, 50};
-    private final int[] COL_COU_ID = {52, 52, 52, 57, 57, 57};
-    private final int[] COL_COU_SHORT = {53, 53, 53, 58, 58, 58};
-    private final int[] COL_COU_DIST = {54, 54, 54, 59, 59, 59};
-    private final int[] COL_COU_CLIMB = {55, 55, 55, 60, 60, 60};
-    private final int[] COL_COU_CONTROLS = {56, 56, 56, 61, 61, 61};
-    private final int[] COL_POSITION = {57, 57, 57, 62, 62, 62};
-    private final int[] COL_SPLIT_STATION = {-1, 60, -1, -1, 65, -1};
-    private final int[] COL_SPLIT_TIME = {-1, 61, -1, -1, 66, -1};
-    private final int[] COL_SPLIT_INC = {-1, 2, -1, -1, 2, -1};
-    private final int[] COL_RADIO_NUM = {-1, -1, 59, -1, -1, 64};
-    private final int[] COL_RADIO_STATION = {-1, -1, 60, -1, -1, 65};
-    private final int[] COL_RADIO_TIME = {-1, -1, 61, -1, -1, 66};
-    private final int[] COL_RADIO_POSITION = {-1, -1, 62, -1, -1, 67};
-    private final int[] COL_RADIO_INC = {-1, -1, 4, -1, -1, 4};
+    private final int[] COL_CAT_ID = {19, 19, 19, -1, -1, -1};
+    private final int[] COL_CAT_SHORT = {20, 20, 20, -1, -1, -1};
+    private final int[] COL_CAT_LONG = {21, -1, -1, -1, -1, -1};
+    private final int[] COL_LEGS = {22, -1, -1, -1, -1, -1};
+    private final int[] COL_LEGINDEX = {31, 0, 0, -1, -1, -1};
+    private final int[] COL_LEGFIELDS = {14, 256, 256, -1, -1, -1};
+    private final int[] COL_LEG = {1, 4, 4, -1, -1, -1};
+    private final int[] COL_LASTNAME = {3, 6, 6, -1, -1, -1};
+    private final int[] COL_FIRSTNAME = {4, 7, 7, -1, -1, -1};
+    private final int[] COL_SEX = {6, 9, 9, -1, -1, -1};
+    private final int[] COL_START = {7, 10, 10, -1, -1, -1};
+    private final int[] COL_FINISH = {8, 11, 11, -1, -1, -1};
+    private final int[] COL_TIME = {9, 12, 12, -1, -1, -1};
+    private final int[] COL_STATUS = {10, 13, 13, -1, -1, -1};
+    private final int[] COL_SICARD = {11, 14, 14, -1, -1, -1};
+    private final int[] COL_SICARDALT = {-1, -1, -1, -1, -1, -1};
+    private final int[] COL_DBID = {13, 16, 16, -1, -1, -1};
+    private final int[] COL_POSITION = {-1, 27, 27, -1, -1, -1};
+    private final int[] COL_COU_ID = {-1, 21, 24, -1, -1, -1};
+    private final int[] COL_COU_SHORT = {-1, 22, 25, -1, -1, -1};
+    private final int[] COL_COU_DIST = {-1, 23, 26, -1, -1, -1};
+    private final int[] COL_COU_CLIMB = {-1, 24, 27, -1, -1, -1};
+    private final int[] COL_COU_CONTROLS = {-1, 25, 28, -1, -1, -1};
+    private final int[] COL_COU_COMBINATION = {-1, 26, 29, -1, -1, -1};
+    private final int[] COL_SPLIT_STATION = {-1, 30, -1, -1, -1, -1};
+    private final int[] COL_SPLIT_TIME = {-1, 31, -1, -1, -1, -1};
+    private final int[] COL_SPLIT_INC = {-1, 2, -1, -1, -1, -1};
+    private final int[] COL_RADIO_NUM = {-1, -1, 33, -1, -1, -1};
+    private final int[] COL_RADIO_STATION = {-1, -1, 34, -1, -1, -1};
+    private final int[] COL_RADIO_TIME = {-1, -1, 35, -1, -1, -1};
+    private final int[] COL_RADIO_POSITION = {-1, -1, 36, -1, -1, -1};
+    private final int[] COL_RADIO_INC = {-1, -1, 4, -1, -1, -1};
+    //NOT USED FOR RELAYS
+    private final int[] COL_IOFID = {-1, -1, -1, -1, -1, -1};
+    private final int[] COL_IOFID_FEDO = {33, 33, 33, -1, -1, -1};
+    private final int[] COL_BIRTH = {-1, -1, -1, -1, -1, -1};
+    private final int[] COL_BIRTH_FEDO = {37, 37, 37, -1, -1, -1};
+    private final int[] COL_BEHIND = {-1, -1, -1, -1, -1, -1};
+    private final int[] COL_LIC_FEDO = {32, 32, 32, -1, -1, -1};
+    private final int[] COL_DNI_FEDO = {35, 35, 35, -1, -1, -1};
+    private final int[] COL_TEL1 = {44, 44, 44, -1, -1, -1};
+    private final int[] COL_TEL2 = {45, 45, 45, -1, -1, -1};
+    private final int[] COL_MAIL = {47, 47, 47, -1, -1, -1};
     
 
-    public ConverterCsvOEToModel() {
+    public ConverterCsvOSToModel() {
         super();
     }
-    public ConverterCsvOEToModel (ConverterToModel poSrc) {
+    public ConverterCsvOSToModel (ConverterToModel poSrc) {
         super.copyValues(poSrc);
     }
-    public ConverterCsvOEToModel(String pcSeparator, String pcEncoding) {
+    public ConverterCsvOSToModel(String pcSeparator, String pcEncoding) {
         cSeparator = pcSeparator;
         cEncoding = pcEncoding;
     }
-    public ConverterCsvOEToModel(String pcSeparator, String pcEncoding, eu.oreplay.db.Event poEve) {
+    public ConverterCsvOSToModel(String pcSeparator, String pcEncoding, eu.oreplay.db.Event poEve) {
         cSeparator = pcSeparator;
         cEncoding = pcEncoding;
         oEve = poEve;
@@ -141,7 +152,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                     plStart.add(vcLine);
                 }
                 voBr.close();
-                voEve = convertStartListSingleStageClassicOE (plStart);
+                voEve = convertStartListSingleStageRelayOS (plStart);
             } catch (Exception e) {
                 voEve = null;
             }        
@@ -152,12 +163,12 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     /**
      * Given a representation of CSV for start list, this method creates a 
      * structure following the OReplay data model and feeds with the data that
-     * came in the CSV file; this method is for 1-stage, classic Foot-O event
-     * The results can come from OE2010 or OEV12
+     * came in the CSV file; this method is for a relay stage
+     * The results can come from OS2010 or OSV12
      * @param plStart List<String> List with elements for each line of a CSV file for start list
-     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners and runnerresults)
+     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, teams, teasmresults, runners and runnerresults)
      */
-    public eu.oreplay.db.Event convertStartListSingleStageClassicOE (List<String> plStart) {
+    public eu.oreplay.db.Event convertStartListSingleStageRelayOS (List<String> plStart) {
         eu.oreplay.db.Event voEve = null;
         //Depending on the type of file, the columns of the fields are different
         int vnColIndex = this.getIndexFromContentsAndSource();       
@@ -185,7 +196,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
             for (int i=1; i<plStart.size(); i++) {
                 vcLine = plStart.get(i);
                 String[] vaRecord = vcLine.split(cSeparator);
-                if (vaRecord.length>=57) {
+                if (vaRecord.length>=44) { //At least, teams with one runner
                     String vcClaId = (COL_CAT_ID[vnColIndex]>=0?vaRecord[COL_CAT_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
                     String vcClaShort = (COL_CAT_SHORT[vnColIndex]>=0?vaRecord[COL_CAT_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
                     String vcClaLong = (COL_CAT_LONG[vnColIndex]>=0?vaRecord[COL_CAT_LONG[vnColIndex]].trim().replaceAll("\"", ""):"");
@@ -200,95 +211,48 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         voCla.setShortName(vcClaShort);
                         voCla.setLongName(vcClaLong);
                     }
-                    //Now, the course of the class
-                    if (voCla.getCourse()==null && !vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", "").equals("")) {
-                        eu.oreplay.db.Course voCou = new eu.oreplay.db.Course();
-                        voCou.setId("");
-                        voCou.setUuid("");
-                        voCou.setOeKey(COL_COU_ID[vnColIndex]>=0?vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voCou.setShortName(COL_COU_SHORT[vnColIndex]>=0?vaRecord[COL_COU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voCou.setDistance(COL_COU_DIST[vnColIndex]>=0?vaRecord[COL_COU_DIST[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voCou.setClimb(COL_COU_CLIMB[vnColIndex]>=0?vaRecord[COL_COU_CLIMB[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        int vnControls = 0;
-                        try {
-                            vnControls = Integer.parseInt(COL_COU_CONTROLS[vnColIndex]>=0?vaRecord[COL_COU_CONTROLS[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                        }catch (Exception eNumCon){};
-                        voCou.setControls(vnControls);
-                        //Add the course to the class
-                        voCla.setCourse(voCou);
-                    }
-                    //Process the runner and put it on the class
-                    List<eu.oreplay.db.Runner> vlRun = voCla.getRunnerList();
-                    if (vlRun==null)
-                        vlRun = new ArrayList<>();
-                    eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
-                    voRun.setId("");
-                    voRun.setUuid("");
-                    voRun.setBibNumber(COL_BIB[vnColIndex]>=0?vaRecord[COL_BIB[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setBibAlt(COL_BIBALT[vnColIndex]>=0?vaRecord[COL_BIBALT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setSicard(COL_SICARD[vnColIndex]>=0?vaRecord[COL_SICARD[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setSicardAlt(COL_SICARDALT[vnColIndex]>=0?vaRecord[COL_SICARDALT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setDbId(COL_DBID[vnColIndex]>=0?vaRecord[COL_DBID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setIofId(COL_IOFID[vnColIndex]>=0?vaRecord[COL_IOFID[vnColIndex]].trim().replaceAll("\"", ""):"");
+                    //Process the team and put it on the class
+                    List<eu.oreplay.db.Team> vlTea = voCla.getTeamList();
+                    if (vlTea==null)
+                        vlTea = new ArrayList<>();
+                    eu.oreplay.db.Team voTea = new eu.oreplay.db.Team();
+                    voTea.setId("");
+                    voTea.setUuid("");
+                    voTea.setBibNumber(COL_TEA_BIB[vnColIndex]>=0?vaRecord[COL_TEA_BIB[vnColIndex]].trim().replaceAll("\"", ""):"");
+                    voTea.setBibAlt(COL_TEA_BIBALT[vnColIndex]>=0?vaRecord[COL_TEA_BIBALT[vnColIndex]].trim().replaceAll("\"", ""):"");
+                    voTea.setTeamName(COL_TEA_NAME[vnColIndex]>=0?vaRecord[COL_TEA_NAME[vnColIndex]].trim().replaceAll("\"", ""):"");
+                    String vcLegs = COL_LEGS[vnColIndex]>=0?vaRecord[COL_LEGS[vnColIndex]].trim().replaceAll("\"", ""):"";
+                    int vnLegs = 0;
                     try {
-                        String vcBirth = (COL_BIRTH[vnColIndex]>=0?vaRecord[COL_BIRTH[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
-                        if (vdBirth==null) {
-                            vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
-                        }
-                        voRun.setBirthDate(vdBirth);
-                    }catch(Exception eDate) {}
-                    //If the event belongs to FEDO, some fields come in Num or Text columns
-                    if (oEve.getFederation()!=null) {
-                        if (oEve.getFederation().getId().equals("FEDO")) {
-                            //IOF ID
-                            voRun.setIofId(COL_IOFID_FEDO[vnColIndex]>=0?vaRecord[COL_IOFID_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            //Birthdate
-                            try {
-                                String vcBirth = (COL_BIRTH_FEDO[vnColIndex]>=0?vaRecord[COL_BIRTH_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                                java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
-                                if (vdBirth==null) {
-                                    vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
-                                }
-                                voRun.setBirthDate(vdBirth);
-                            }catch(Exception eDate) {}
-                            //License
-                            voRun.setLicense(COL_LIC_FEDO[vnColIndex]>=0?vaRecord[COL_LIC_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            //DNI
-                            voRun.setNationalId(COL_DNI_FEDO[vnColIndex]>=0?vaRecord[COL_DNI_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        }
+                        vnLegs = Integer.parseInt(vcLegs);
+                    } catch (Exception eLegs) {
+                        vnLegs = 0;
                     }
-                    voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]].length()>0?vaRecord[COL_SEX[vnColIndex]].trim().replaceAll("\"", "").charAt(0):' '):' '));
-                    voRun.setTelephone1(COL_TEL1[vnColIndex]>=0?vaRecord[COL_TEL1[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setTelephone2(COL_TEL2[vnColIndex]>=0?vaRecord[COL_TEL2[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setEmail(COL_MAIL[vnColIndex]>=0?vaRecord[COL_MAIL[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    //Start Time is set in a first element of RunnerResult List
-                    ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
-                    eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
-                    voRes.setId("");
-                    voRes.setStageOrder(voSta.getOrderNumber());
-                    voRes.setLegNumber(1);
+                    voTea.setLegs(vnLegs);
+                    //Start Time is set in a first element of TeamResult List
+                    ArrayList<eu.oreplay.db.TeamResult> vlRet = new ArrayList<>();
+                    eu.oreplay.db.TeamResult voRet = new eu.oreplay.db.TeamResult();
+                    voRet.setId("");
+                    voRet.setStageOrder(voSta.getOrderNumber());
                     //Compose the type of result, which is a Stage Result
                     eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
                     voResType.setId(Utils.RESULT_STAGE_ID);
                     voResType.setDescription(Utils.RESULT_STAGE_DESC);
-                    voRes.setResultType(voResType);
+                    voRet.setResultType(voResType);
                     //Transform the start time value
                     try {
-                        String vcTime = COL_START[vnColIndex]>=0?vaRecord[COL_START[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"";
+                        String vcTime = COL_TEA_START[vnColIndex]>=0?vaRecord[COL_TEA_START[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"";
                         java.util.Date vdTime = Utils.formatRelativeTimeFromBase(vcTime, 
                                 voSta.getBaseDate(), voSta.getBaseTime());
-                        voRes.setStartTime(vdTime);
+                        voRet.setStartTime(vdTime);
                     }catch(Exception eStart) {
                     }
-                    voRes.setStatusCode('0');
+                    voRet.setStatusCode('0');
                     //Add the result to the list
-                    vlRes.add(voRes);
-                    //Add the list to the runner data
-                    voRun.setRunnerResultList(vlRes);
-                    //Now, the club of the runner
+                    vlRet.add(voRet);
+                    //Add the list to the team data
+                    voTea.setTeamResultList(vlRet);                  
+                    //Now, the club of the team (also for the runners of the team)
                     if (!(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"").equals("")) {
                         eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
                         voClu.setId("");
@@ -298,18 +262,71 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         voClu.setShortName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
                         voClu.setLongName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
                         //Add the club to the runner
-                        voRun.setClub(voClu);
+                        voTea.setClub(voClu);
                     }
-                    //Add the runner to the list of runners
-                    vlRun.add(voRun);
-                    //Set the list of runners to the class again
-                    voCla.setRunnerList(vlRun);
+                    //Process the runners, taking in account the number of legs
+                    List<eu.oreplay.db.Runner> vlRun = new ArrayList<>();
+                    for (int j=0; j<vnLegs; j++) {
+                        //The index where the runner fields start
+                        int vnColIni = COL_LEGINDEX[vnColIndex] + (COL_LEGFIELDS[vnColIndex] * j);
+                        if (vnColIni>=0 && vnColIni<vaRecord.length) {
+                            eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
+                            voRun.setId("");
+                            voRun.setUuid("");
+                            String vcLeg = COL_LEG[vnColIndex]>=0?vaRecord[COL_LEG[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"";
+                            int vnLeg = 0;
+                            try {
+                                vnLeg = Integer.parseInt(vcLeg);
+                            } catch (Exception eLeg) {
+                                vnLeg = 0;
+                            }
+                            voRun.setLegNumber(vnLeg);
+                            voRun.setBibNumber(voTea.getBibNumber() + "-" + vnLeg); //The bib number of the runner is the concatenation of the team and the leg
+                            voRun.setSicard(COL_SICARD[vnColIndex]>=0?vaRecord[COL_SICARD[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                            voRun.setSicardAlt(COL_SICARDALT[vnColIndex]>=0?vaRecord[COL_SICARDALT[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                            voRun.setDbId(COL_DBID[vnColIndex]>=0?vaRecord[COL_DBID[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                            voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                            voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                            voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]+vnColIni].length()>0?vaRecord[COL_SEX[vnColIndex]+vnColIni].trim().replaceAll("\"", "").charAt(0):' '):' '));
+                            //Start Time is set in a first element of RunnerResult List
+                            ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
+                            eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
+                            voRes.setId("");
+                            voRes.setStageOrder(voSta.getOrderNumber());
+                            voRes.setLegNumber(1);
+                            //Compose the type of result, which is a Stage Result
+                            voRes.setResultType(voResType);
+                            //Transform the start time value
+                            try {
+                                String vcTime = COL_START[vnColIndex]>=0?vaRecord[COL_START[vnColIndex]+vnColIni].trim().replaceAll("\"", "").replaceAll(",", "."):"";
+                                java.util.Date vdTime = Utils.formatRelativeTimeFromBase(vcTime, 
+                                        voSta.getBaseDate(), voSta.getBaseTime());
+                                voRes.setStartTime(vdTime);
+                            }catch(Exception eStart) {
+                            }
+                            voRes.setStatusCode('0');
+                            //Add the result to the list
+                            vlRes.add(voRes);
+                            //Add the list to the runner data
+                            voRun.setRunnerResultList(vlRes);
+                            //Now, the club of the runner, which is the same as the team
+                            voRun.setClub(voTea.getClub());
+                            //Add the runner to the list of runners
+                            vlRun.add(voRun);                                                
+                        }                                
+                    }
+                    //Set the list of runners to the team
+                    voTea.setRunnerList(vlRun);
+                    //Set the team to the list of teams
+                    vlTea.add(voTea);
+                    //Set the list of teams to the class again
+                    voCla.setTeamList(vlTea);
                     //Remove the previous contents of the class from the HashMap and insert it again
                     vlCla.remove(vcClaId);
                     vlCla.put(vcClaId, voCla);
                 }
             }
-            //Add the lis of classes to the stage
+            //Add the list of classes to the stage
             List<eu.oreplay.db.Clazz> vlClaNew = new ArrayList<>(vlCla.values());
             voSta.setClazzList(vlClaNew);
             //Add the stage to the event
@@ -341,7 +358,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                     plResult.add(vcLine);
                 }
                 voBr.close();
-                voEve = convertResultListSingleStageClassicOE (plResult);
+                voEve = convertResultListSingleStageRelayOS (plResult);
             } catch (Exception e) {
                 voEve = null;
             }        
@@ -351,14 +368,15 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     /**
      * Given a representation of CSV for result list, this method creates a 
      * structure following the OReplay data model and feeds with the data that
-     * came in the CSV file; this method is for 1-stage, classic Foot-O event
+     * came in the CSV file; this method is for relay event
      * The results can be global, breakdown (splits) or radiocontrol (intermediate)
-     * The results can come from OE2010 or OEV12
+     * The results can come from OS2010 or OSV12
      * @param plResult List<String> List with elements for each line of a CSV file for result list
-     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners and runnerresults)
+     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, teams, teamresults, runners and runnerresults)
      */
-    public eu.oreplay.db.Event convertResultListSingleStageClassicOE (List<String> plResult) {
+    public eu.oreplay.db.Event convertResultListSingleStageRelayOS (List<String> plResult) {
         eu.oreplay.db.Event voEve = null;
+        /*
         //HashMap to store Classes. For each class its runners. Runners should be ordered by class in the CSV but, what if not?...
         HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<>();
         ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<>();
@@ -444,46 +462,22 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
                         voRun.setId("");
                         voRun.setUuid("");
-                        voRun.setBibNumber(COL_BIB[vnColIndex]>=0?vaRecord[COL_BIB[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setBibAlt(COL_BIBALT[vnColIndex]>=0?vaRecord[COL_BIBALT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setSicard(COL_SICARD[vnColIndex]>=0?vaRecord[COL_SICARD[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setSicardAlt(COL_SICARDALT[vnColIndex]>=0?vaRecord[COL_SICARDALT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setDbId(COL_DBID[vnColIndex]>=0?vaRecord[COL_DBID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setIofId(COL_IOFID[vnColIndex]>=0?vaRecord[COL_IOFID[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        String vcLeg = COL_LEG[vnColIndex]>=0?vaRecord[COL_LEG[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"";
+                        int vnLeg = 0;
                         try {
-                            String vcBirth = (COL_BIRTH[vnColIndex]>=0?vaRecord[COL_BIRTH[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
-                            if (vdBirth==null) {
-                                vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
-                            }
-                            voRun.setBirthDate(vdBirth);
-                        }catch(Exception eDate) {}
-                        //If the event belongs to FEDO, some fields come in Num or Text columns
-                        if (oEve.getFederation()!=null) {
-                            if (oEve.getFederation().getId().equals("FEDO")) {
-                                //IOF ID
-                                voRun.setIofId(COL_IOFID_FEDO[vnColIndex]>=0?vaRecord[COL_IOFID_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                                //Birthdate
-                                try {
-                                    String vcBirth = (COL_BIRTH_FEDO[vnColIndex]>=0?vaRecord[COL_BIRTH_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                                    java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
-                                    if (vdBirth==null) {
-                                        vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
-                                    }
-                                    voRun.setBirthDate(vdBirth);
-                                }catch(Exception eDate) {}
-                                //License
-                                voRun.setLicense(COL_LIC_FEDO[vnColIndex]>=0?vaRecord[COL_LIC_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                                //DNI
-                                voRun.setNationalId(COL_DNI_FEDO[vnColIndex]>=0?vaRecord[COL_DNI_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            }
+                            vnLeg = Integer.parseInt(vcLeg);
+                        } catch (Exception eLeg) {
+                            vnLeg = 0;
                         }
-                        voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]].length()>0?vaRecord[COL_SEX[vnColIndex]].trim().replaceAll("\"", "").charAt(0):' '):' '));
-                        voRun.setTelephone1(COL_TEL1[vnColIndex]>=0?vaRecord[COL_TEL1[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setTelephone2(COL_TEL2[vnColIndex]>=0?vaRecord[COL_TEL2[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voRun.setEmail(COL_MAIL[vnColIndex]>=0?vaRecord[COL_MAIL[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setLegNumber(vnLeg);
+                        voRun.setBibNumber(voTea.getBibNumber() + "-" + vnLeg); //The bib number of the runner is the concatenation of the team and the leg
+                        voRun.setBibAlt(voRun.getBibNumber());
+                        voRun.setSicard(COL_SICARD[vnColIndex]>=0?vaRecord[COL_SICARD[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                        voRun.setSicardAlt(COL_SICARDALT[vnColIndex]>=0?vaRecord[COL_SICARDALT[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                        voRun.setDbId(COL_DBID[vnColIndex]>=0?vaRecord[COL_DBID[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                        voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                        voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                        voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]+vnColIni].length()>0?vaRecord[COL_SEX[vnColIndex]+vnColIni].trim().replaceAll("\"", "").charAt(0):' '):' '));
                         //Start Time is set in a first element of RunnerResult List
                         ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
                         eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
@@ -672,6 +666,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
         }catch (Exception e) {
             e.printStackTrace();
         }
+        */
         return voEve;
     }
     /**

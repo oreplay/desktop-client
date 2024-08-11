@@ -131,6 +131,9 @@ public class Runner implements Serializable {
     @JoinColumn(name = "team_id", referencedColumnName = "id")
     @ManyToOne
     private Team team;
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @ManyToOne
+    private Course course;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
     private User user;
@@ -368,6 +371,15 @@ public class Runner implements Serializable {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @JsonProperty("course")
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @JsonProperty("user")
