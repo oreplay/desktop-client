@@ -96,6 +96,9 @@ public class Team implements Serializable {
     @JoinColumn(name = "club_id", referencedColumnName = "id")
     @ManyToOne
     private Club club;
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @ManyToOne
+    private Course course;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
     private List<TeamResult> teamResultList;
     @OneToMany(mappedBy = "team")
@@ -229,6 +232,15 @@ public class Team implements Serializable {
 
     public void setClub(Club club) {
         this.club = club;
+    }
+
+    @JsonProperty("course")
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     @JsonProperty("team_results")
