@@ -176,20 +176,9 @@ public class ConverterCsvOSToModel extends ConverterToModel{
         HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<>();
         if (plStart!=null) {
             //Event's data
-            voEve = new eu.oreplay.db.Event();
-            voEve.setId(oEve.getId());
-            voEve.setDescription(oEve.getDescription());
+            voEve = Utils.copyBasicEventData(oEve);
             //Stage's data
-            eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-            if (oEve.getStageList()!=null) {
-                if (!oEve.getStageList().isEmpty()) {
-                    voSta.setId(oEve.getStageList().get(0).getId());
-                    voSta.setOrderNumber(oEve.getStageList().get(0).getOrderNumber());
-                    voSta.setDescription(oEve.getStageList().get(0).getDescription());
-                    voSta.setBaseDate(oEve.getStageList().get(0).getBaseDate());
-                    voSta.setBaseTime(oEve.getStageList().get(0).getBaseTime());
-                }
-            }
+            eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
             //First line contains the name of the columns
             String vcLine = "";
             //Loop starts at second line
@@ -401,20 +390,9 @@ public class ConverterCsvOSToModel extends ConverterToModel{
             //Process the contents
             if (plResult!=null) {
                 //Event's data
-                voEve = new eu.oreplay.db.Event();
-                voEve.setId(vcUuidEve);
-                voEve.setDescription(oEve.getDescription());
+                voEve = Utils.copyBasicEventData(oEve);
                 //Stage's data
-                eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-                if (oEve.getStageList()!=null) {
-                    if (!oEve.getStageList().isEmpty()) {
-                        voSta.setId(vcUuidSta);
-                        voSta.setOrderNumber(oEve.getStageList().get(0).getOrderNumber());
-                        voSta.setDescription(oEve.getStageList().get(0).getDescription());
-                        voSta.setBaseDate(oEve.getStageList().get(0).getBaseDate());
-                        voSta.setBaseTime(oEve.getStageList().get(0).getBaseTime());
-                    }
-                }
+                eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
                 //First line contains the name of the columns
                 String vcLine = "";
                 //Loop starts at second line

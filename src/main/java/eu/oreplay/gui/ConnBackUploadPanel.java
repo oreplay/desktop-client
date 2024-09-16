@@ -381,7 +381,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             OReplayDataTransfer voTransf = new OReplayDataTransfer();
                             voTransf.setoLog(JClientMain.getoLog());
                             ConverterToModel voConv = voTransf.preProcessFile(vcFile);
-                            String vcJson = voTransf.processFile(voConv);
+                            String vcJson = (oStatus==null?voTransf.processFile(voConv):voTransf.processFile(voConv, oStatus.getcEveId(), oStatus.getcEveDesc(), oStatus.getcStaId(), oStatus.getcStaDesc()));
+                            JClientMain.getoLog().info("File: " + vcFile + 
+                                    "; Eve Id: " + oStatus.getcEveId() + 
+                                    "; Eve Desc: " + oStatus.getcEveDesc() +
+                                    "; Sta Id: " + oStatus.getcStaId() + 
+                                    "; Sta Desc: " + oStatus.getcStaDesc());
                             //Communication with backend
                             if (!vcJson.toLowerCase().startsWith("error")) {
                                 //Third, send the contents to the backend

@@ -439,7 +439,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     @Override
     public void handleConnBackEvent(ConnBackEvent e) {
         if (e!=null) {
-//System.out.println(e.getoStatus().toString());
+            //Set the new values for the status
+            this.setoStatus(e.getoStatus());
             //If there is no connection, disable the other panels
             if (e.getoStatus().getnStatus()==ConnBackStatus.CONNECTION_NOOK ||
                     e.getoStatus().getnStatus()==ConnBackStatus.DISCONNECTED) {

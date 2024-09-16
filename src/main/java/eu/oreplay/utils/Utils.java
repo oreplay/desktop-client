@@ -163,6 +163,31 @@ public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId,
     }
     return voEveSrc;
 }
+public static eu.oreplay.db.Event copyBasicEventData (eu.oreplay.db.Event poEve) {
+    eu.oreplay.db.Event voEve = null;
+    if (poEve!=null) {
+        voEve = new eu.oreplay.db.Event();
+        voEve.setId(poEve.getId());
+        voEve.setDescription(poEve.getDescription());
+    }
+    return voEve;
+}
+public static eu.oreplay.db.Stage copyBasicOneStageData (eu.oreplay.db.Event poEve) {
+    eu.oreplay.db.Stage voSta = null;
+    if (poEve!=null) {
+        voSta = new eu.oreplay.db.Stage();
+        if (poEve.getStageList()!=null) {
+            if (!poEve.getStageList().isEmpty()) {
+                voSta.setId(poEve.getStageList().get(0).getId());
+                voSta.setOrderNumber(poEve.getStageList().get(0).getOrderNumber());
+                voSta.setDescription(poEve.getStageList().get(0).getDescription());
+                voSta.setBaseDate(poEve.getStageList().get(0).getBaseDate());
+                voSta.setBaseTime(poEve.getStageList().get(0).getBaseTime());
+            }
+        }
+    }
+    return voSta;
+}
 /**
  * Given an IOF value for a runner result status, this method converts to the
  * corresponding OReplay's internal model Id
