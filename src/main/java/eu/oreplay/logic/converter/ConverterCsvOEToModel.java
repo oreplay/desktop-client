@@ -165,20 +165,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
         HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<>();
         if (plStart!=null) {
             //Event's data
-            voEve = new eu.oreplay.db.Event();
-            voEve.setId(oEve.getId());
-            voEve.setDescription(oEve.getDescription());
+            voEve = Utils.copyBasicEventData(oEve);
             //Stage's data
-            eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-            if (oEve.getStageList()!=null) {
-                if (!oEve.getStageList().isEmpty()) {
-                    voSta.setId(oEve.getStageList().get(0).getId());
-                    voSta.setOrderNumber(oEve.getStageList().get(0).getOrderNumber());
-                    voSta.setDescription(oEve.getStageList().get(0).getDescription());
-                    voSta.setBaseDate(oEve.getStageList().get(0).getBaseDate());
-                    voSta.setBaseTime(oEve.getStageList().get(0).getBaseTime());
-                }
-            }
+            eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
             //First line contains the name of the columns
             String vcLine = "";
             //Loop starts at second line
@@ -363,8 +352,6 @@ public class ConverterCsvOEToModel extends ConverterToModel{
         HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<>();
         ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<>();
         HashMap<String, String> vlStations = new HashMap<>();
-        String vcUuidEve = "";
-        String vcUuidSta = "";
         boolean vbRadio = false;
         boolean vbSplit = false;
         //Flag to say whether the results include radiocontrols
@@ -373,30 +360,15 @@ public class ConverterCsvOEToModel extends ConverterToModel{
         //Flag to say whether the results include breakdown of results (splits)
         if (getcResultsType().equals(ConverterToModel.RES_BREAKDOWN))
             vbSplit = true;
-        if (oEve!=null) {
-            vcUuidEve = oEve.getId();
-            vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
-        }
         //Depending on the type of file, the columns of the fields are different
         int vnColIndex = this.getIndexFromContentsAndSource();       
         try {
             //Process the contents
             if (plResult!=null) {
                 //Event's data
-                voEve = new eu.oreplay.db.Event();
-                voEve.setId(vcUuidEve);
-                voEve.setDescription(oEve.getDescription());
+                voEve = Utils.copyBasicEventData(oEve);
                 //Stage's data
-                eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-                if (oEve.getStageList()!=null) {
-                    if (!oEve.getStageList().isEmpty()) {
-                        voSta.setId(vcUuidSta);
-                        voSta.setOrderNumber(oEve.getStageList().get(0).getOrderNumber());
-                        voSta.setDescription(oEve.getStageList().get(0).getDescription());
-                        voSta.setBaseDate(oEve.getStageList().get(0).getBaseDate());
-                        voSta.setBaseTime(oEve.getStageList().get(0).getBaseTime());
-                    }
-                }
+                eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
                 //First line contains the name of the columns
                 String vcLine = "";
                 //Loop starts at second line

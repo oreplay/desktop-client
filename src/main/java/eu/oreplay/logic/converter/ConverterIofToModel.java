@@ -94,13 +94,16 @@ public class ConverterIofToModel extends ConverterToModel {
      */
     public eu.oreplay.db.Event convertStartListSingleStageClassic (eu.oreplay.logic.iof.StartList poStart) {
         eu.oreplay.db.Event voEve = null;
+        /*
         String vcUuidEve = "";
         String vcUuidSta = "";
         if (oEve!=null) {
             vcUuidEve = oEve.getId();
             vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
         }
+        */
         if (poStart!=null) {
+            /*
             //Event's data
             voEve = new eu.oreplay.db.Event();
             voEve.setId(vcUuidEve);
@@ -122,6 +125,11 @@ public class ConverterIofToModel extends ConverterToModel {
                     voSta.setDescription(voEve.getDescription());
                 }
             }
+            */
+            //Event's data
+            voEve = Utils.copyBasicEventData(oEve);
+            //Stage's data
+            eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
             //Classes' data
             if (poStart.getClassStart()!=null) {
                 //Process each class in the StartList
@@ -234,13 +242,16 @@ public class ConverterIofToModel extends ConverterToModel {
      */
     public eu.oreplay.db.Event convertStartListSingleStageRelay (eu.oreplay.logic.iof.StartList poStart) {
         eu.oreplay.db.Event voEve = null;
+        /*
         String vcUuidEve = "";
         String vcUuidSta = "";
         if (oEve!=null) {
             vcUuidEve = oEve.getId();
             vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
         }
+        */
         if (poStart!=null) {
+            /*
             //Event's data
             voEve = new eu.oreplay.db.Event();
             voEve.setId(vcUuidEve);
@@ -262,6 +273,11 @@ public class ConverterIofToModel extends ConverterToModel {
                     voSta.setDescription(voEve.getDescription());
                 }
             }
+            */
+            //Event's data
+            voEve = Utils.copyBasicEventData(oEve);
+            //Stage's data
+            eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
             //Classes' data
             if (poStart.getClassStart()!=null) {
                 //Process each class in the StartList
@@ -444,17 +460,22 @@ public class ConverterIofToModel extends ConverterToModel {
         eu.oreplay.db.Event voEve = null;
         ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<>();
         HashMap<String, String> vlStations = new HashMap<>();
+        /*
         String vcUuidEve = "";
         String vcUuidSta = "";
+        */
         boolean vbRadio = false;
         //Flag to say whether the results include radiocontrols
         if (getcResultsType().equals(ConverterToModel.RES_RADIO))
             vbRadio = true;
+        /*
         if (oEve!=null) {
             vcUuidEve = oEve.getId();
             vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
         }
+        */
         if (poResult!=null) {
+            /*
             //Event's data
             voEve = new eu.oreplay.db.Event();
             voEve.setId(vcUuidEve);
@@ -476,6 +497,11 @@ public class ConverterIofToModel extends ConverterToModel {
                     voSta.setDescription(voEve.getDescription());
                 }
             }
+            */
+            //Event's data
+            voEve = Utils.copyBasicEventData(oEve);
+            //Stage's data
+            eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
             //Classes' data
             if (poResult.getClassResult()!=null) {
                 //Process each class in the ResultList
@@ -678,17 +704,22 @@ public class ConverterIofToModel extends ConverterToModel {
         eu.oreplay.db.Event voEve = null;
         ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<>();
         HashMap<String, String> vlStations = new HashMap<>();
+        /*
         String vcUuidEve = "";
         String vcUuidSta = "";
+        */
         boolean vbRadio = false;
         //Flag to say whether the results include radiocontrols
         if (getcResultsType().equals(ConverterToModel.RES_RADIO))
             vbRadio = true;
+        /*
         if (oEve!=null) {
             vcUuidEve = oEve.getId();
             vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
         }
+        */
         if (poResult!=null) {
+            /*
             //Event's data
             voEve = new eu.oreplay.db.Event();
             voEve.setId(vcUuidEve);
@@ -710,6 +741,11 @@ public class ConverterIofToModel extends ConverterToModel {
                     voSta.setDescription(voEve.getDescription());
                 }
             }
+            */
+            //Event's data
+            voEve = Utils.copyBasicEventData(oEve);
+            //Stage's data
+            eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
             //Classes' data
             if (poResult.getClassResult()!=null) {
                 //Process each class in the ResultList
