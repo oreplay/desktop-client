@@ -55,6 +55,7 @@ public abstract class ConverterToModel {
     private boolean bOneStage;
     private String cSource;
     private String cIofVersion;
+    private boolean bIncludeScore;
 
     public ConverterToModel() {
         initializeValues();
@@ -164,6 +165,15 @@ public abstract class ConverterToModel {
     public void setcIofVersion(String cIofVersion) {
         this.cIofVersion = cIofVersion;
     }
+
+    @JsonProperty("include_score")
+    public boolean isbIncludeScore() {
+        return bIncludeScore;
+    }
+
+    public void setbIncludeScore(boolean bIncludeScore) {
+        this.bIncludeScore = bIncludeScore;
+    }
     
     /**
      * Returns the flag that checks the existence of the source file
@@ -186,6 +196,7 @@ public abstract class ConverterToModel {
         bOneStage = true;
         cSource = OTHER_VALUES;
         cIofVersion = OTHER_VALUES;
+        bIncludeScore = false;
     }
     /**
      * Copy values of the properties from another object
@@ -203,6 +214,7 @@ public abstract class ConverterToModel {
         bOneStage = poSrc.isbOneStage();
         cSource = poSrc.getcSource();
         cIofVersion = poSrc.getcIofVersion();
+        bIncludeScore = poSrc.isbIncludeScore();
     }
     @JsonIgnore
     public boolean isCsv () {
@@ -239,7 +251,8 @@ public abstract class ConverterToModel {
         boolean vbResul = false;
         if (getcSource()!=null) {
             if (getcSource().equals(ConverterToModel.SRC_OESCORE2010) ||
-                    getcSource().equals(ConverterToModel.SRC_OESCOREV12)) {
+                    getcSource().equals(ConverterToModel.SRC_OESCOREV12) ||
+                    isbIncludeScore()) {
                 vbResul = true;
             }
         }
@@ -337,7 +350,7 @@ public abstract class ConverterToModel {
                 } else if (vcTopValues.startsWith("OESco0001")) {
                     cContents = CONTENTS_START;
                     cSource = SRC_OESCORE2010;
-                } else if (vcTopValues.startsWith("OS0001_V12")) {
+                } else if (vcTopValues.startsWith("OS0009_V12")) {
                     cContents = CONTENTS_START;
                     cSource = SRC_OSV12;
                 } else if (vcTopValues.startsWith("OS0001")) {
@@ -394,7 +407,11 @@ public abstract class ConverterToModel {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_BREAKDOWN;
                     cSource = SRC_OSV12;
-                } else if (vcTopValues.startsWith("OS0016a_V12")) {
+                } else if (vcTopValues.startsWith("OS0016a")) {
+                    cContents = CONTENTS_RESULT;
+                    cResultsType = RES_RADIO;
+                    cSource = SRC_OS2010;
+                } else if (vcTopValues.startsWith("OS0016")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_RADIO;
                     cSource = SRC_OSV12;
@@ -405,10 +422,6 @@ public abstract class ConverterToModel {
                 } else if (vcTopValues.startsWith("OS0014")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_BREAKDOWN;
-                    cSource = SRC_OS2010;
-                } else if (vcTopValues.startsWith("OS0016a")) {
-                    cContents = CONTENTS_RESULT;
-                    cResultsType = RES_RADIO;
                     cSource = SRC_OS2010;
                 } else if (vcTopValues.startsWith("RaceNumber;CardNumbers;MembershipNumbers;Name;Category;Club;Country;CourseClass;StartTime;FinishTime")) {
                     cContents = CONTENTS_RESULT;
@@ -449,6 +462,8 @@ public abstract class ConverterToModel {
                         cSource = SRC_OSV12;
                     } else if (vcTopValues.contains("SiTiming")) {
                         cSource = SRC_SITIMING;
+                    } else if (vcTopValues.contains("MeOS")) {
+                        cSource = SRC_MEOS;
                     }
                     //IOF Version
                     if (vcTopValues.contains("iofVersion=2.0")) {
@@ -519,6 +534,10 @@ public abstract class ConverterToModel {
                 } else {
                     cResultsType = RES_TOTALS;
                 }               
+                //If XML contains Score tags, set the flag to true
+                if (vcTopValues.contains("<Score type=")) {
+                    bIncludeScore = true;
+                }
                 vbResul = true;
             }
             voIs.close();

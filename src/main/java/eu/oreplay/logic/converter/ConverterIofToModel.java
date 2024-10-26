@@ -358,7 +358,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                                     voRes.setId("");
                                                     voRes.setStageOrder(voSta.getOrderNumber());
-                                                    voRes.setLegNumber(voPrs.getLeg().intValue());
+                                                    if (voPrs.getLeg()!=null)
+                                                        voRes.setLegNumber(voPrs.getLeg().intValue());
                                                     //The type of result is null as it is processing only start times
                                                     voRes.setResultType(null);
                                                     //Transform the date value
@@ -443,6 +444,11 @@ public class ConverterIofToModel extends ConverterToModel {
             } else if (getcSource().equals(ConverterToModel.SRC_OS2010) ||
                     getcSource().equals(ConverterToModel.SRC_OSV12)) {
                 voEve = convertResultListSingleStageRelay (voResult);
+            } else if ((getcSource().equals(ConverterToModel.SRC_MEOS) ||
+                    getcSource().equals(ConverterToModel.SRC_OESCOREV12) ||
+                    getcSource().equals(ConverterToModel.SRC_SITIMING)) &&
+                    isScoring()) {
+                voEve = convertResultListSingleStageRogaine (voResult);
             }
         }catch(Exception e) {            
             voEve = null;
@@ -460,44 +466,11 @@ public class ConverterIofToModel extends ConverterToModel {
         eu.oreplay.db.Event voEve = null;
         ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<>();
         HashMap<String, String> vlStations = new HashMap<>();
-        /*
-        String vcUuidEve = "";
-        String vcUuidSta = "";
-        */
         boolean vbRadio = false;
         //Flag to say whether the results include radiocontrols
         if (getcResultsType().equals(ConverterToModel.RES_RADIO))
             vbRadio = true;
-        /*
-        if (oEve!=null) {
-            vcUuidEve = oEve.getId();
-            vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
-        }
-        */
         if (poResult!=null) {
-            /*
-            //Event's data
-            voEve = new eu.oreplay.db.Event();
-            voEve.setId(vcUuidEve);
-            voEve.setDescription(poResult.getEvent()!=null?poResult.getEvent().getName():"");
-            //Stage's data
-            eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-            voSta.setId(vcUuidSta);
-            if (poResult.getEvent()!=null) {
-                if (poResult.getEvent().getRace()!=null) {
-                    if (!poResult.getEvent().getRace().isEmpty()) {
-                        voSta.setOrderNumber((poResult.getEvent().getRace().get(0).getRaceNumber()!=null?poResult.getEvent().getRace().get(0).getRaceNumber().intValue():1));
-                        voSta.setDescription((poResult.getEvent().getRace().get(0).getName()!=null?poResult.getEvent().getRace().get(0).getName():""));
-                    } else {
-                        voSta.setOrderNumber(1);
-                        voSta.setDescription(voEve.getDescription());
-                    }
-                } else {
-                    voSta.setOrderNumber(1);
-                    voSta.setDescription(voEve.getDescription());
-                }
-            }
-            */
             //Event's data
             voEve = Utils.copyBasicEventData(oEve);
             //Stage's data
@@ -704,44 +677,11 @@ public class ConverterIofToModel extends ConverterToModel {
         eu.oreplay.db.Event voEve = null;
         ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<>();
         HashMap<String, String> vlStations = new HashMap<>();
-        /*
-        String vcUuidEve = "";
-        String vcUuidSta = "";
-        */
         boolean vbRadio = false;
         //Flag to say whether the results include radiocontrols
         if (getcResultsType().equals(ConverterToModel.RES_RADIO))
             vbRadio = true;
-        /*
-        if (oEve!=null) {
-            vcUuidEve = oEve.getId();
-            vcUuidSta = (oEve.getStageList()!=null?oEve.getStageList().get(0).getId():"");
-        }
-        */
         if (poResult!=null) {
-            /*
-            //Event's data
-            voEve = new eu.oreplay.db.Event();
-            voEve.setId(vcUuidEve);
-            voEve.setDescription(poResult.getEvent()!=null?poResult.getEvent().getName():"");
-            //Stage's data
-            eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
-            voSta.setId(vcUuidSta);
-            if (poResult.getEvent()!=null) {
-                if (poResult.getEvent().getRace()!=null) {
-                    if (!poResult.getEvent().getRace().isEmpty()) {
-                        voSta.setOrderNumber((poResult.getEvent().getRace().get(0).getRaceNumber()!=null?poResult.getEvent().getRace().get(0).getRaceNumber().intValue():1));
-                        voSta.setDescription((poResult.getEvent().getRace().get(0).getName()!=null?poResult.getEvent().getRace().get(0).getName():""));
-                    } else {
-                        voSta.setOrderNumber(1);
-                        voSta.setDescription(voEve.getDescription());
-                    }
-                } else {
-                    voSta.setOrderNumber(1);
-                    voSta.setDescription(voEve.getDescription());
-                }
-            }
-            */
             //Event's data
             voEve = Utils.copyBasicEventData(oEve);
             //Stage's data
@@ -842,7 +782,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                                     voRes.setId("");
                                                     voRes.setStageOrder(voSta.getOrderNumber());
-                                                    voRes.setLegNumber(voPrs.getLeg().intValue());
+                                                    if (voPrs.getLeg()!=null)
+                                                        voRes.setLegNumber(voPrs.getLeg().intValue());
                                                     //Compose the type of result, which is a Stage Result
                                                     eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
                                                     voResType.setId(Utils.RESULT_STAGE_ID);
@@ -997,6 +938,591 @@ public class ConverterIofToModel extends ConverterToModel {
             ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
             vlSta.add(voSta);
             voEve.setStageList(vlSta);
+        }
+        return voEve;
+    }
+    /**
+     * Given a representation of IOF XML for result list, this method creates a 
+     * structure following the OReplay data model and feeds with the data that
+     * came in the XML file; this method is for 1-stage, Rogaine event
+     * @param poResult ResultList Object that represents an IOF XML file for result list
+     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners and runnerresults, teams and teamresults)
+     */
+    public eu.oreplay.db.Event convertResultListSingleStageRogaine (eu.oreplay.logic.iof.ResultList poResult) {
+        eu.oreplay.db.Event voEve = null;
+        ArrayList<eu.oreplay.db.Control> vlCon = new ArrayList<>();
+        HashMap<String, String> vlStations = new HashMap<>();
+        boolean vbRadio = false;
+        try {
+            //Flag to say whether the results include radiocontrols
+            if (getcResultsType().equals(ConverterToModel.RES_RADIO))
+                vbRadio = true;
+            if (poResult!=null) {
+                //Event's data
+                voEve = Utils.copyBasicEventData(oEve);
+                //Stage's data
+                eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
+                //Classes' data
+                if (poResult.getClassResult()!=null) {
+                    //Process each class in the ResultList
+                    ArrayList<eu.oreplay.db.Clazz> vlCla = new ArrayList<>();
+                    for (eu.oreplay.logic.iof.ClassResult voClassResult : poResult.getClassResult()) {
+                        //List to store the radiocontrols of the class
+                        ArrayList<eu.oreplay.db.ClazzControl> vlClaCon = new ArrayList<>();
+                        //Creates a class
+                        eu.oreplay.db.Clazz voCla = new eu.oreplay.db.Clazz();
+                        voCla.setId("");
+                        voCla.setUuid("");
+                        eu.oreplay.logic.iof.Class voClass = voClassResult.getClazz();
+                        if (voClass!=null) {
+                            voCla.setOeKey((voClass.getId()!=null?voClass.getId().getValue():""));
+                            voCla.setShortName(voClass.getShortName());
+                            voCla.setLongName(voClass.getName());
+                            //Now, the course of the class
+                            if (voClassResult.getCourse()!=null) {
+                                if (!voClassResult.getCourse().isEmpty()) {
+                                    eu.oreplay.logic.iof.SimpleRaceCourse voSimple = voClassResult.getCourse().get(0);
+                                    if (voSimple!=null) {
+                                        eu.oreplay.db.Course voCou = new eu.oreplay.db.Course();
+                                        voCou.setId("");
+                                        voCou.setUuid("");
+                                        voCou.setOeKey((voSimple.getId()!=null?voSimple.getId().getValue():""));
+                                        voCou.setShortName(voSimple.getName());
+                                        voCou.setClimb((voSimple.getClimb()!=null?voSimple.getClimb()+"":""));
+                                        voCou.setDistance((voSimple.getLength()!=null?voSimple.getLength()+"":""));
+                                        voCou.setControls((voSimple.getNumberOfControls()!=null?voSimple.getNumberOfControls().intValue():0));
+                                        //Add the course to the class
+                                        voCla.setCourse(voCou);
+                                    }
+                                }
+                            }
+                            //Some classes would only have individual persons. Some other would have also teams and then teammembers
+                            //Start processing individuals
+                            //---------------------------------------------------------------------------
+                            if (voClassResult.getPersonResult()!=null) {
+                                //Process each runner of the class
+                                ArrayList<eu.oreplay.db.Runner> vlRun = new ArrayList<>();
+                                int vnContRun = 0;
+                                for (eu.oreplay.logic.iof.PersonResult voPersonResult : voClassResult.getPersonResult()) {
+                                    eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
+                                    voRun.setId("");
+                                    voRun.setUuid("");
+                                    eu.oreplay.logic.iof.Person voPerson = voPersonResult.getPerson();
+                                    if (voPerson!=null) {
+                                        voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
+                                        voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
+                                        Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
+                                        voRun.setSex(vcSex);
+                                    }
+                                    //Start Time, Bib#, SiCard and results are in another place
+                                    if (voPersonResult.getResult()!=null) {
+                                        if (!voPersonResult.getResult().isEmpty()) {
+                                            eu.oreplay.logic.iof.PersonRaceResult voPrs = voPersonResult.getResult().get(0);
+                                            if (voPrs!=null) {
+                                                voRun.setBibNumber(voPrs.getBibNumber());
+                                                //SiTiming treats teams as one person with serveral SiCards. I get only the first one
+                                                voRun.setSicard(voPrs.getControlCard()!=null?(!voPrs.getControlCard().isEmpty()?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):""):"");
+                                                //Start Time is set in a first element of RunnerResult List
+                                                ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
+                                                eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
+                                                voRes.setId("");
+                                                voRes.setStageOrder(voSta.getOrderNumber());
+                                                voRes.setLegNumber(1);
+                                                //Compose the type of result, which is a Stage Result
+                                                eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
+                                                voResType.setId(Utils.RESULT_STAGE_ID);
+                                                voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                                                voRes.setResultType(voResType);
+                                                //Transform date values
+                                                voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
+                                                //Get the status, from IOF enumeration to OReplay Ids
+                                                voRes.setStatusCode(Utils.convertIofStatusValue(voPrs.getStatus().value()));
+                                                //Get times and position
+                                                if (voPrs.getTime()!=null)
+                                                    voRes.setTimeSeconds(new java.math.BigDecimal(voPrs.getTime()));
+                                                if (voPrs.getTimeBehind()!=null)
+                                                    voRes.setTimeBehind(new java.math.BigDecimal(voPrs.getTimeBehind()));
+                                                if (voPrs.getPosition()!=null)
+                                                    voRes.setPosition(voPrs.getPosition().intValue());
+                                                //Set remainder fields for points and times
+                                                //Process the Score tags
+                                                if (voPrs.getScore()!=null) {
+                                                    for (eu.oreplay.logic.iof.Score voSco : voPrs.getScore()) {
+                                                        if (voSco!=null) {
+                                                            try {
+                                                                int vnPoints = (int)voSco.getValue();
+                                                                switch (voSco.getType()) {
+                                                                    case "Score":
+                                                                        voRes.setPointsFinal(vnPoints);
+                                                                        break;
+                                                                    case "FinalScore":
+                                                                        voRes.setPointsFinal(vnPoints);
+                                                                        break;
+                                                                    case "Penalty":
+                                                                        voRes.setPointsPenalty(vnPoints);
+                                                                        break;
+                                                                    case "ManualScoreAdjust":
+                                                                        voRes.setPointsAdjusted(vnPoints);
+                                                                        break;
+                                                                    case "XtraPoints":
+                                                                        voRes.setPointsBonus(vnPoints);
+                                                                        break;
+                                                                    default:
+                                                                        break;
+                                                                }
+                                                            }catch(Exception eConvScore) {
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                voRes.setTimeAdjusted(BigDecimal.ZERO);
+                                                voRes.setTimeBonus(BigDecimal.ZERO);
+                                                voRes.setTimeNeutralization(BigDecimal.ZERO);
+                                                voRes.setTimePenalty(BigDecimal.ZERO);
+                                                //Now, process Splits, if present
+                                                if (voPrs.getSplitTime()!=null) {
+                                                    if (!voPrs.getSplitTime().isEmpty()) {
+                                                        int vnSplOrder = 1;
+                                                        ArrayList<eu.oreplay.db.Split> vlSpl = new ArrayList<>();
+                                                        for (eu.oreplay.logic.iof.SplitTime voSplitTime : voPrs.getSplitTime()) {
+                                                            eu.oreplay.db.Split voSpl = new eu.oreplay.db.Split();
+                                                            voSpl.setStation(voSplitTime.getControlCode());
+                                                            //Get the time, but only if the status is not missing
+                                                            if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
+                                                                try {
+                                                                    Date vdSplitTime = new Date((long)voRes.getStartTime().getTime() + (long)(voSplitTime.getTime() * 1000.0));
+                                                                    voSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
+                                                                    voSpl.setReadingTime(vdSplitTime);
+                                                                    BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
+                                                                    //If it has no decimals, stores only the integer part
+                                                                    voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+                                                                }catch (Exception eMilli) {
+                                                                    voSpl.setReadingMilli(null);
+                                                                    voSpl.setTimeSeconds(null);
+                                                                }
+                                                            } else {
+                                                                voSpl.setReadingMilli(null);
+                                                                voSpl.setTimeSeconds(null);
+                                                            }
+                                                            voSpl.setBibRunner(voRun.getBibNumber());
+                                                            voSpl.setOrderNumber(vnSplOrder);
+                                                            voSpl.setPoints(0);
+                                                            voSpl.setSicard(voRun.getSicard());
+                                                            voSpl.setStageOrder(voSta.getOrderNumber());
+                                                            //Add the object to the list
+                                                            vlSpl.add(voSpl);
+                                                            //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
+                                                            if (vbRadio) {
+                                                                eu.oreplay.db.Control voCon = new eu.oreplay.db.Control();
+                                                                voCon.setStation(voSplitTime.getControlCode());
+                                                                if (!vlStations.containsKey(voSplitTime.getControlCode())) {
+                                                                    vlStations.put(voSplitTime.getControlCode(), voSplitTime.getControlCode());
+                                                                    vlCon.add(voCon);
+                                                                }
+                                                                //If it's the first runner of the class, add the control to the list of controls of the class
+                                                                if (vnContRun==0) {
+                                                                    eu.oreplay.db.ClazzControl voClaCon = new eu.oreplay.db.ClazzControl();
+                                                                    voClaCon.setControl(voCon);
+                                                                    vlClaCon.add(voClaCon);
+                                                                }
+                                                            }
+                                                            //Increase the counter of the split order
+                                                            vnSplOrder++;
+                                                        }
+                                                        //Add the list of splits to the results
+                                                        voRes.setSplitList(vlSpl);
+                                                    }
+                                                }
+                                                //Add the result to the list
+                                                vlRes.add(voRes);
+                                                //Add the list to the runner data
+                                                voRun.setRunnerResultList(vlRes);
+                                            }
+                                        }
+                                    }
+                                    //Get Club info
+                                    if (voPersonResult.getOrganisation()!=null) {
+                                        eu.oreplay.logic.iof.Organisation voOrg = voPersonResult.getOrganisation();
+                                        eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
+                                        voClu.setId("");
+                                        voClu.setUuid("");
+                                        voClu.setOeKey(voOrg.getId()!=null?voOrg.getId().getValue():"");
+                                        voClu.setShortName(voOrg.getShortName());
+                                        voClu.setLongName(voOrg.getName());
+                                        //Add the club to the runner
+                                        voRun.setClub(voClu);
+                                    }
+                                    //Add the runner to the list of runners
+                                    vlRun.add(voRun);
+                                    //Increase the counter of runners
+                                    vnContRun++;
+                                }
+                                //Set the list of runners to the class
+                                voCla.setRunnerList(vlRun);
+                            }
+                            //---------------------------------------------------------------------------
+                            //Now, process the teams if the class has teams instead of individuals
+                            //HashMap to store Teams. For each team, its runners. In some XML, the runners of a team come in one TeamResult tag. 
+                            //But, in some other, each runner comes in a separate TeamResult tag (even when it's for the same team)
+                            HashMap<String, eu.oreplay.db.Team> vlTea = new HashMap<>();
+                            //Process each team
+                            if (voClassResult.getTeamResult()!=null) {
+                                //Counter of runners for the class, in order to add controls only when it is the first runner
+                                int vnContRun = 0;
+                                for (eu.oreplay.logic.iof.TeamResult voTeamResult : voClassResult.getTeamResult()) {
+                                    //First, tries to get a good identifier for the team
+                                    String vcTeaId = "";
+                                    String vcTeaBib = (voTeamResult.getBibNumber()!=null?voTeamResult.getBibNumber():"");
+                                    String vcTeaName = (voTeamResult.getName()!=null?voTeamResult.getName():"");
+                                    String vcTeaEntry = (voTeamResult.getEntryId()!=null?voTeamResult.getEntryId().getValue():"");
+                                    if (!vcTeaBib.equals(""))
+                                        vcTeaId = vcTeaBib;
+                                    else if (!vcTeaEntry.equals(""))
+                                        vcTeaId = vcTeaEntry;
+                                    else if (!vcTeaName.equals(""))
+                                        vcTeaId = vcTeaName;
+                                    //Search for the team in the HashMap
+                                    eu.oreplay.db.Team voTea = new eu.oreplay.db.Team();
+                                    if (vlTea.containsKey(vcTeaId)) {
+                                        voTea = vlTea.get(vcTeaId);
+                                    } else {
+                                        voTea.setId("");
+                                        voTea.setUuid("");
+                                        voTea.setBibNumber(vcTeaBib);
+                                        voTea.setTeamName(vcTeaName);
+                                    }                                
+                                    //Get Club info
+                                    if (voTeamResult.getOrganisation()!=null) {
+                                        if (!voTeamResult.getOrganisation().isEmpty()) {
+                                            eu.oreplay.logic.iof.Organisation voOrg = voTeamResult.getOrganisation().get(0);
+                                            eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
+                                            voClu.setId("");
+                                            voClu.setUuid("");
+                                            voClu.setOeKey(voOrg.getId()!=null?voOrg.getId().getValue():"");
+                                            voClu.setShortName(voOrg.getShortName());
+                                            voClu.setLongName(voOrg.getName());
+                                            //Add the club to the team
+                                            voTea.setClub(voClu);
+                                        }
+                                    }
+                                    //Process the team's runners
+                                    if (voTeamResult.getTeamMemberResult()!=null) {
+                                        //Process each runner of the team
+                                        List<eu.oreplay.db.Runner> vlRun = null;
+                                        vlRun = voTea.getRunnerList();
+                                        if (vlRun==null)
+                                            vlRun = new ArrayList<>();
+                                        //Loop for each member
+                                        for (eu.oreplay.logic.iof.TeamMemberResult voTeamMemberResult : voTeamResult.getTeamMemberResult()) {
+                                            eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
+                                            voRun.setId("");
+                                            voRun.setUuid("");
+                                            eu.oreplay.logic.iof.Person voPerson = voTeamMemberResult.getPerson();
+                                            if (voPerson!=null) {
+                                                voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
+                                                voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
+                                                Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
+                                                voRun.setSex(vcSex);
+                                            }
+                                            //Get Club info
+                                            if (voTeamMemberResult.getOrganisation()!=null) {
+                                                eu.oreplay.logic.iof.Organisation voOrg = voTeamMemberResult.getOrganisation();
+                                                eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
+                                                voClu.setId("");
+                                                voClu.setUuid("");
+                                                voClu.setOeKey(voOrg.getId()!=null?voOrg.getId().getValue():"");
+                                                voClu.setShortName(voOrg.getShortName());
+                                                voClu.setLongName(voOrg.getName());
+                                                //Add the club to the runner
+                                                voRun.setClub(voClu);
+                                                //Add the club to the team if the team doesn't have one yet
+                                                if (voTea.getClub()==null)
+                                                    voTea.setClub(voClu);
+                                            } else {
+                                                //Add the club to the runner, copying the same of the team
+                                                voRun.setClub(voTea.getClub());
+                                            }
+                                            //Course, Leg, Start Time, Bib# and SiCard are in another place
+                                            if (voTeamMemberResult.getResult()!=null) {
+                                                if (!voTeamMemberResult.getResult().isEmpty()) {
+                                                    eu.oreplay.logic.iof.TeamMemberRaceResult voPrs = voTeamMemberResult.getResult().get(0);
+                                                    if (voPrs!=null) {
+                                                        voRun.setBibNumber(voPrs.getBibNumber());
+                                                        voRun.setSicard(voPrs.getControlCard()!=null?(!voPrs.getControlCard().isEmpty()?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):""):"");
+                                                        //Now, the specific course of the runner
+                                                        if (voPrs.getCourse()!=null) {
+                                                            eu.oreplay.logic.iof.SimpleCourse voSimple = voPrs.getCourse();
+                                                            if (voSimple!=null) {
+                                                                eu.oreplay.db.Course voCou = new eu.oreplay.db.Course();
+                                                                voCou.setId("");
+                                                                voCou.setUuid("");
+                                                                voCou.setOeKey((voSimple.getId()!=null?voSimple.getId().getValue():""));
+                                                                voCou.setShortName(voSimple.getName());
+                                                                voCou.setClimb((voSimple.getClimb()!=null?voSimple.getClimb()+"":""));
+                                                                voCou.setDistance((voSimple.getLength()!=null?voSimple.getLength()+"":""));
+                                                                voCou.setControls((voSimple.getNumberOfControls()!=null?voSimple.getNumberOfControls().intValue():0));
+                                                                //Add the course to the runner
+                                                                voRun.setCourse(voCou);
+                                                                //If the course of the class is null, add this course to the class too
+                                                                if (voCla.getCourse()==null)
+                                                                    voCla.setCourse(voCou);
+                                                            }
+                                                        }
+                                                        //Start Time is set in a first element of RunnerResult List
+                                                        ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
+                                                        eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
+                                                        voRes.setId("");
+                                                        voRes.setStageOrder(voSta.getOrderNumber());
+                                                        if (voPrs.getLeg()!=null)
+                                                            voRes.setLegNumber(voPrs.getLeg().intValue());
+                                                        //Compose the type of result, which is a Stage Result
+                                                        eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
+                                                        voResType.setId(Utils.RESULT_STAGE_ID);
+                                                        voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                                                        voRes.setResultType(voResType);
+                                                        //Transform date values
+                                                        voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                        voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
+                                                        //Get the status, from IOF enumeration to OReplay Ids
+                                                        voRes.setStatusCode(Utils.convertIofStatusValue(voPrs.getStatus().value()));
+                                                        //Get times and position
+                                                        if (voPrs.getTime()!=null)
+                                                            voRes.setTimeSeconds(new java.math.BigDecimal(voPrs.getTime()));
+                                                        if (voPrs.getTimeBehind()!=null) {
+                                                            if (!voPrs.getTimeBehind().isEmpty()) {
+                                                                voRes.setTimeBehind(new java.math.BigDecimal(voPrs.getTimeBehind().get(0).getValue()));
+                                                            }
+                                                        }
+                                                        if (voPrs.getPosition()!=null) {
+                                                            if (!voPrs.getPosition().isEmpty()) {
+                                                                voRes.setPosition(voPrs.getPosition().get(0).getValue().intValue());
+                                                            }
+                                                        }
+                                                        //Set remainder fields for points and times
+                                                        //Process the Score tags
+                                                        if (voPrs.getScore()!=null) {
+                                                            for (eu.oreplay.logic.iof.Score voSco : voPrs.getScore()) {
+                                                                if (voSco!=null) {
+                                                                    try {
+                                                                        int vnPoints = (int)voSco.getValue();
+                                                                        switch (voSco.getType()) {
+                                                                            case "Score":
+                                                                                voRes.setPointsFinal(vnPoints);
+                                                                                break;
+                                                                            case "FinalScore":
+                                                                                voRes.setPointsFinal(vnPoints);
+                                                                                break;
+                                                                            case "Penalty":
+                                                                                voRes.setPointsPenalty(vnPoints);
+                                                                                break;
+                                                                            case "ManualScoreAdjust":
+                                                                                voRes.setPointsAdjusted(vnPoints);
+                                                                                break;
+                                                                            case "XtraPoints":
+                                                                                voRes.setPointsBonus(vnPoints);
+                                                                                break;
+                                                                            default:
+                                                                                break;
+                                                                        }
+                                                                    }catch(Exception eConvScore) {
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        voRes.setTimeAdjusted(BigDecimal.ZERO);
+                                                        voRes.setTimeBonus(BigDecimal.ZERO);
+                                                        voRes.setTimeNeutralization(BigDecimal.ZERO);
+                                                        voRes.setTimePenalty(BigDecimal.ZERO);
+                                                        //Now, process Splits, if present
+                                                        if (voPrs.getSplitTime()!=null) {
+                                                            if (!voPrs.getSplitTime().isEmpty()) {
+                                                                int vnSplOrder = 1;
+                                                                ArrayList<eu.oreplay.db.Split> vlSpl = new ArrayList<>();
+                                                                for (eu.oreplay.logic.iof.SplitTime voSplitTime : voPrs.getSplitTime()) {
+                                                                    eu.oreplay.db.Split voSpl = new eu.oreplay.db.Split();
+                                                                    voSpl.setStation(voSplitTime.getControlCode());
+                                                                    //Get the time, but only if the status is not missing
+                                                                    if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
+                                                                        try {
+                                                                            Date vdSplitTime = new Date((long)voRes.getStartTime().getTime() + (long)(voSplitTime.getTime() * 1000.0));
+                                                                            voSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
+                                                                            voSpl.setReadingTime(vdSplitTime);
+                                                                            BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
+                                                                            //If it has no decimals, stores only the integer part
+                                                                            voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+                                                                        }catch (Exception eMilli) {
+                                                                            voSpl.setReadingMilli(null);
+                                                                            voSpl.setTimeSeconds(null);
+                                                                        }
+                                                                    } else {
+                                                                        voSpl.setReadingMilli(null);
+                                                                        voSpl.setTimeSeconds(null);
+                                                                    }
+                                                                    voSpl.setBibRunner(voRun.getBibNumber());
+                                                                    voSpl.setOrderNumber(vnSplOrder);
+                                                                    voSpl.setPoints(0);
+                                                                    voSpl.setSicard(voRun.getSicard());
+                                                                    voSpl.setStageOrder(voSta.getOrderNumber());
+                                                                    //Add the object to the list
+                                                                    vlSpl.add(voSpl);
+                                                                    //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
+                                                                    if (vbRadio) {
+                                                                        eu.oreplay.db.Control voCon = new eu.oreplay.db.Control();
+                                                                        voCon.setStation(voSplitTime.getControlCode());
+                                                                        if (!vlStations.containsKey(voSplitTime.getControlCode())) {
+                                                                            vlStations.put(voSplitTime.getControlCode(), voSplitTime.getControlCode());
+                                                                            vlCon.add(voCon);
+                                                                        }
+                                                                        //If it's the first runner of the class, add the control to the list of controls of the class
+                                                                        if (vnContRun==0) {
+                                                                            eu.oreplay.db.ClazzControl voClaCon = new eu.oreplay.db.ClazzControl();
+                                                                            voClaCon.setControl(voCon);
+                                                                            vlClaCon.add(voClaCon);
+                                                                        }
+                                                                    }
+                                                                    //Increase the counter of the split order
+                                                                    vnSplOrder++;
+                                                                }
+                                                                //Add the list of splits to the results
+                                                                voRes.setSplitList(vlSpl);
+                                                            }
+                                                        }
+                                                        //Create or update the team's result from the OverallResult tag
+                                                        List<eu.oreplay.db.TeamResult> vlTes = new ArrayList<>();
+                                                        eu.oreplay.db.TeamResult voTes = new eu.oreplay.db.TeamResult();
+                                                        if (voPrs.getOverallResult()!=null) {
+                                                            OverallResult voOve = voPrs.getOverallResult();
+                                                            voTes.setId(voRes.getId());
+                                                            voTes.setStageOrder(voRes.getStageOrder());
+                                                            voTes.setResultType(voRes.getResultType());
+                                                            //Get the status, from IOF enumeration to OReplay Ids
+                                                            voTes.setStatusCode(Utils.convertIofStatusValue(voOve.getStatus().value()));
+                                                            //Get times and position
+                                                            if (voOve.getTime()!=null)
+                                                                voTes.setTimeSeconds(new java.math.BigDecimal(voOve.getTime()));
+                                                            if (voOve.getTimeBehind()!=null) {
+                                                                voTes.setTimeBehind(new java.math.BigDecimal(voOve.getTimeBehind()));
+                                                            }
+                                                            if (voOve.getPosition()!=null) {
+                                                                voTes.setPosition(voOve.getPosition().intValue());
+                                                            }                                                        
+                                                            //Set remainder fields for points and times
+                                                            //Process the Score tags
+                                                            if (voOve.getScore()!=null) {
+                                                                for (eu.oreplay.logic.iof.Score voSco : voOve.getScore()) {
+                                                                    if (voSco!=null) {
+                                                                        try {
+                                                                            int vnPoints = (int)voSco.getValue();
+                                                                            switch (voSco.getType()) {
+                                                                                case "Score":
+                                                                                    voTes.setPointsFinal(vnPoints);
+                                                                                    break;
+                                                                                case "FinalScore":
+                                                                                    voTes.setPointsFinal(vnPoints);
+                                                                                    break;
+                                                                                case "Penalty":
+                                                                                    voTes.setPointsPenalty(vnPoints);
+                                                                                    break;
+                                                                                case "ManualScoreAdjust":
+                                                                                    voTes.setPointsAdjusted(vnPoints);
+                                                                                    break;
+                                                                                case "XtraPoints":
+                                                                                    voTes.setPointsBonus(vnPoints);
+                                                                                    break;
+                                                                                default:
+                                                                                    break;
+                                                                            }
+                                                                        }catch(Exception eConvScore) {
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                            voTes.setTimeAdjusted(BigDecimal.ZERO);
+                                                            voTes.setTimeBonus(BigDecimal.ZERO);
+                                                            voTes.setTimeNeutralization(BigDecimal.ZERO);
+                                                            voTes.setTimePenalty(BigDecimal.ZERO);
+                                                            //Some XML files have the results of the runner inside the Overall tag
+                                                            //So, let's write the runner values from this Overall
+                                                            voRes.setStatusCode(voTes.getStatusCode());
+                                                            voRes.setTimeSeconds(voTes.getTimeSeconds());
+                                                            voRes.setTimeBehind(voTes.getTimeBehind());
+                                                            voRes.setPosition(voTes.getPosition());
+                                                            voRes.setPointsFinal(voTes.getPointsFinal());
+                                                            voRes.setPointsPenalty(voTes.getPointsPenalty());
+                                                            voRes.setPointsAdjusted(voTes.getPointsAdjusted());
+                                                            voRes.setPointsBonus(voTes.getPointsBonus());
+                                                            voRes.setTimeAdjusted(BigDecimal.ZERO);
+                                                            voRes.setTimeBonus(BigDecimal.ZERO);
+                                                            voRes.setTimeNeutralization(BigDecimal.ZERO);
+                                                            voRes.setTimePenalty(BigDecimal.ZERO);                                                        
+                                                        } else {
+                                                            //If there is no Overall tag, put the value of the team as of the runner
+                                                            voTes.setId(voRes.getId());
+                                                            voTes.setStageOrder(voRes.getStageOrder());
+                                                            voTes.setResultType(voRes.getResultType());
+                                                            voTes.setStatusCode(voRes.getStatusCode());
+                                                            voTes.setTimeSeconds(voRes.getTimeSeconds());
+                                                            voTes.setTimeBehind(voRes.getTimeBehind());
+                                                            voTes.setPosition(voRes.getPosition());
+                                                            voTes.setPointsFinal(voRes.getPointsFinal());
+                                                            voTes.setPointsPenalty(voRes.getPointsPenalty());
+                                                            voTes.setPointsAdjusted(voRes.getPointsAdjusted());
+                                                            voTes.setPointsBonus(voRes.getPointsBonus());
+                                                            voTes.setTimeAdjusted(BigDecimal.ZERO);
+                                                            voTes.setTimeBonus(BigDecimal.ZERO);
+                                                            voTes.setTimeNeutralization(BigDecimal.ZERO);
+                                                            voTes.setTimePenalty(BigDecimal.ZERO);
+                                                        }
+                                                        //Add the result to the list
+                                                        vlRes.add(voRes);
+                                                        //Add the list to the runner data
+                                                        voRun.setRunnerResultList(vlRes);
+                                                        //Add the result to the list
+                                                        vlTes.add(voTes);
+                                                        //Add the list to the team data
+                                                        voTea.setTeamResultList(vlTes);
+                                                    }
+                                                }
+                                            }
+                                            //Add the runner to the list of runners
+                                            vlRun.add(voRun);                                        
+                                            //Increase the counter of runners
+                                            vnContRun++;
+                                        }
+                                        //Set the list of runners to the team
+                                        voTea.setRunnerList(vlRun);
+                                    }
+                                    //Remove the previous contents of the team from the HashMap and insert it again
+                                    vlTea.remove(vcTeaId);
+                                    vlTea.put(vcTeaId, voTea);
+                                }
+                                //Add the list of teams to the class
+                                List<eu.oreplay.db.Team> vlTeaNew = new ArrayList<>(vlTea.values());
+                                voCla.setTeamList(vlTeaNew);
+                            }
+                            //If it's a result with radiocontrols, add the list of class-controls to the class
+                            if (vbRadio && !vlClaCon.isEmpty()) {
+                                voCla.setClazzControlList(vlClaCon);
+                            }
+                        }
+                        //Add the class to the list of classes
+                        vlCla.add(voCla);
+                    }
+                    //Set the list of classes to the stage
+                    voSta.setClazzList(vlCla);
+                    //If it's a result with radiocontrols, add the list of controls to the stage
+                    if (vbRadio && !vlCon.isEmpty()) {
+                        voSta.setControlList(vlCon);
+                    }
+                }
+                //Add the stage to the event
+                ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
+                vlSta.add(voSta);
+                voEve.setStageList(vlSta);
+            }            
+        }catch(Exception e) {
+            e.printStackTrace();
         }
         return voEve;
     }
