@@ -27,52 +27,52 @@ public class ConverterCsvOSToModel extends ConverterToModel{
     private String cSeparator = ";";
     private String cEncoding = Utils.ENCODING_UTF_8;
     private eu.oreplay.db.Event oEve = null; //Event/Stage basic information to perform the calculations (UUID, base date, base time, description, etc)
-    private final String[] FILE = {"OS0012", "OS0014", "OS0016a", "OS0012_V12", "OS0014_V12", "OS0016a_V12"};
-    private final int[] COL_TEA_BIB = {1, 1, 1, -1, -1, -1};
+    private final String[] FILE = {"OS0012", "OS0014", "OS0016a", "OS0012_V12", "OS0014_V12", "OS0016"};
+    private final int[] COL_TEA_BIB = {1, 1, 1, 1, 1, 1};
     private final int[] COL_TEA_BIBALT = {-1, -1, -1, -1, -1, -1};
-    private final int[] COL_TEA_NAME = {3, 18, 18, -1, -1, -1};
-    private final int[] COL_TEA_START = {6, -1, -1, -1, -1, -1};
-    private final int[] COL_TEA_TIME = {7, -1, 30, -1, -1, -1};
-    private final int[] COL_TEA_STATUS = {8, -1, 31, -1, -1, -1};
-    private final int[] COL_TEA_POSITION = {9, -1, 32, -1, -1, -1};
-    private final int[] COL_CLU_ID = {13, 17, 17, -1, -1, -1};
-    private final int[] COL_CLU_CITY = {14, -1, -1, -1, -1, -1};
-    private final int[] COL_CLU_SHORT = {15, -1, -1, -1, -1, -1};
+    private final int[] COL_TEA_NAME = {3, 18, 18, 3, 19, 19};
+    private final int[] COL_TEA_START = {6, -1, -1, 6, -1, -1};
+    private final int[] COL_TEA_TIME = {7, -1, 30, 7, -1, 31};
+    private final int[] COL_TEA_STATUS = {8, -1, 31, 8, -1, 32};
+    private final int[] COL_TEA_POSITION = {9, -1, 32, 9, -1, 33};
+    private final int[] COL_CLU_ID = {13, 17, 17, 13, 18, 18};
+    private final int[] COL_CLU_CITY = {14, -1, -1, 14, -1, -1};
+    private final int[] COL_CLU_SHORT = {15, -1, -1, 15, -1, -1};
     private final int[] COL_CLU_LONG = {-1, -1, -1, -1, -1, -1};
-    private final int[] COL_CAT_ID = {19, 19, 19, -1, -1, -1};
-    private final int[] COL_CAT_SHORT = {20, 20, 20, -1, -1, -1};
-    private final int[] COL_CAT_LONG = {21, -1, -1, -1, -1, -1};
-    private final int[] COL_LEGS = {22, -1, -1, -1, -1, -1};
-    private final int[] COL_LEGINDEX = {31, 0, 0, -1, -1, -1};
-    private final int[] COL_LEGFIELDS = {14, 256, 256, -1, -1, -1};
-    private final int[] COL_LEG = {1, 4, 4, -1, -1, -1};
-    private final int[] COL_LASTNAME = {3, 6, 6, -1, -1, -1};
-    private final int[] COL_FIRSTNAME = {4, 7, 7, -1, -1, -1};
-    private final int[] COL_SEX = {6, 9, 9, -1, -1, -1};
-    private final int[] COL_START = {7, 10, 10, -1, -1, -1};
-    private final int[] COL_FINISH = {8, 11, 11, -1, -1, -1};
-    private final int[] COL_TIME = {9, 12, 12, -1, -1, -1};
-    private final int[] COL_STATUS = {10, 13, 13, -1, -1, -1};
-    private final int[] COL_SICARD = {11, 14, 14, -1, -1, -1};
+    private final int[] COL_CAT_ID = {19, 19, 19, 19, 20, 20};
+    private final int[] COL_CAT_SHORT = {20, 20, 20, 20, 21, 21};
+    private final int[] COL_CAT_LONG = {21, -1, -1, 21, -1, -1};
+    private final int[] COL_LEGS = {22, -1, -1, 22, -1, -1};
+    private final int[] COL_LEGINDEX = {31, 0, 0, 31, 0, 0};
+    private final int[] COL_LEGFIELDS = {14, 256, 256, 15, 256, 256};
+    private final int[] COL_LEG = {1, 4, 4, 1, 4, 4};
+    private final int[] COL_LASTNAME = {3, 6, 6, 3, 6, 6};
+    private final int[] COL_FIRSTNAME = {4, 7, 7, 4, 7, 7};
+    private final int[] COL_SEX = {6, 9, 9, 6, 9, 9};
+    private final int[] COL_START = {7, 10, 10, 7, 10, 10};
+    private final int[] COL_FINISH = {8, 11, 11, 8, 11, 11};
+    private final int[] COL_TIME = {9, 12, 12, 9, 12, 12};
+    private final int[] COL_STATUS = {10, 13, 13, 10, 13, 13};
+    private final int[] COL_SICARD = {11, 14, 14, 11, 14, 14};
     private final int[] COL_SICARDALT = {-1, -1, -1, -1, -1, -1};
-    private final int[] COL_DBID = {13, 16, 16, -1, -1, -1};
-    private final int[] COL_POSITION = {-1, 27, 27, -1, -1, -1};
-    private final int[] COL_COU_ID = {-1, 21, 24, -1, -1, -1};
-    private final int[] COL_COU_SHORT = {-1, 22, 25, -1, -1, -1};
-    private final int[] COL_COU_DIST = {-1, 23, 26, -1, -1, -1};
-    private final int[] COL_COU_CLIMB = {-1, 24, 27, -1, -1, -1};
-    private final int[] COL_COU_CONTROLS = {-1, 25, 28, -1, -1, -1};
-    private final int[] COL_COU_COMBINATION = {-1, 26, 29, -1, -1, -1};
-    private final int[] COL_SPLIT_STATION = {-1, 30, -1, -1, -1, -1};
-    private final int[] COL_SPLIT_TIME = {-1, 31, -1, -1, -1, -1};
-    private final int[] COL_SPLIT_INC = {-1, 2, -1, -1, -1, -1};
-    private final int[] COL_RADIO_NUM = {-1, -1, 33, -1, -1, -1};
-    private final int[] COL_RADIO_STATION = {-1, -1, 34, -1, -1, -1};
-    private final int[] COL_RADIO_TIME = {-1, -1, 35, -1, -1, -1};
-    private final int[] COL_RADIO_POSITION = {-1, -1, 36, -1, -1, -1};
-    private final int[] COL_RADIO_INC = {-1, -1, 4, -1, -1, -1};
+    private final int[] COL_DBID = {13, 16, 16, 13, 16, 16};
+    private final int[] COL_IOFID = {-1, -1, -1, 14, 17, 17};
+    private final int[] COL_POSITION = {-1, 27, -1, -1, 28, -1};
+    private final int[] COL_COU_ID = {-1, 21, 24, -1, 22, 25};
+    private final int[] COL_COU_SHORT = {-1, 22, 25, -1, 23, 26};
+    private final int[] COL_COU_DIST = {-1, 23, 26, -1, 24, 27};
+    private final int[] COL_COU_CLIMB = {-1, 24, 27, -1, 25, 28};
+    private final int[] COL_COU_CONTROLS = {-1, 25, 28, -1, 26, 29};
+    private final int[] COL_COU_COMBINATION = {-1, 26, 29, -1, 27, 30};
+    private final int[] COL_SPLIT_STATION = {-1, 30, -1, -1, 31, -1};
+    private final int[] COL_SPLIT_TIME = {-1, 31, -1, -1, 32, -1};
+    private final int[] COL_SPLIT_INC = {-1, 2, -1, -1, 2, -1};
+    private final int[] COL_RADIO_NUM = {-1, -1, 33, -1, -1, 34};
+    private final int[] COL_RADIO_STATION = {-1, -1, 34, -1, -1, 35};
+    private final int[] COL_RADIO_TIME = {-1, -1, 35, -1, -1, 36};
+    private final int[] COL_RADIO_POSITION = {-1, -1, 36, -1, -1, 37};
+    private final int[] COL_RADIO_INC = {-1, -1, 4, -1, -1, 4};
     //NOT USED FOR RELAYS
-    private final int[] COL_IOFID = {-1, -1, -1, -1, -1, -1};
     private final int[] COL_IOFID_FEDO = {33, 33, 33, -1, -1, -1};
     private final int[] COL_BIRTH = {-1, -1, -1, -1, -1, -1};
     private final int[] COL_BIRTH_FEDO = {37, 37, 37, -1, -1, -1};
@@ -172,7 +172,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
         eu.oreplay.db.Event voEve = null;
         //Depending on the type of file, the columns of the fields are different
         int vnColIndex = this.getIndexFromContentsAndSource();       
-        //HashMap to store Classes. For each class its runners. Runners shoulb be ordered by class in the CSV but, what if not?...
+        //HashMap to store Classes. For each class its runners. Runners should be ordered by class in the CSV but, what if not?...
         HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<>();
         if (plStart!=null) {
             //Event's data
@@ -274,6 +274,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                             voRun.setSicard(COL_SICARD[vnColIndex]>=0?vaRecord[COL_SICARD[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
                             voRun.setSicardAlt(COL_SICARDALT[vnColIndex]>=0?vaRecord[COL_SICARDALT[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
                             voRun.setDbId(COL_DBID[vnColIndex]>=0?vaRecord[COL_DBID[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
+                            voRun.setIofId(COL_IOFID[vnColIndex]>=0?vaRecord[COL_IOFID[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
                             voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
                             voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"");
                             voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]+vnColIni].length()>0?vaRecord[COL_SEX[vnColIndex]+vnColIni].trim().replaceAll("\"", "").charAt(0):' '):' '));
@@ -648,22 +649,22 @@ public class ConverterCsvOSToModel extends ConverterToModel{
         return voEve;
     }
     /**
-     * When processing CSV from OE, depending on OE version and type of contents,
+     * When processing CSV from OS, depending on OS version and type of contents,
      * this method returns an index, meaning the place things like column positions, etc,
      * is located
-     * OE2010, STARTS or GLOBAL RESULTS = 0
-     * OE2010, BREAKDOWN (SPLITS) = 1
-     * OE2010, RADIOCONTROL (INTERMEDIATE) = 2
-     * OEV12, STARTS or GLOBAL RESULTS = 3
-     * OEV12, BREAKDOWN (SPLITS) = 4
-     * OEV12, RADIOCONTROL (INTERMEDIATE) = 5
+     * OS2010, STARTS or GLOBAL RESULTS = 0
+     * OS2010, BREAKDOWN (SPLITS) = 1
+     * OS2010, RADIOCONTROL (INTERMEDIATE) = 2
+     * OSV12, STARTS or GLOBAL RESULTS = 3
+     * OSV12, BREAKDOWN (SPLITS) = 4
+     * OSV12, RADIOCONTROL (INTERMEDIATE) = 5
      * @return int Index of the values
      */
     @JsonIgnore
     public int getIndexFromContentsAndSource() {
         int vnResul = 0;
         try {
-            if (getcSource().equals(ConverterToModel.SRC_OE2010)) {
+            if (getcSource().equals(ConverterToModel.SRC_OS2010)) {
                 if ((getcContents().equals(ConverterToModel.CONTENTS_RESULT) && getcResultsType().equals(ConverterToModel.RES_TOTALS)) ||
                        (getcContents().equals(ConverterToModel.CONTENTS_START)))
                     vnResul = 0;
@@ -671,7 +672,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                     vnResul = 1;
                 else if (getcResultsType().equals(ConverterToModel.RES_RADIO))
                     vnResul = 2;
-            } else if (getcSource().equals(ConverterToModel.SRC_OEV12)) {
+            } else if (getcSource().equals(ConverterToModel.SRC_OSV12)) {
                 if ((getcContents().equals(ConverterToModel.CONTENTS_RESULT) && getcResultsType().equals(ConverterToModel.RES_TOTALS)) ||
                        (getcContents().equals(ConverterToModel.CONTENTS_START)))
                     vnResul = 3;
