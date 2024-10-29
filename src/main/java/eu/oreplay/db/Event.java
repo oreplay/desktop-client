@@ -75,6 +75,8 @@ public class Event implements Serializable {
     private String picture;
     private String scope;
     private String location;
+    @Column(name = "country_code")
+    private String countryCode;
     
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
@@ -381,6 +383,15 @@ public class Event implements Serializable {
         this.location = location;
     }
 
+    @JsonProperty("country_code")
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+    
     
     @Override
     public int hashCode() {

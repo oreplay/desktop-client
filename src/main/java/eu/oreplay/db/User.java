@@ -51,6 +51,7 @@ public class User implements Serializable {
     @Id
     @Basic(optional = false)
     private String id;
+    private String email;
     private String password;
     @Column(name = "first_name")
     private String firstName;
@@ -99,6 +100,14 @@ public class User implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
