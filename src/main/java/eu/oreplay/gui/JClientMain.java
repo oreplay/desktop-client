@@ -259,23 +259,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        if (pnlCheck!=null) {
-            pnlCheck.saveFormParameters();
-            //Remove listener
-            pnlCheck.removeEventListener(this);
-        }
-        if (pnlLogin!=null) {
-            pnlLogin.saveFormParameters();
-            //Remove listener
-            pnlLogin.removeEventListener(this);
-        }
-        if (pnlUpload!=null) {
-            pnlUpload.saveFormParameters();
-            //Remove listener
-            pnlUpload.removeEventListener(this);
-        }
-        this.saveFormsParameters();
-        oLog.info(resMessages.getString("info_exit_app"));
+        this.stopListenersBeforeExit();
     }//GEN-LAST:event_formWindowClosing
 
     /**
@@ -348,8 +332,27 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private eu.oreplay.gui.ConnBackUploadPanel pnlUpload;
     // End of variables declaration//GEN-END:variables
 
+    private void stopListenersBeforeExit() {
+        if (pnlCheck!=null) {
+            pnlCheck.saveFormParameters();
+            //Remove listener
+            pnlCheck.removeEventListener(this);
+        }
+        if (pnlLogin!=null) {
+            pnlLogin.saveFormParameters();
+            //Remove listener
+            pnlLogin.removeEventListener(this);
+        }
+        if (pnlUpload!=null) {
+            pnlUpload.saveFormParameters();
+            //Remove listener
+            pnlUpload.removeEventListener(this);
+        }
+        this.saveFormsParameters();
+        oLog.info(resMessages.getString("info_exit_app"));        
+    }
     public void exitApp() {
-        oLog.info(resMessages.getString("info_exit_app"));
+        this.stopListenersBeforeExit();
         System.exit(0);
     }
     /**

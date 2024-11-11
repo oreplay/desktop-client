@@ -172,6 +172,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 voRes.setResultType(null);
                                                 //Transform the date value
                                                 voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                //There is only Status info at Result tag
                                                 voRes.setStatusCode(Utils.STATUS_OK_ID);
                                                 //Add the result to the list
                                                 vlRes.add(voRes);
@@ -294,6 +295,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voRes.setResultType(null);
                                                         //Transform the date value
                                                         voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                        //There is only Status info at Result tag
                                                         voRes.setStatusCode(Utils.STATUS_OK_ID);
                                                         //Add the result to the list
                                                         vlRes.add(voRes);
@@ -307,6 +309,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                             voTes.setStageOrder(voRes.getStageOrder());
                                                             voTes.setResultType(voRes.getResultType());
                                                             voTes.setStartTime(voRes.getStartTime());
+                                                            //There is only Status info at Result tag
                                                             voTes.setStatusCode(voRes.getStatusCode());
                                                             //Add the result to the list
                                                             vlTes.add(voTes);

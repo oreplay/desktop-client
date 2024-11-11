@@ -40,6 +40,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     private final int[] COL_BIRTH = {-1, -1, -1, 9, 9, 9};
     private final int[] COL_BIRTH_FEDO = {37, 37, 37, 9, 9, 9};
     private final int[] COL_SEX = {8, 8, 8, 11, 11, 11};
+    private final int[] COL_NC = {10, 10, 10, 13, 13, 13};
     private final int[] COL_START = {11, 11, 11, 14, 14, 14};
     private final int[] COL_FINISH = {12, 12, 12, 15, 15, 15};
     private final int[] COL_TIME = {13, 13, 13, 16, 16, 16};
@@ -272,7 +273,10 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         voRes.setStartTime(vdTime);
                     }catch(Exception eStart) {
                     }
-                    voRes.setStatusCode('0');
+                    String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
+                    voRes.setStatusCode(Utils.STATUS_OK_ID);
+                    if (vcNc.equals("X") || vcNc.equals("1"))
+                        voRes.setStatusCode(Utils.STATUS_NC_ID);
                     //Add the result to the list
                     vlRes.add(voRes);
                     //Add the list to the runner data
@@ -494,6 +498,11 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         if (vcStatus.equals(""))
                             vcStatus = "0";
                         voRes.setStatusCode(vcStatus.charAt(0));
+                        //Check if it's a NotCompeting Runner. If so, change the status code
+                        String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
+                        voRes.setStatusCode(Utils.STATUS_OK_ID);
+                        if (vcNc.equals("X") || vcNc.equals("1"))
+                            voRes.setStatusCode(Utils.STATUS_NC_ID);
                         //Get the position
                         int vnPosition = 0;
                         try {

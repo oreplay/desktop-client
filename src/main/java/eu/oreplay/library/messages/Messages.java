@@ -16,7 +16,7 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.2.6"},
+        {"main", "OReplay. Desktop Client 0.2.8"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -135,6 +135,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"hour_short", "h"},
         {"minute_short", "m"},
         {"second_short", "s"},
+        {"second_mid", "sec."},
         {"about", "About..."},
         {"language", "Language"},
         {"english", "English"},
@@ -234,11 +235,16 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_waiting_connection", "Waiting for connection."},
         {"info_connection_ok", "Connection established."},
         {"info_connection_nook", "Could not connect."},
+        {"info_connection_timeout", "Timeout reached before connection."},
+        {"info_connection_break", "Connection break while processing data."},
         {"info_login_ok", "Login Ok."},
         {"info_login_nook", "Login failed."},
         {"info_data_novalid", "No valid data"},
         {"info_upload_started", "Upload process started"},
         {"info_upload_stopped", "Upload process stopped"},
+        {"info_fileprocess_started", "File process started"},
+        {"info_fileprocess_stopped", "File process stopped"},
+        {"info_fileprocess_finished", "File process finished"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},
         {"error_format_unknown", "Format unknown or not supported yet"},

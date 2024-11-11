@@ -97,8 +97,11 @@ public class Utils {
     public static final String STATUS_OVER_DESC = "OverTime";
     public static final Character STATUS_FINISHED_ID = 'F';
     public static final String STATUS_FINISHED_DESC = "Finished";
+    public static final Character STATUS_NC_ID = '9';
+    public static final String STATUS_NC_DESC = "NotCompeting";
     //Values for Split Status
     public static final String SPLIT_STATUS_MISSING = "Missing";
+    public static final String SPLIT_STATUS_ADDITIONAL = "Additional";
         
     final static int[] daysmonth = {29,31,28,31,30,31,30,31,31,30,31,30,31};
     private static Logger oLog = null;
@@ -211,6 +214,8 @@ public static Character convertIofStatusValue (String pcValue) {
             vcResul = Utils.STATUS_OVER_ID;
         } else if (pcValue.toLowerCase().equals(Utils.STATUS_FINISHED_DESC.toLowerCase())) {
             vcResul = Utils.STATUS_FINISHED_ID;
+        } else if (pcValue.toLowerCase().equals(Utils.STATUS_NC_DESC.toLowerCase())) {
+            vcResul = Utils.STATUS_NC_ID;
         }
     }catch(Exception e) {
     }
