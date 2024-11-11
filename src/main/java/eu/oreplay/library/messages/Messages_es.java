@@ -16,7 +16,7 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.2.6"},
+        {"main", "OReplay. Cliente de Escritorio 0.2.8"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
@@ -135,6 +135,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"hour_short", "h"},
         {"minute_short", "m"},
         {"second_short", "s"},
+        {"second_mid", "seg."},
         {"about", "Acerca de..."},
         {"language", "Idioma"},
         {"english", "English"},
@@ -234,11 +235,16 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"info_waiting_connection", "Esperando para conectar."},
         {"info_connection_ok", "Conexión realizada."},
         {"info_connection_nook", "No pudo conectar."},
+        {"info_connection_timeout", "Timeout alcanzado antes de conectar."},
+        {"info_connection_break", "Conexión rota mientras procesaba datos."},
         {"info_login_ok", "Login correcto."},
         {"info_login_nook", "Login erróneo."},
         {"info_data_novalid", "Datos no válidos"},
         {"info_upload_started", "Proceso de subida comenzado"},
         {"info_upload_stopped", "Proceso de subida parado"},
+        {"info_fileprocess_started", "Proceso de fichero comenzado"},
+        {"info_fileprocess_stopped", "Proceso de fichero parado"},
+        {"info_fileprocess_finished", "Proceso de fichero finalizado"},
 
         {"error_exception", "Algo fue mal y el programa entró en un bloque de excepción"},
         {"error_format_unknown", "Formato desconocido o no soportado aún"},

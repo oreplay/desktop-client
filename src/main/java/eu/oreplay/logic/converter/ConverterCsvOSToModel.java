@@ -31,6 +31,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
     private final int[] COL_TEA_BIB = {1, 1, 1, 1, 1, 1};
     private final int[] COL_TEA_BIBALT = {-1, -1, -1, -1, -1, -1};
     private final int[] COL_TEA_NAME = {3, 18, 18, 3, 19, 19};
+    private final int[] COL_TEA_NC = {5, -1, -1, 5, -1, -1};
     private final int[] COL_TEA_START = {6, -1, -1, 6, -1, -1};
     private final int[] COL_TEA_TIME = {7, -1, 30, 7, -1, 31};
     private final int[] COL_TEA_STATUS = {8, -1, 31, 8, -1, 32};
@@ -236,7 +237,10 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         voRet.setStartTime(vdTime);
                     }catch(Exception eStart) {
                     }
-                    voRet.setStatusCode('0');
+                    String vcNc = (COL_TEA_NC[vnColIndex]>=0?vaRecord[COL_TEA_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
+                    voRet.setStatusCode(Utils.STATUS_OK_ID);
+                    if (vcNc.equals("X") || vcNc.equals("1"))
+                        voRet.setStatusCode(Utils.STATUS_NC_ID);
                     //Add the result to the list
                     vlRet.add(voRet);
                     //Add the list to the team data
@@ -294,7 +298,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                 voRes.setStartTime(vdTime);
                             }catch(Exception eStart) {
                             }
-                            voRes.setStatusCode('0');
+                            voRes.setStatusCode(voRet.getStatusCode());
                             //Add the result to the list
                             vlRes.add(voRes);
                             //Add the list to the runner data

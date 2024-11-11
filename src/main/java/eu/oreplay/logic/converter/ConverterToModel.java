@@ -44,6 +44,7 @@ public abstract class ConverterToModel {
     public static final String SRC_OESCOREV12 = "OEScorev12";
     public static final String SRC_SITIMING = "SiTiming";
     public static final String SRC_MEOS = "MeOS";
+    public static final String SRC_OPRE = "ControlOPrecision";
 
     private String cFile;
     private boolean bExists;
