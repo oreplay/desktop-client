@@ -29,6 +29,31 @@ By now, Java is being explored as the development language. A desktop applicatio
 - **Conversion to JSON**
 - **Uploading to the server**, and letting the backend make all of the big checkings, calculations and operations with the database
 
+Current file processing capabilities:
+
+| CSV             |             | Starts  | Totals | Breakdown (splits) | Radiocontrols |
+| :-------------- | :---------- | :-----: | :----: | :----------------: | :-----------: |
+| Classic         |             |         |        |                    |               |
+|                 | OE2010      |    X    | X      | X                  | X             |
+|                 | OEv12       |    X    | X      | X                  | X             |
+| Relays          |             |         |        |                    |               |
+|                 | OS2010      |    X    |        |                    |               |
+|                 | OSv12       |    X    |        |                    |               |
+|                 |             |         |        |                    |               |
+
+| XML             |             | Starts  | Totals | Breakdown (splits) | Radiocontrols |
+| :-------------- | :---------- | :-----: | :----: | :----------------: | :-----------: |
+| Classic         |             |         |        |                    |               |
+|                 | OE2010      |    X    | X      | X                  | X             |
+|                 | OEv12       |    X    | X      | X                  | X             |
+| Relays          |             |         |        |                    |               |
+|                 | OS2010      |    X    | X      | X                  | X             |
+|                 | OSv12       |    X    | X      | X                  | X             |
+| Rogaine         |             |         |        |                    |               |
+|                 | MeOS        |    X    | X      | X                  | X             |
+|                 | OEScorev12  |         | X      | X                  | X             |
+|                 | SiTiming    |         | X      | X                  | X             |
+
 # For starting collaboration
 
 Cloning GitHub Netbeans project
