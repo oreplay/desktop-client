@@ -375,11 +375,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 Date voFinish = new Date();
                 Date voNow = new Date();
                 String vcNow = "";
+                String vcFile = "";
                 //Iterate until the thread is stopped
                 while (bRun) {
                     try {
                         //First, find a file with the given extension located at the given folder
-                        String vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
+                        vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
                         if (vcFile!=null) {
                             //Get a Timestamp when starting process
                             voStart = new Date();
@@ -481,18 +482,23 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                     } catch (java.net.http.HttpConnectTimeoutException eTimeout) {
                         voFinish = new java.util.Date();
                         vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                        JClientMain.getoLog().error(resMessages.getString("info_connection_timeout") + " - " + vcNow);
                         JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eTimeout);
                         //This calls the method "process" in the SwingWorker, to set a status text in the panel
                         publish(resMessages.getString("info_connection_timeout") + " - " + vcNow + "\n");
                     } catch (java.io.IOException | java.lang.InterruptedException eInterrupt) {
                         voFinish = new java.util.Date();
                         vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                        JClientMain.getoLog().error(resMessages.getString("info_connection_break") + " - " + vcNow);
                         JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eInterrupt);
+                        //Deletes the file assuming that the server is processing the file but aborted the connection due to a load balanced server
+                        Utils.deleteFile(vcFile);
                         //This calls the method "process" in the SwingWorker, to set a status text in the panel
                         publish(resMessages.getString("info_connection_break") + " - " + vcNow + "\n");
                     } catch (Exception eNet) {
                         voFinish = new java.util.Date();
                         vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                        JClientMain.getoLog().error(resMessages.getString("info_connection_nook") + " - " + vcNow);
                         JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eNet);
                         //This calls the method "process" in the SwingWorker, to set a status text in the panel
                         publish(resMessages.getString("info_connection_nook") + " - " + vcNow + "\n");
