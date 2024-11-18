@@ -14,6 +14,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import eu.oreplay.utils.Utils;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.*;
 
 
@@ -128,9 +132,17 @@ public class OReplayDataTransfer {
      * @return String JSON or error message
      */
     public String processFile() {
-        String vcResul = "";
-        vcResul = processFile(oConf, "", "", "", "");
+        String vcResul = processFile(oConf, "", "", "", "");
         return vcResul;
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @return HashMap<String, String> JSON or error message, splitted by event classes
+     */
+    public HashMap<String, String> processFileAndSplit() {
+        HashMap<String, String> vaResul = processFile(oConf, "", "", "", "", true);
+        return vaResul;
     }
     /**
      * Given the metadata defining the kind of file with data, this method
@@ -139,9 +151,18 @@ public class OReplayDataTransfer {
      * @return String JSON or error message
      */
     public String processFile(ConverterToModel poConv) {
-        String vcResul = "";
-        vcResul = processFile(poConv, "", "", "", "");
+        String vcResul = processFile(poConv, "", "", "", "");
         return vcResul;
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @param poConv ConverterToModel Metadata obtained previously
+     * @return HashMap<String, String> JSON or error message, splitted by event classes
+     */
+    public HashMap<String, String> processFileAndSplit(ConverterToModel poConv) {
+        HashMap<String, String> vaResul = processFile(poConv, "", "", "", "", true);
+        return vaResul;
     }
     /**
      * Given the metadata defining the kind of file with data, this method
@@ -159,6 +180,19 @@ public class OReplayDataTransfer {
     /**
      * Given the metadata defining the kind of file with data, this method
      * processes the data and generates a JSON, or returns a message with error
+     * @param pcEveId String Event's Id
+     * @param pcEveDesc String Event's description
+     * @param pcStaId String Stage's Id
+     * @param pcStaDesc String Stage's description
+     * @return HashMap<String, String> JSON or error message, splitted by event classes
+     */
+    public HashMap<String, String> processFileAndSplit(String pcEveId, String pcEveDesc, 
+            String pcStaId, String pcStaDesc) {
+        return processFile (oConf, pcEveId, pcEveDesc, pcStaId, pcStaDesc, true);
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
      * @param poConv ConverterToModel Metadata obtained previously
      * @param pcEveId String Event's Id
      * @param pcEveDesc String Event's description
@@ -168,6 +202,54 @@ public class OReplayDataTransfer {
      */
     public String processFile(ConverterToModel poConv, String pcEveId, String pcEveDesc, 
             String pcStaId, String pcStaDesc) {
+        String vcResul = "";
+        try {
+            HashMap<String, String> vaResul = processFile(poConv, pcEveId, pcEveDesc, pcStaId, pcStaDesc, false);
+            if (vaResul!=null) {
+                if (vaResul.size()>0) {
+                    Map.Entry<String, String> vaFirst = vaResul.entrySet()
+                        .stream()
+                        .findFirst()
+                        .get();
+                    vcResul = vaFirst.getValue();
+                }
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+            vcResul = "";
+        }
+        return vcResul;
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @param poConv ConverterToModel Metadata obtained previously
+     * @param pcEveId String Event's Id
+     * @param pcEveDesc String Event's description
+     * @param pcStaId String Stage's Id
+     * @param pcStaDesc String Stage's description
+     * @return HashMap<String, String> JSON or error message, splitted by event classes
+     */
+    public HashMap<String, String> processFileAndSplit(ConverterToModel poConv, String pcEveId, String pcEveDesc, 
+            String pcStaId, String pcStaDesc) {
+        HashMap<String, String> vaResul = processFile(poConv, pcEveId, pcEveDesc, pcStaId, pcStaDesc, true);
+        return vaResul;
+    }
+    /**
+     * Given the metadata defining the kind of file with data, this method
+     * processes the data and generates a JSON, or returns a message with error
+     * @param poConv ConverterToModel Metadata obtained previously
+     * @param pcEveId String Event's Id
+     * @param pcEveDesc String Event's description
+     * @param pcStaId String Stage's Id
+     * @param pcStaDesc String Stage's description
+     * @param pbSplit boolean Flag to indicate if contents should be splitted in several Strings by event classes
+     * @return HashMap<String, String> JSON or error message; it can be a unique JSON or splitted by event classes
+     */
+    public HashMap<String, String> processFile(ConverterToModel poConv, String pcEveId, String pcEveDesc, 
+            String pcStaId, String pcStaDesc, boolean pbSplit) {
+        HashMap<String, String> vaResul = new HashMap<>();
+        String vcClass = "ERROR";
         String vcResul = "";
         eu.oreplay.db.Event voEve = null;
         try {
@@ -217,11 +299,34 @@ public class OReplayDataTransfer {
                     if (voEve!=null) {
                         //---- Final steps, write the output ---
                         //Object to group configuration and event
-                        OReplayDataTransfer voData = new OReplayDataTransfer(poConv, voEve);
-                        //JSON file with Jackson
-                        ObjectMapper voMapper = new ObjectMapper();
-                        voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-                        vcResul = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
+                        if (!pbSplit) {
+                            //If all of the data in one result
+                            OReplayDataTransfer voData = new OReplayDataTransfer(poConv, voEve);
+                            //JSON file with Jackson
+                            ObjectMapper voMapper = new ObjectMapper();
+                            voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+                            vcClass = "ALL";
+                            vcResul = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
+                            vaResul.put(vcClass, vcResul);
+                        } else {
+                            //If each class in one String
+                            eu.oreplay.db.Event voEveClass = null;
+                            for (eu.oreplay.db.Stage voStaClass : voEve.getStageList()) {
+                                for (eu.oreplay.db.Clazz voCla : voStaClass.getClazzList()) {
+                                    //Copy the event data but only for the given class
+                                    String vcClassName = (voCla.getShortName()!=null?voCla.getShortName():(voCla.getLongName()!=null?voCla.getLongName():""));
+                                    voEveClass = Utils.copyExtendedEventData (voEve, voStaClass.getId(), vcClassName);
+                                    //Prepare the data transfer
+                                    OReplayDataTransfer voData = new OReplayDataTransfer(poConv, voEveClass);
+                                    //JSON file with Jackson
+                                    ObjectMapper voMapper = new ObjectMapper();
+                                    voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+                                    vcResul = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
+                                    vaResul.put(vcClassName, vcResul);
+//System.out.println("Llego B, " + vcClassName + ", tam resul: " + vcResul.length());
+                                }
+                            }
+                        }
                     } else {
                         vcResul = "error_nothing_to_do_noevent";
                     }
@@ -234,7 +339,7 @@ public class OReplayDataTransfer {
         } catch(Exception e) {
             vcResul = "error_exception" + ". " + e.getMessage();
         }
-        return vcResul;
+        return vaResul;
     }
     
 }

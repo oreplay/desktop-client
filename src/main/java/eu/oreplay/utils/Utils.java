@@ -7,12 +7,15 @@ package eu.oreplay.utils;
 
 import eu.oreplay.db.StageDiscipline;
 import eu.oreplay.db.StageType;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URI;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -190,6 +193,87 @@ public static eu.oreplay.db.Stage copyBasicOneStageData (eu.oreplay.db.Event poE
         }
     }
     return voSta;
+}
+public static eu.oreplay.db.Event copyExtendedEventData (eu.oreplay.db.Event poEve, String poStaId, String pcClass) {
+    eu.oreplay.db.Event voEve = null;
+    try {
+        if (poEve!=null) {
+            voEve = new eu.oreplay.db.Event();
+            voEve.setId(poEve.getId());
+            voEve.setDescription(poEve.getDescription());
+            voEve.setFederation(poEve.getFederation());
+            voEve.setFederation_id(poEve.getFederation_id());
+            voEve.setInitialDate(poEve.getInitialDate());
+            voEve.setIsHidden(poEve.getIsHidden());
+            voEve.setLocation(poEve.getLocation());
+            voEve.setPicture(poEve.getPicture());
+            voEve.setScope(poEve.getScope());
+            voEve.setWebsite(poEve.getWebsite());
+            //Copy the given stage data
+            boolean vbFound = false;
+            int i=0;
+            while (i<poEve.getStageList().size() && !vbFound) {
+                eu.oreplay.db.Stage voSta = poEve.getStageList().get(i);
+                if (voSta.getId().equals(poStaId)) {
+                    eu.oreplay.db.Stage voStaDst = new eu.oreplay.db.Stage();
+                    voStaDst.setBaseDate(voSta.getBaseDate());
+                    voStaDst.setBaseTime(voSta.getBaseTime());
+                    voStaDst.setDescription(voSta.getDescription());
+                    voStaDst.setId(voSta.getId());
+                    voStaDst.setOrderNumber(voSta.getOrderNumber());
+                    voStaDst.setServerOffset(voSta.getServerOffset());
+                    voStaDst.setStageDiscipline(voSta.getStageDiscipline());
+                    voStaDst.setStageType(voSta.getStageType());
+                    voStaDst.setUtcValue(voSta.getUtcValue());
+                    //Copy the given class data
+                    int j=0;
+                    while (j<voSta.getClazzList().size() && !vbFound) {
+                        eu.oreplay.db.Clazz voCla = voSta.getClazzList().get(j);
+                        if (voCla.getShortName()!=null) {
+                            if (voCla.getShortName().equals(pcClass) && !pcClass.equals("")) {
+                                vbFound = true;
+                            }
+                        }
+                        if (!vbFound && voCla.getLongName()!=null) {
+                            if (voCla.getLongName().equals(pcClass) && !pcClass.equals("")) {
+                                vbFound = true;
+                            }
+                        }
+                        if (vbFound) {
+                            eu.oreplay.db.Clazz voClaDst = new eu.oreplay.db.Clazz();
+                            voClaDst.setClazzControlList(voCla.getClazzControlList());
+                            voClaDst.setCourse(voCla.getCourse());
+                            voClaDst.setId(voCla.getId());
+                            voClaDst.setLongName(voCla.getLongName());
+                            voClaDst.setOeKey(voCla.getOeKey());
+                            voClaDst.setRunnerList(voCla.getRunnerList());
+                            voClaDst.setRunnerResultList(voCla.getRunnerResultList());
+                            voClaDst.setShortName(voCla.getShortName());
+                            voClaDst.setSplitList(voCla.getSplitList());
+                            voClaDst.setTeamList(voCla.getTeamList());
+                            voClaDst.setTeamResultList(voCla.getTeamResultList());
+                            voClaDst.setUuid(voCla.getUuid());
+                            //Add the given class to the list of classes
+                            List<eu.oreplay.db.Clazz> vlCla = new ArrayList<>();
+                            vlCla.add(voClaDst);
+                            voStaDst.setClazzList(vlCla);
+                            vbFound = true;
+                        }
+                        j++;
+                    }
+                    //Add the stage to the list of stages
+                    List<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
+                    vlSta.add(voStaDst);
+                    voEve.setStageList(vlSta);
+                    vbFound = true;
+                }
+                i++;
+            }
+        }
+    }catch(Exception e) {
+        e.printStackTrace();
+    }
+    return voEve;
 }
 /**
  * Given an IOF value for a runner result status, this method converts to the
@@ -929,6 +1013,50 @@ public static boolean deleteFile (String pcFile) {
  */
 public static boolean isWhole(BigDecimal pnValue) {
     return pnValue.setScale(0, RoundingMode.HALF_UP).compareTo(pnValue) == 0;
+}
+
+/**
+ * Opens the given URL in the default explorer; the second parameter lets the user
+ * choose a different method: 0=Desktop Class; 1=OS Specific Runtime Command
+ * @param pcUrl String URL to open
+ * @param pnOption int Method used to open the URL (Desktop Class or Runtime Command)
+ */
+public static void openUrlInExplorer (String pcUrl, int pnOption) {
+    if (pnOption<=0) {
+        //First option, using Dektop Class
+        try {
+            Desktop voDesk = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (voDesk != null && voDesk.isSupported(Desktop.Action.BROWSE)) {
+                voDesk.browse(new URI(pcUrl));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } else {
+        //Second option, using OS commands depending on OS
+        String vcOs = System.getProperty("os.name").toLowerCase();
+        Runtime voRt = Runtime.getRuntime();
+        try{
+            if (vcOs.indexOf( "win" ) >= 0) {
+                // this doesn't support showing urls in the form of "page.html#nameLink" 
+                voRt.exec( "rundll32 url.dll,FileProtocolHandler " + pcUrl);
+            } else if (vcOs.indexOf( "mac" ) >= 0) {
+                voRt.exec( "open " + pcUrl);
+            } else if (vcOs.indexOf( "nix") >=0 || vcOs.indexOf( "nux") >=0) {
+                // Do a best guess on unix until we get a platform independent way
+                // Build a list of browsers to try, in this order.
+                String[] vaBrowser = {"epiphany", "firefox", "mozilla", "konqueror",
+                                             "netscape","opera","links","lynx"};
+                // Build a command string which looks like "browser1 "url" || browser2 "url" ||..."
+                StringBuffer vcCmd = new StringBuffer();
+                for (int i=0; i<vaBrowser.length; i++)
+                    vcCmd.append( (i==0  ? "" : " || " ) + vaBrowser[i] +" \"" + pcUrl + "\" ");
+                voRt.exec(new String[] { "sh", "-c", vcCmd.toString() });
+            }
+        }catch (Exception e){
+             e.printStackTrace();
+        }
+    }
 }
 
 }

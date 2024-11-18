@@ -16,12 +16,12 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.2.9"},
+        {"main", "OReplay. Cliente de Escritorio 0.2.10"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
         {"about_developers_title", "Listado de desarrolladores, orden alfabético"},
-        {"about_developers_list", "Javier Arufe, Andreu Espinosa, Sergio García, Manuel Pedre, Jessica Penela, Adrián Pérez, Guillem Serrallonga"},
+        {"about_developers_list", "Javier Arufe, Andreu Espinosa, Sergio García, Manuel Pedre, Jessica Penela, Adrián Pérez, Amador Real, Guillem Serrallonga"},
         {"file", "Archivo"},
         {"save_conf", "Grabar configuración"},
         {"exit", "Salir"},
@@ -113,6 +113,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"battery", "Batería"},
         {"reading_time", "H.Lectura"},
         {"login", "Entrar"},
+        {"gotoweb", "Ir a Web"},
         {"create_event", "Crear evento"},
         {"plus1", "+01:00"},
         {"basic", "Básico"},
@@ -184,6 +185,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"folder", "Directorio"},
         {"waiting", "Esperando"},
         {"bytes_sent", "bytes enviados"},
+        {"split_class", "Separar categorías"},
 
         {"title_main", "Bienvenido al cliente de escritorio de OReplay"},
         {"title_splash", "Bienvenido al cliente de escritorio de OReplay"},
@@ -245,6 +247,9 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"info_fileprocess_started", "Proceso de fichero comenzado"},
         {"info_fileprocess_stopped", "Proceso de fichero parado"},
         {"info_fileprocess_finished", "Proceso de fichero finalizado"},
+        {"info_classprocess_started", "Proceso de categoría comenzado"},
+        {"info_classprocess_stopped", "Proceso de categoría parado"},
+        {"info_classprocess_finished", "Proceso de categoría finalizado"},
 
         {"error_exception", "Algo fue mal y el programa entró en un bloque de excepción"},
         {"error_format_unknown", "Formato desconocido o no soportado aún"},
