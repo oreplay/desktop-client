@@ -205,7 +205,7 @@ public class FormsParameters {
          * Constructor by default
          */
         public ParJClientMain() {
-            oPos = new ParPosition (200, 200, 675, 590);
+            oPos = new ParPosition (200, 200, 785, 590);
         }
         /**
          * Constructor with parameters
@@ -296,7 +296,7 @@ public class FormsParameters {
          * Constructor by default
          */
         public ParConnBackCheckPanel() {
-            oPos = new ParPosition (200, 200, 300, 200);
+            oPos = new ParPosition (200, 200, 450, 200);
             lServers.add("http://127.0.0.1");
             lServers.add("https://www.oreplay.es");
         }
@@ -339,7 +339,7 @@ public class FormsParameters {
          * Constructor by default
          */
         public ParConnBackLoginPanel() {
-            oPos = new ParPosition (200, 200, 300, 200);
+            oPos = new ParPosition (200, 200, 450, 200);
             cEveId = "";
             cToken = "";
             cStaId = "";
@@ -440,6 +440,7 @@ public class FormsParameters {
     public class ParConnBackUploadPanel extends ParBase{
         private String cFolder = "";
         private String cExtension = "";
+        private boolean bSplit = false;
         /**
          * Constructor by default
          */
@@ -447,6 +448,7 @@ public class FormsParameters {
             oPos = new ParPosition (200, 200, 300, 200);
             cFolder = "";
             cExtension = "";
+            bSplit = false;
         }
         /**
          * Constructor with parameters
@@ -456,6 +458,7 @@ public class FormsParameters {
             this.oPos = oPos;
             cFolder = "";
             cExtension = "";
+            bSplit = false;
         }
         /**
          * Constructor with parameters
@@ -467,6 +470,20 @@ public class FormsParameters {
             this.oPos = oPos;
             cFolder = pcFolder;
             cExtension = pcExtension;
+            bSplit = false;
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcFolder String Folder to search files
+         * @param pcExtension String File extension to search
+         * @param pbSplit boolean Flag to separate data and perform uploads by classes
+         */
+        public ParConnBackUploadPanel(ParPosition oPos, String pcFolder, String pcExtension, boolean pbSplit) {
+            this.oPos = oPos;
+            cFolder = pcFolder;
+            cExtension = pcExtension;
+            bSplit = pbSplit;
         }
 
         public String getcFolder() {
@@ -483,6 +500,14 @@ public class FormsParameters {
 
         public void setcExtension(String cExtension) {
             this.cExtension = cExtension;
+        }
+
+        public boolean isbSplit() {
+            return bSplit;
+        }
+
+        public void setbSplit(boolean bSplit) {
+            this.bSplit = bSplit;
         }
         
     }

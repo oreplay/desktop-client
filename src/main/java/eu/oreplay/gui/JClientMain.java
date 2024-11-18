@@ -102,10 +102,10 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(resMessages.getString("oreplay"));
         setBackground(new java.awt.Color(255, 255, 255));
-        setBounds(new java.awt.Rectangle(200, 200, 675, 590));
+        setBounds(new java.awt.Rectangle(200, 200, 785, 590));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/images/LogoOReplay_32.png")).getImage());
-        setMinimumSize(new java.awt.Dimension(675, 590));
-        setPreferredSize(new java.awt.Dimension(675, 590));
+        setMinimumSize(new java.awt.Dimension(785, 590));
+        setPreferredSize(new java.awt.Dimension(785, 590));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -190,7 +190,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                         .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlUpload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 163, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(

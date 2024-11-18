@@ -16,12 +16,12 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.2.9"},
+        {"main", "OReplay. Desktop Client 0.2.10"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
         {"about_developers_title", "List of developers, alphabetical order"},
-        {"about_developers_list", "Javier Arufe, Andreu Espinosa, Sergio García, Manuel Pedre, Jessica Penela, Adrián Pérez, Guillem Serrallonga"},
+        {"about_developers_list", "Javier Arufe, Andreu Espinosa, Sergio García, Manuel Pedre, Jessica Penela, Adrián Pérez, Amador Real, Guillem Serrallonga"},
         {"file", "File"},
         {"save_conf", "Save Configuration"},
         {"exit", "Exit"},
@@ -113,6 +113,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"battery", "Battery"},
         {"reading_time", "Reading time"},
         {"login", "Login"},
+        {"gotoweb", "Goto Web"},
         {"create_event", "Create event"},
         {"plus1", "+01:00"},
         {"basic", "Basic"},
@@ -184,6 +185,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"folder", "Folder"},
         {"waiting", "Waiting"},
         {"bytes_sent", "bytes sent"},
+        {"split_class", "Split by class"},
 
         {"title_main", "Welcome to OReplay Desktop Client"},
         {"title_splash", "Welcome to OReplay Desktop Client"},
@@ -245,6 +247,9 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_fileprocess_started", "File process started"},
         {"info_fileprocess_stopped", "File process stopped"},
         {"info_fileprocess_finished", "File process finished"},
+        {"info_classprocess_started", "Class process started"},
+        {"info_classprocess_stopped", "Class process stopped"},
+        {"info_classprocess_finished", "Class process finished"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},
         {"error_format_unknown", "Format unknown or not supported yet"},

@@ -214,6 +214,18 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e13) {}
+                } else if (lname.toLowerCase().equals("bsplit")) {
+                    try {
+                        switch (nType) {
+                            case 6:
+                                if (content.toUpperCase().equals("T") || content.toUpperCase().equals("V") ||
+                                        content.toUpperCase().equals("1") || content.toUpperCase().equals("S"))
+                                    oRec.getoConnBackUploadPanel().setbSplit(true);
+                                else
+                                    oRec.getoConnBackUploadPanel().setbSplit(false);
+                                break;
+                        }
+                    }catch(Exception e14) {}
                 }
             }
         }
@@ -318,6 +330,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                 voStream.println("    <nSizeY>" + poRec.getoConnBackUploadPanel().getoPos().getnSizeY()+ "</nSizeY>");
                 voStream.println("    <cFolder>" + poRec.getoConnBackUploadPanel().getcFolder()+ "</cFolder>");
                 voStream.println("    <cExtension>" + poRec.getoConnBackUploadPanel().getcExtension()+ "</cExtension>");
+                voStream.println("    <bSplit>" + (poRec.getoConnBackUploadPanel().isbSplit()?"T":"F")+ "</bSplit>");
                 voStream.println("  </ConnBackUploadPanel>");
                 //End of the main tag
                 voStream.println("</FormsParameters>");

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.converter.OReplayDataTransfer;
+import eu.oreplay.utils.Utils;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -51,6 +52,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         //Change the texts
         lblTitle.setText("2. " + resMessages.getString("login_event"));
         btnLogin.setText(resMessages.getString("login"));
+        btnWeb.setText(resMessages.getString("gotoweb"));
         lblEveId.setText(resMessages.getString("event_id"));
         lblToken.setText(resMessages.getString("token"));
         lblStaId.setText(resMessages.getString("stage"));
@@ -137,10 +139,11 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         scrStages = new javax.swing.JScrollPane();
         lstStages = new javax.swing.JList<>();
         lblStatus = new javax.swing.JLabel();
+        btnWeb = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(300, 200));
-        setPreferredSize(new java.awt.Dimension(300, 200));
+        setMinimumSize(new java.awt.Dimension(450, 200));
+        setPreferredSize(new java.awt.Dimension(450, 200));
 
         lblTitle.setBackground(new java.awt.Color(255, 255, 255));
         lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -180,6 +183,14 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         lblStatus.setBackground(new java.awt.Color(255, 255, 255));
         lblStatus.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
 
+        btnWeb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_web.png"))); // NOI18N
+        btnWeb.setText(resMessages.getString("gotoweb"));
+        btnWeb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnWebActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,7 +198,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                    .addComponent(lblTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -197,7 +208,9 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblToken, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -223,7 +236,9 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                     .addComponent(txtToken, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,9 +263,15 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             this.stageSelected();
     }//GEN-LAST:event_lstStagesValueChanged
 
+    private void btnWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWebActionPerformed
+        // TODO add your handling code here:
+        this.gotoWeb();
+    }//GEN-LAST:event_btnWebActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
+    private javax.swing.JButton btnWeb;
     private javax.swing.JLabel lblEveId;
     private javax.swing.JLabel lblStaId;
     private javax.swing.JLabel lblStatus;
@@ -273,6 +294,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         txtToken.setEnabled(false);
         lstStages.setEnabled(false);
         btnLogin.setEnabled(false);
+        btnWeb.setEnabled(false);
         lblStatus.setText("");
     }
     /**
@@ -286,6 +308,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         txtToken.setEnabled(true);
         lstStages.setEnabled(false);
         btnLogin.setEnabled(true);
+        btnWeb.setEnabled(false);
         lblStatus.setText("");
     }
     /**
@@ -293,6 +316,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
      */
     public void enableForStage() {
         lstStages.setEnabled(true);
+        btnWeb.setEnabled(true);
     }
     /**
      * Sets values when login is no ok
@@ -415,6 +439,25 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             oStatus.setcToken(cToken);
             oStatus.setnStatus(ConnBackStatus.STAGE_SELECTED);
             this.fireEvent();
+        }
+    }
+    /**
+     * If there is an event and stage selected, opens a web explorer to the
+     * page of the event and stage. If there is only event, goes to the event page
+     */
+    private void gotoWeb () {
+        try {
+            if (!oStatus.getcServer().equals("") && !cEveId.equals("")) {
+                //Compose target URL
+                String vcUrl = oStatus.getcServer();
+                vcUrl += (!oStatus.getcServer().endsWith("/")?"/":"");
+                vcUrl += cEveId;
+                vcUrl += (!cStaId.equals("")?("/"+cStaId+"?menu=results"):"");
+                //Launch web explorer
+                Utils.openUrlInExplorer(vcUrl, 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
