@@ -451,6 +451,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 //Compose target URL
                 String vcUrl = oStatus.getcServer();
                 vcUrl += (!oStatus.getcServer().endsWith("/")?"/":"");
+                vcUrl += "competitions/";
                 vcUrl += cEveId;
                 vcUrl += (!cStaId.equals("")?("/"+cStaId+"?menu=results"):"");
                 //Launch web explorer
