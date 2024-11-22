@@ -8,6 +8,10 @@ import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.xml.FormsParametersXMLHandler;
 import eu.oreplay.utils.Utils;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import org.apache.logging.log4j.*;
 
 /**
@@ -87,6 +91,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         pnlCheck = new eu.oreplay.gui.ConnBackCheckPanel();
         pnlLogin = new eu.oreplay.gui.ConnBackLoginPanel();
         pnlUpload = new eu.oreplay.gui.ConnBackUploadPanel();
+        txtOffset = new javax.swing.JTextField();
+        lblOffset = new javax.swing.JLabel();
         mnuMain = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuTest = new javax.swing.JMenuItem();
@@ -120,6 +126,13 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         pnlLogin.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         pnlUpload.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        txtOffset.setEditable(false);
+        txtOffset.setText("+01:00");
+        txtOffset.setMaximumSize(new java.awt.Dimension(64, 22));
+
+        lblOffset.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblOffset.setText(resMessages.getString("timezone_offset"));
 
         mnuFile.setText(resMessages.getString("file"));
 
@@ -190,7 +203,10 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                         .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlUpload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblOffset, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtOffset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -201,7 +217,13 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                     .addComponent(pnlLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
                     .addComponent(pnlCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlUpload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlUpload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtOffset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblOffset))))
                 .addGap(12, 12, 12))
         );
 
@@ -238,7 +260,10 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         if (bFirstOpen) {
             oLog.info(resMessages.getString("info_enter_app"));
             Utils.setoLog(oLog);  //Sets log file in the Utils static class for using it during the app execution
+            //Get data from XML files
             getXmlData();
+            //Get Timezone offset from computer
+            getTimezoneOffset();
             //For each Connection panel, add managing events, set status and pass default values
             pnlCheck.addEventListener(this);
             pnlCheck.initialize(oStatus);
@@ -318,6 +343,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JLabel lblOffset;
     private javax.swing.JMenuItem mnuAbout;
     private javax.swing.JMenuItem mnuEnglish;
     private javax.swing.JMenuItem mnuExit;
@@ -330,6 +356,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private eu.oreplay.gui.ConnBackCheckPanel pnlCheck;
     private eu.oreplay.gui.ConnBackLoginPanel pnlLogin;
     private eu.oreplay.gui.ConnBackUploadPanel pnlUpload;
+    private javax.swing.JTextField txtOffset;
     // End of variables declaration//GEN-END:variables
 
     private void stopListenersBeforeExit() {
@@ -432,7 +459,17 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             oLog.error(resMessages.getString("error_exception"), eLocal);
         }
     }
-
+    /**
+     * Inspects the computer to get the timezone offset; this value is used
+     * to compose datetime values (start lists, results, splits, etc)
+     */
+    private void getTimezoneOffset() {
+        try {
+            txtOffset.setText(Utils.getTimezoneOffset());
+        }catch(Exception e) {
+            oLog.error(resMessages.getString("error_exception"), e);
+        }
+    }
     /**
      * Method that receives the event occurred in one of the connection panels;
      * It's in charge of activating or deactivating panels as things happen,
