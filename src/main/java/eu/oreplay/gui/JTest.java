@@ -522,6 +522,7 @@ public class JTest extends javax.swing.JDialog {
             if (!txtSrcFile.getText().equals("")) {
                 this.preProcessFile(vcFile);
             }
+            lblStatus.setText("");
         } catch (Exception e) {
             JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
@@ -541,6 +542,7 @@ public class JTest extends javax.swing.JDialog {
             } else {
                 txtDstFile.setText("");
             }
+            lblStatus.setText("");
         } catch (Exception e) {
             JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }

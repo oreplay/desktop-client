@@ -17,9 +17,13 @@ import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.*;
 
@@ -752,7 +756,35 @@ public static Date formatRelativeTimeFromBase (String pcSrc, Date poBaseDateTime
     }
     return vdResul;
 }
-
+/**
+ * Inspects the computer to get the timezone offset; this value is used
+ * to compose datetime values (start lists, results, splits, etc)
+ * <br>
+ * This method gets the timezone offset as String after applying a daylight saving rule
+ * @return String Timezone Offset in String (+01:00, -02:00, etc)
+ */
+public static String getTimezoneOffset() {
+    String vcOffset = "+00:00";
+    try {
+        //Gets the default timezone of the computer
+        TimeZone voZone = TimeZone.getDefault();
+        /*
+        Calendar voCal = GregorianCalendar.getInstance(voZone);
+        int vnOffset = voZone.getOffset(voCal.getTimeInMillis());
+        vcOffset = String.format("%02d:%02d", Math.abs(vnOffset / 3600000), Math.abs((vnOffset / 60000) % 60));
+        vcOffset = (vnOffset >= 0 ? "+" : "-") + vcOffset;
+        */
+        //This sentence gets the timezone offset as String before any daylight saving rule is applied
+        //vcOffset = voZone.toZoneId().getRules().getStandardOffset(Instant.now()).getId();
+        //This sentence gets the timezone offset as String after applying a daylight saving rule
+        vcOffset = voZone.toZoneId().getRules().getOffset(Instant.now()).getId();
+    }catch(Exception e) {
+        vcOffset = "+00:00";
+        if (oLog!=null)
+            oLog.error("Error while getting timezone", e);
+    }
+    return vcOffset;
+}
 /**
  * Giving an integer, it returns a String with format +00:00 to indicate an UTC offset
  * @param pnUtc int. Offset value as integer (-1, 0, 2, etc)
