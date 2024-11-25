@@ -7,8 +7,7 @@ package eu.oreplay.logic.connection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Class with the data structure that is returned when you query GitHub for
- * custom properties
+ * Class with data structure of a query to GitHub for custom properties
  * @author javier.arufe
  */
 public class CustomProperty {
@@ -19,7 +18,7 @@ public class CustomProperty {
         this.propertyName = "";
         this.value = "";
     }
-    
+
     public CustomProperty(String propertyName, String value) {
         this.propertyName = propertyName;
         this.value = value;

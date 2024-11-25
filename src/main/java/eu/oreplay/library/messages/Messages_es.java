@@ -255,7 +255,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"info_classprocess_started", "Proceso de categoría comenzado"},
         {"info_classprocess_stopped", "Proceso de categoría parado"},
         {"info_classprocess_finished", "Proceso de categoría finalizado"},
-        {"info_new_version", "Hay una versión más moderna del cliente de escritorio.\nReemplaza la distribución o descarga el instalador\npara windows más moderno para actualizar"},
+        {"info_new_version", "Hay una versión más moderna del cliente de escritorio.\nReemplaza tu distribución o descarga el instalador\npara windows más moderno para actualizar"},
 
         {"error_exception", "Algo fue mal y el programa entró en un bloque de excepción"},
         {"error_format_unknown", "Formato desconocido o no soportado aún"},

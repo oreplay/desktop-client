@@ -265,8 +265,6 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             getXmlData();
             //Get Timezone offset from computer
             getTimezoneOffset();
-            //Check for new version
-            checkForNewVersion();
             //For each Connection panel, add managing events, set status and pass default values
             pnlCheck.addEventListener(this);
             pnlCheck.initialize(oStatus);
@@ -567,5 +565,6 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         }catch(Exception e) {
             oLog.error(resMessages.getString("error_exception"), e);
         }
-    }
+    }    
+    
 }
