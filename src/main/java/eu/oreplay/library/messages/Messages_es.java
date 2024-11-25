@@ -16,7 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.2.11"},
+        {"main", "OReplay. Cliente de Escritorio 0.3.0"},
+        {"version", "v0.3.0"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
@@ -187,6 +188,9 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"bytes_sent", "bytes enviados"},
         {"split_class", "Separar categorías"},
         {"timezone_offset", "Diferencia Horaria"},
+        {"info", "Información"},
+        {"error", "Error"},
+        {"confirm", "Confirmación"},
 
         {"title_main", "Bienvenido al cliente de escritorio de OReplay"},
         {"title_splash", "Bienvenido al cliente de escritorio de OReplay"},
@@ -251,6 +255,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"info_classprocess_started", "Proceso de categoría comenzado"},
         {"info_classprocess_stopped", "Proceso de categoría parado"},
         {"info_classprocess_finished", "Proceso de categoría finalizado"},
+        {"info_new_version", "Hay una versión más moderna del cliente de escritorio.\nReemplaza tu distribución o descarga el instalador\npara windows más moderno para actualizar"},
 
         {"error_exception", "Algo fue mal y el programa entró en un bloque de excepción"},
         {"error_format_unknown", "Formato desconocido o no soportado aún"},

@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import javax.swing.JOptionPane;
 import org.apache.logging.log4j.*;
 
 /**
@@ -264,6 +265,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             getXmlData();
             //Get Timezone offset from computer
             getTimezoneOffset();
+            //Check for new version
+            checkForNewVersion();
             //For each Connection panel, add managing events, set status and pass default values
             pnlCheck.addEventListener(this);
             pnlCheck.initialize(oStatus);
@@ -548,4 +551,21 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         }
     }
 
+    /**
+     * Checks for a version change; If so, show a message to recommend an update
+     */
+    private void checkForNewVersion() {
+        boolean vbChanged = false;
+        try {
+            vbChanged = Utils.checkForNewVersion("sss"); //resMessages.getString("version"));
+            if (vbChanged) {
+                JOptionPane.showMessageDialog(JClientMain.this, 
+                        resMessages.getString("info_new_version"),
+                        resMessages.getString("info"), 
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        }catch(Exception e) {
+            oLog.error(resMessages.getString("error_exception"), e);
+        }
+    }
 }
