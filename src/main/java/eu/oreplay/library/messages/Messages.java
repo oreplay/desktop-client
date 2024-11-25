@@ -16,7 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.2.11"},
+        {"main", "OReplay. Desktop Client 0.3.0"},
+        {"version", "v0.3.0"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -187,6 +188,9 @@ public class Messages extends java.util.ListResourceBundle {
         {"bytes_sent", "bytes sent"},
         {"split_class", "Split by class"},
         {"timezone_offset", "Timezone Offset"},
+        {"info", "Information"},
+        {"error", "Error"},
+        {"confirm", "Confirmation"},
 
         {"title_main", "Welcome to OReplay Desktop Client"},
         {"title_splash", "Welcome to OReplay Desktop Client"},
@@ -251,6 +255,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_classprocess_started", "Class process started"},
         {"info_classprocess_stopped", "Class process stopped"},
         {"info_classprocess_finished", "Class process finished"},
+        {"info_new_version", "There is a newer version of the desktop client.\n Replace your release or download\nthe newest windows installer to update"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},
         {"error_format_unknown", "Format unknown or not supported yet"},

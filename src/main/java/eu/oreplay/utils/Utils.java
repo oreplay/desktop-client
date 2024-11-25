@@ -5,8 +5,11 @@
  */
 package eu.oreplay.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.oreplay.db.StageDiscipline;
 import eu.oreplay.db.StageType;
+import eu.oreplay.logic.connection.CustomProperty;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +19,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1089,6 +1097,55 @@ public static void openUrlInExplorer (String pcUrl, int pnOption) {
              e.printStackTrace();
         }
     }
+}
+
+/**
+ * Performs a query for custom property in a GitHub repository in order to see if the
+ * version has changed, because in this case a message should be shown to the user in 
+ * order to update the application
+ * @param pcCurrent String Current version for comparison
+ * @return boolean Flag to indicate if version has changed
+ */
+public static boolean checkForNewVersion(String pcCurrent) {
+    boolean vbResul = false;
+    try {
+        //Gets an HTTP Client to make a request
+        HttpClient voClient = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(3))
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .build();
+        //Sets the request to the current server
+        HttpRequest voReq = HttpRequest.newBuilder()
+            .GET()
+            .uri(new URI("https://api.github.com/repos/jarufe/mi_repo/properties/values"))
+            .header("Accept", "application/vnd.github+json")
+            .build();
+        //Sends the request an gets the response
+        HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());
+        //If there is a correct response, finish the process to fire the event
+        if (voResp.statusCode()==200 || voResp.statusCode() == 202) {
+            //First, parse the response (a list of strings with data)
+            String vcContents = voResp.body();
+            //JSON file with Jackson
+            ObjectMapper voMapper = new ObjectMapper();
+            TypeReference<List<CustomProperty>> voTR = new TypeReference<List<CustomProperty>>() {};
+            List<CustomProperty> vlData = voMapper.readValue(vcContents, voTR);
+            //If there are data, check for version property
+            if (vlData!=null) {
+                for (CustomProperty voData : vlData) {
+                    if (voData!=null) {
+                        if (voData.getPropertyName().equals("oreplaydesktopclientver") && 
+                                !voData.getValue().equals(pcCurrent)) {
+                            vbResul = true;
+                        }
+                    }
+                }
+            }
+        }
+    }catch(Exception e) {
+        oLog.error("Exception", e);
+    }
+    return vbResul;
 }
 
 }

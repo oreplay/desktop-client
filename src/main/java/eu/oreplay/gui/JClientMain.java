@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import javax.swing.JOptionPane;
 import org.apache.logging.log4j.*;
 
 /**
@@ -548,4 +549,22 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         }
     }
 
+    /**
+     * Checks for a version change; If so, show a message to recommend an update
+     */
+    private void checkForNewVersion() {
+        boolean vbChanged = false;
+        try {
+            vbChanged = Utils.checkForNewVersion(resMessages.getString("version"));
+            if (vbChanged) {
+                JOptionPane.showMessageDialog(JClientMain.this, 
+                        resMessages.getString("info_new_version"),
+                        resMessages.getString("info"), 
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        }catch(Exception e) {
+            oLog.error(resMessages.getString("error_exception"), e);
+        }
+    }    
+    
 }
