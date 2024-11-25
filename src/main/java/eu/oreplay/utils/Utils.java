@@ -1119,6 +1119,8 @@ public static boolean checkForNewVersion(String pcCurrent) {
             .GET()
             .uri(new URI("https://api.github.com/repos/jarufe/mi_repo/properties/values"))
             .header("Accept", "application/vnd.github+json")
+//            .header("Authorization", "Bearer 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")
+//            .header("X-GitHub-Api-Version", "2022-11-28")
             .build();
         //Sends the request an gets the response
         HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());
