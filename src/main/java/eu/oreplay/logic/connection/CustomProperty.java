@@ -7,7 +7,8 @@ package eu.oreplay.logic.connection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- *
+ * Class with the data structure that is returned when you query GitHub for
+ * custom properties
  * @author javier.arufe
  */
 public class CustomProperty {

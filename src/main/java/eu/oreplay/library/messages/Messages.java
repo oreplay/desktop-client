@@ -255,7 +255,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_classprocess_started", "Class process started"},
         {"info_classprocess_stopped", "Class process stopped"},
         {"info_classprocess_finished", "Class process finished"},
-        {"info_new_version", "There is a newer version of the desktop client.\n Replace your release or download\nthe newest windows installer to update"},
+        {"info_new_version", "There is a newer version of the desktop client.\nReplace your release or download\nthe newest windows installer to update"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},
         {"error_format_unknown", "Format unknown or not supported yet"},

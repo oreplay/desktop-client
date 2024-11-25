@@ -557,7 +557,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private void checkForNewVersion() {
         boolean vbChanged = false;
         try {
-            vbChanged = Utils.checkForNewVersion("sss"); //resMessages.getString("version"));
+            vbChanged = Utils.checkForNewVersion(resMessages.getString("version"));
             if (vbChanged) {
                 JOptionPane.showMessageDialog(JClientMain.this, 
                         resMessages.getString("info_new_version"),
