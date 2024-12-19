@@ -186,15 +186,13 @@
               <Font name="Segoe UI" size="10" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="csv"/>
-                <StringItem index="1" value="xml"/>
-                <StringItem index="2" value="htm"/>
-                <StringItem index="3" value="html"/>
+              <StringArray count="1">
+                <StringItem index="0" value="xml"/>
               </StringArray>
             </Property>
             <Property name="selectionMode" type="int" value="0"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="selectedIndex" type="int" value="0"/>
           </Properties>
           <Events>
             <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstExtensionsValueChanged"/>
