@@ -9,34 +9,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.ArrayList;
 /**
- *
+ * Data Structure that suits the Response from the backend
  * @author javier.arufe
  */
 public class UploadResponse {
-    private List<String> data;
-    private Meta oMeta;
+    private ResponseMeta oMeta;
+    private List<String> lData;
 
     public UploadResponse() {
-        data = new ArrayList<String>();
-        oMeta = new Meta();
+        oMeta = new ResponseMeta();
+        lData = new ArrayList<>();
     }
-    public UploadResponse (List<String> plData, Meta poMeta) {
-        data = plData;
+    public UploadResponse (ResponseMeta poMeta, List<String> plData) {
         oMeta = poMeta;
+        lData = plData;
     }
 
-    @JsonIgnore
-    public List<String> getData() {
-        return data;
-    }
-    public void setlData(List<String> lData) {
-        this.data = lData;
-    }
     @JsonProperty("meta")
-    public Meta getoMeta() {
+    public ResponseMeta getoMeta() {
         return oMeta;
     }
-    public void setoMeta(Meta poMeta) {
+    public void setoMeta(ResponseMeta poMeta) {
         oMeta = poMeta;
+    }
+    @JsonProperty("data")
+    public List<String> getlData() {
+        return lData;
+    }
+    public void setlData(List<String> lData) {
+        this.lData = lData;
     }
 }
