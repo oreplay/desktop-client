@@ -10,23 +10,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Inner class to store some properties
  */
 public class ResponseRunners {
-    private int nRunnerLoop;
-    private int nRunnersInLoop;
-    private int nClubs;
-    private int nRunnerResults;
-    private int nSplits;
-    private int nTotal;
+    private double nRunnerLoop;
+    private double nRunnersInLoop;
+    private double nClubs;
+    private double nRunnerResults;
+    private double nSplits;
+    private double nTotal;
 
     public ResponseRunners() {
-        nRunnerLoop = 0;
-        nRunnersInLoop = 0;
-        nClubs = 0;
-        nSplits = 0;
-        nRunnerResults = 0;
-        nTotal = 0;
+        nRunnerLoop = 0.0;
+        nRunnersInLoop = 0.0;
+        nClubs = 0.0;
+        nSplits = 0.0;
+        nRunnerResults = 0.0;
+        nTotal = 0.0;
     }
-    public ResponseRunners (int pnRunnerLoop, int pnRunnersInLoop, int pnClubs, 
-            int pnRunnerResults, int pnSplits, int pnTotal) {
+    public ResponseRunners (double pnRunnerLoop, double pnRunnersInLoop, double pnClubs, 
+            double pnRunnerResults, double pnSplits, double pnTotal) {
         nRunnerLoop = pnRunnerLoop;
         nRunnersInLoop = pnRunnersInLoop;
         nClubs = pnClubs;
@@ -36,45 +36,45 @@ public class ResponseRunners {
     }
 
     @JsonProperty("runnerLoop")
-    public int getnRunnerLoop() {
+    public double getnRunnerLoop() {
         return nRunnerLoop;
     }
-    public void setnRunnerLoop(int pnRunnerLoop) {
+    public void setnRunnerLoop(double pnRunnerLoop) {
         nRunnerLoop = pnRunnerLoop;
     }
     @JsonProperty("runnersInLoop")
-    public int getnRunnersInLoop() {
+    public double getnRunnersInLoop() {
         return nRunnersInLoop;
     }
-    public void setnRunnersInLoop(int nRunnersInLoop) {
+    public void setnRunnersInLoop(double nRunnersInLoop) {
         this.nRunnersInLoop = nRunnersInLoop;
     }
     @JsonProperty("clubs")
-    public int getnClubs() {
+    public double getnClubs() {
         return nClubs;
     }
-    public void setnClubs(int pnClubs) {
+    public void setnClubs(double pnClubs) {
         nClubs = pnClubs;
     }
     @JsonProperty("runnerResults")
-    public int getnRunnerResults() {
+    public double getnRunnerResults() {
         return nRunnerResults;
     }
-    public void setnRunnerResults(int nRunnerResults) {
+    public void setnRunnerResults(double nRunnerResults) {
         this.nRunnerResults = nRunnerResults;
     }    
     @JsonProperty("splits")
-    public int getnSplits() {
+    public double getnSplits() {
         return nSplits;
     }
-    public void setnSplits(int nSplits) {
+    public void setnSplits(double nSplits) {
         this.nSplits = nSplits;
     }
     @JsonProperty("total")
-    public int getnTotal() {
+    public double getnTotal() {
         return nTotal;
     }
-    public void setnTotal(int nTotal) {
+    public void setnTotal(double nTotal) {
         this.nTotal = nTotal;
     }
     

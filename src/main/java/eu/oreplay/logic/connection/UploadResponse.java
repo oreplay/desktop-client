@@ -14,15 +14,15 @@ import java.util.ArrayList;
  */
 public class UploadResponse {
     private ResponseMeta oMeta;
-    private List<String> lData;
+    private List<String> data;
 
     public UploadResponse() {
         oMeta = new ResponseMeta();
-        lData = new ArrayList<>();
+        data = new ArrayList<>();
     }
     public UploadResponse (ResponseMeta poMeta, List<String> plData) {
         oMeta = poMeta;
-        lData = plData;
+        data = plData;
     }
 
     @JsonProperty("meta")
@@ -32,11 +32,11 @@ public class UploadResponse {
     public void setoMeta(ResponseMeta poMeta) {
         oMeta = poMeta;
     }
-    @JsonProperty("data")
-    public List<String> getlData() {
-        return lData;
+    @JsonIgnore
+    public List<String> getData() {
+        return data;
     }
-    public void setlData(List<String> lData) {
-        this.lData = lData;
+    public void setData(List<String> lData) {
+        this.data = lData;
     }
 }
