@@ -10,19 +10,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Class to store some properties and some strings
  */
 public class ResponseSaving {
-    private int nTotal;
+    private double nTotal;
 
     public ResponseSaving() {
-        nTotal = 0;
+        nTotal = 0.0;
     }
-    public ResponseSaving (int pnTotal) {
+    public ResponseSaving (double pnTotal) {
         nTotal = pnTotal;
     }
     @JsonProperty("total")
-    public int getnTotal() {
+    public double getnTotal() {
         return nTotal;
     }
-    public void setnTotal(int nTotal) {
+    public void setnTotal(double nTotal) {
         this.nTotal = nTotal;
     }
     

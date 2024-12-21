@@ -10,25 +10,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Class to store some properties and some strings
  */
 public class ResponseProcessing {
-    private int nCourses;
+    private double nCourses;
     private ResponseRunners oRunners;
-    private int nTotal;
+    private double nTotal;
 
     public ResponseProcessing() {
-        nCourses = 0;
+        nCourses = 0.0;
         oRunners = new ResponseRunners();
-        nTotal = 0;
+        nTotal = 0.0;
     }
-    public ResponseProcessing (int pnCourses, ResponseRunners poRunners, int pnTotal) {
+    public ResponseProcessing (double pnCourses, ResponseRunners poRunners, double pnTotal) {
         nCourses = pnCourses;
         oRunners = poRunners;
         nTotal = pnTotal;
     }
     @JsonProperty("courses")
-    public int getnCourses() {
+    public double getnCourses() {
         return nCourses;
     }
-    public void setnCourses(int nCourses) {
+    public void setnCourses(double nCourses) {
         this.nCourses = nCourses;
     }
     @JsonProperty("runners")
@@ -39,10 +39,10 @@ public class ResponseProcessing {
         oRunners = poRunners;
     }
     @JsonProperty("total")
-    public int getnTotal() {
+    public double getnTotal() {
         return nTotal;
     }
-    public void setnTotal(int nTotal) {
+    public void setnTotal(double nTotal) {
         this.nTotal = nTotal;
     }
     

@@ -5,8 +5,6 @@
 package eu.oreplay.logic.connection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class to store some properties and some strings
@@ -14,14 +12,14 @@ import java.util.List;
 public class ResponseTimings {
     private ResponseProcessing oProcessing;
     private ResponseSaving oSaving;
-    private int nTotal;
+    private double nTotal;
 
     public ResponseTimings() {
         oProcessing = new ResponseProcessing();
         oSaving = new ResponseSaving();
-        nTotal = 0;
+        nTotal = 0.0;
     }
-    public ResponseTimings (ResponseProcessing poProcessing, ResponseSaving poSaving, int pnTotal) {
+    public ResponseTimings (ResponseProcessing poProcessing, ResponseSaving poSaving, double pnTotal) {
         oProcessing = poProcessing;
         oSaving = poSaving;
         nTotal = pnTotal;
@@ -41,10 +39,10 @@ public class ResponseTimings {
         this.oSaving = oSaving;
     }
     @JsonProperty("total")
-    public int getnTotal() {
+    public double getnTotal() {
         return nTotal;
     }
-    public void setnTotal(int nTotal) {
+    public void setnTotal(double nTotal) {
         this.nTotal = nTotal;
     }
     
