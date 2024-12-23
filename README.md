@@ -29,7 +29,7 @@ By now, Java is being explored as the development language. A desktop applicatio
 - **Conversion to JSON**
 - **Uploading to the server**, and letting the backend make all of the big checkings, calculations and operations with the database
 
-Current file processing capabilities:
+Current file processing capabilities (uploading from csv files are currently disabled to avoid problems with dates in backend):
 
 | CSV             |             | Starts  | Totals | Breakdown (splits) | Radiocontrols |
 | :-------------- | :---------- | :-----: | :----: | :----------------: | :-----------: |
@@ -64,7 +64,7 @@ Although sometimes is better to spend long time with stable versions of products
   - [NetBeans](https://netbeans.apache.org/front/main/index.html)
   - Ensure you've got a proper Java JDK (tested in version 21) installed or Install it (Netbeans will use it)
     - In Netbeans go to: Tools -> Java Platform in order to check and download the JDK
-    - [OpenJDK 21](https://openjdk.org)
+    - [OpenJDK](https://openjdk.org)
 - Clone the GitHub project in Netbeans
   - [Netbeans Git tutorial](https://netbeans.apache.org/tutorial/main/kb/docs/ide/git/)
   - Team -> Git -> Clone
