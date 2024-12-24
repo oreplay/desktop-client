@@ -1007,7 +1007,7 @@ public static List<String> findFilesInDir (String pcPath, String pcExtension, bo
         vlResul = walk
                 .filter(p -> !java.nio.file.Files.isDirectory(p))   // not a directory
                 .map(p -> p.toString())               // convert path to string
-                .filter(f -> f.endsWith(pcExtension))               // check end with
+                .filter(f -> f.toLowerCase().endsWith(pcExtension))               // check end with
                 .collect(java.util.stream.Collectors.toList());     // collect all matched to a List
     }catch (Exception e) {
         vlResul = null;

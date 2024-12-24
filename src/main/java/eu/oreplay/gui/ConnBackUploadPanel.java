@@ -313,8 +313,10 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
         txtFolder.setText(cFolder);
         if (!cExtension.equals(""))
             lstExtensions.setSelectedValue(cExtension, true);
-        else
+        else {
             lstExtensions.setSelectedIndex(0);
+            this.extensionSelected();
+        }
         txtFolder.setEnabled(true);
         lstExtensions.setEnabled(true);
         btnFolder.setEnabled(true);
