@@ -348,9 +348,11 @@ public abstract class ConverterToModel {
                 } else if (vcTopValues.startsWith("OESco0009_V12")) {
                     cContents = CONTENTS_START;
                     cSource = SRC_OESCOREV12;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OESco0001")) {
                     cContents = CONTENTS_START;
                     cSource = SRC_OESCORE2010;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OS0009_V12")) {
                     cContents = CONTENTS_START;
                     cSource = SRC_OSV12;
@@ -388,18 +390,22 @@ public abstract class ConverterToModel {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_TOTALS;
                     cSource = SRC_OESCOREV12;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OESco0014_V12")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_BREAKDOWN;
                     cSource = SRC_OESCOREV12;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OESco0012")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_TOTALS;
                     cSource = SRC_OESCORE2010;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OESco0014")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_BREAKDOWN;
                     cSource = SRC_OESCORE2010;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OS0012_V12")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_TOTALS;
@@ -457,6 +463,7 @@ public abstract class ConverterToModel {
                             cSource = SRC_OESCORE2010;
                         else if (vcTopValues.contains("V.12"))
                             cSource = SRC_OESCOREV12;
+                        bIncludeScore = true;
                     } else if (vcTopValues.contains("SportSoftware OS2010")) {
                         cSource = SRC_OS2010;
                     } else if (vcTopValues.contains("SportSoftware OS12")) {

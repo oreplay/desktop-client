@@ -116,6 +116,8 @@ public class OReplayDataTransfer {
                     oConf = new ConverterCsvOEToModel(oConf);
                 else if (oConf.isRelay())
                     oConf = new ConverterCsvOSToModel(oConf);
+                else if (oConf.isScoring())
+                    oConf = new ConverterCsvOEScoreToModel(oConf);
             } else if (oConf.isXml()) {
                 oConf = new ConverterIofToModel(oConf);
             }
@@ -283,6 +285,8 @@ public class OReplayDataTransfer {
                             ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
                         else if (poConv.isRelay())
                             ((ConverterCsvOSToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                        else if (poConv.isScoring())
+                            ((ConverterCsvOEScoreToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
                         if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
                             //Parses the contents
                             voEve = poConv.convertResultList(poConv.getcFile());

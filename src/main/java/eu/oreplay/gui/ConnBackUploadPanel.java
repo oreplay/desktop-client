@@ -188,13 +188,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
 
         lstExtensions.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         lstExtensions.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "xml" };
+            String[] strings = { "xml", "csv" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
         lstExtensions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         lstExtensions.setToolTipText("");
-        lstExtensions.setSelectedIndex(0);
         lstExtensions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstExtensionsValueChanged(evt);
@@ -294,8 +293,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     public void setDefaultValues() {
         oSB = new StringBuilder();
         txtFolder.setText("");
-        //So far, there is only one item (xml); it's always selected
-        //lstExtensions.clearSelection();
+        lstExtensions.clearSelection();
         txtFolder.setEnabled(false);
         lstExtensions.setEnabled(false);
         btnFolder.setEnabled(false);
