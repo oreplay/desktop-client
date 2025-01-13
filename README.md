@@ -39,7 +39,9 @@ Current file processing capabilities (uploading from csv files are currently dis
 | Relays          |             |         |        |                    |               |
 |                 | OS2010      |    X    |        |                    |               |
 |                 | OSv12       |    X    |        |                    |               |
-|                 |             |         |        |                    |               |
+| Rogaine         |             |         |        |                    |               |
+|                 | OEScore2010 |    X    | X      | X                  | N/A           |
+|                 | OEScorev12  |    X    | X      | X                  | N/A           |
 
 | XML             |             | Starts  | Totals | Breakdown (splits) | Radiocontrols |
 | :-------------- | :---------- | :-----: | :----: | :----------------: | :-----------: |
@@ -51,7 +53,7 @@ Current file processing capabilities (uploading from csv files are currently dis
 |                 | OSv12       |    X    | X      | X                  | X             |
 | Rogaine         |             |         |        |                    |               |
 |                 | MeOS        |    X    | X      | X                  | X             |
-|                 | OEScorev12  |         | X      | X                  | X             |
+|                 | OEScorev12  |    X    | X      | X                  | X             |
 |                 | SiTiming    |         | X      | X                  | X             |
 
 # For starting collaboration
