@@ -12,7 +12,6 @@ import eu.oreplay.logic.converter.ConverterToModel;
 import eu.oreplay.logic.converter.OReplayDataTransfer;
 import eu.oreplay.utils.JUtils;
 import eu.oreplay.utils.Utils;
-import java.awt.Color;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -23,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -81,6 +80,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             cFolder = poParam.getcFolder();
             cExtension = poParam.getcExtension();
             bSplit = poParam.isbSplit();
+            //Fire the event to notify changing the extension
+            if (cExtension.toLowerCase().equals("csv"))
+                oStatus.setnStatus(ConnBackStatus.EXT_CSV);
+            else if (cExtension.toLowerCase().equals("xml"))
+                oStatus.setnStatus(ConnBackStatus.EXT_XML);
+            fireEvent();
         }catch (Exception e) {
             JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
@@ -335,19 +340,27 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 btnUpload.setText(resMessages.getString("run"));
                 txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_stopped"), "#000000") + cEnd);
                 bRun = !bRun;
+                //Fire the event to notify starting the upload
+                oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
+                fireEvent();
             } else {
-                if (oStatus.isReadyToSend() && Utils.folderExists(cFolder) && 
-                        !cExtension.equals("")) {
-                    btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_stop.png"))); // NOI18N
-                    btnUpload.setText(resMessages.getString("stop"));
-                    txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_started"), "#000000") + cEnd);
-                    //Fire the event to notify starting the upload
-                    oStatus.setnStatus(ConnBackStatus.UPLOAD_ON);
-                    fireEvent();
-                    //Change the running flag
-                    bRun = !bRun;
-                    //Starts the upload process in a separated thread using a SwingWorker
-                    this.uploadThread();
+                boolean vbExtAndDate = this.checkExtensionAndDate();
+                if (vbExtAndDate) {
+                    if (oStatus.isReadyToSend() && Utils.folderExists(cFolder) && 
+                            !cExtension.equals("")) {
+                        btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_stop.png"))); // NOI18N
+                        btnUpload.setText(resMessages.getString("stop"));
+                        txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_started"), "#000000") + cEnd);
+                        //Fire the event to notify starting the upload
+                        oStatus.setnStatus(ConnBackStatus.UPLOAD_ON);
+                        fireEvent();
+                        //Change the running flag
+                        bRun = !bRun;
+                        //Starts the upload process in a separated thread using a SwingWorker
+                        this.uploadThread();
+                    }
+                } else {
+                    
                 }
             }
         }catch(Exception e) {
@@ -375,9 +388,14 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
      */
     private void extensionSelected () {
         int vnRow = lstExtensions.getSelectedIndex();
-        if (vnRow>=0 && vnRow<4) {
-            //Fire the event
+        if (vnRow>=0 && vnRow<2) {
             cExtension = lstExtensions.getModel().getElementAt(vnRow);
+            //Fire the event to notify changing the extension
+            if (cExtension.toLowerCase().equals("csv"))
+                oStatus.setnStatus(ConnBackStatus.EXT_CSV);
+            else if (cExtension.toLowerCase().equals("xml"))
+                oStatus.setnStatus(ConnBackStatus.EXT_XML);
+            fireEvent();
         }
     }
  
@@ -414,6 +432,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         OReplayDataTransfer voTransf = new OReplayDataTransfer();
                         voTransf.setoLog(JClientMain.getoLog());
                         ConverterToModel voConv = voTransf.preProcessFile(vcFile);
+                        //Sets stage date and zero time from Main Form
+                        try {
+                            voConv.setcStageDate(JClientMain.getDateForTransfer());
+                            voConv.setcStageZeroTime(JClientMain.getZeroTimeForTransfer());
+                        }catch(Exception eDate) {
+                        }
                         HashMap<String, String> vaJson = null;
                         if (chkSplit.isSelected()) {
                             vaJson = (oStatus==null?voTransf.processFileAndSplit(voConv):voTransf.processFileAndSplit(voConv, oStatus.getcEveId(), oStatus.getcEveDesc(), oStatus.getcStaId(), oStatus.getcStaDesc()));
@@ -630,5 +654,31 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
         }
         vcResul = oSB.append(vcLine).toString() + "\n";
         return vcResul;
+    }
+    /**
+     * Checks the selected type of extension and the value of the date and time value,
+     * in case of CSV
+     * @return boolean Flag to indicate if everything is ok
+     */
+    private boolean checkExtensionAndDate() {
+        boolean vbResul = true;
+        try {
+            if (cExtension.toLowerCase().equals("csv")) {
+                String vcStageDate = JClientMain.getcStageDate();
+                Date voStageDate = Utils.parse(vcStageDate, resMessages.getString("format_date"));
+                String vcStageZeroTime = JClientMain.getcStageZeroTime();
+                Date voStageZeroTime = Utils.parse(vcStageZeroTime, resMessages.getString("format_time"));
+                if (voStageDate==null || voStageZeroTime==null) {
+                    JOptionPane.showMessageDialog(this , 
+                            resMessages.getString("info_date_time_needed"), 
+                            resMessages.getString("info"),
+                            JOptionPane.ERROR_MESSAGE);
+                    vbResul = false;
+                }
+            }
+        }catch(Exception e) {
+            vbResul = false;
+        }
+        return vbResul;
     }
 }

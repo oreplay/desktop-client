@@ -105,6 +105,12 @@ public class ConverterIofToModel extends ConverterToModel {
         eu.oreplay.db.Event voEve = null;
         try {
             if (poStart!=null) {
+                //Try to set the date and time of the stage from the XML
+                try {
+                    oEve.getStageList().get(0).setBaseDate(poStart.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
+                    oEve.getStageList().get(0).setBaseTime(poStart.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                }catch(Exception eDateTime) {
+                }
                 //Event's data
                 voEve = Utils.copyBasicEventData(oEve);
                 //Stage's data
@@ -434,6 +440,12 @@ public class ConverterIofToModel extends ConverterToModel {
             if (getcResultsType().equals(ConverterToModel.RES_RADIO))
                 vbRadio = true;
             if (poResult!=null) {
+                //Try to set the date and time of the stage from the XML
+                try {
+                    oEve.getStageList().get(0).setBaseDate(poResult.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
+                    oEve.getStageList().get(0).setBaseTime(poResult.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                }catch(Exception eDateTime) {
+                }
                 //Event's data
                 voEve = Utils.copyBasicEventData(oEve);
                 //Stage's data

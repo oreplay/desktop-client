@@ -583,6 +583,12 @@ public class JTest extends javax.swing.JDialog {
         try {
             //If a source file has been inspected and a destination file has value, process it
             if (oConv!=null && !txtDstFile.getText().equals("")) {
+                //Sets stage date and zero time from Main Form
+                try {
+                    oConv.setcStageDate(JClientMain.getDateForTransfer());
+                    oConv.setcStageZeroTime(JClientMain.getZeroTimeForTransfer());
+                }catch(Exception eDate) {
+                }
                 OReplayDataTransfer voTransf = new OReplayDataTransfer();
                 String vcJson = voTransf.processFile(oConv);
                 if (!vcJson.toLowerCase().startsWith("error")) {

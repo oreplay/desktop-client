@@ -226,6 +226,22 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e14) {}
+                } else if (lname.toLowerCase().equals("cstagedate")) {
+                    try {
+                        switch (nType) {
+                            case 1:
+                                oRec.getoJClientMain().setcStageDate(content);
+                                break;
+                        }
+                    }catch(Exception e15) {}
+                } else if (lname.toLowerCase().equals("cstagezerotime")) {
+                    try {
+                        switch (nType) {
+                            case 1:
+                                oRec.getoJClientMain().setcStageZeroTime(content);
+                                break;
+                        }
+                    }catch(Exception e16) {}
                 }
             }
         }
@@ -279,6 +295,8 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                 voStream.println("    <nPosY>" + poRec.getoJClientMain().getoPos().getnPosY()+ "</nPosY>");
                 voStream.println("    <nSizeX>" + poRec.getoJClientMain().getoPos().getnSizeX()+ "</nSizeX>");
                 voStream.println("    <nSizeY>" + poRec.getoJClientMain().getoPos().getnSizeY()+ "</nSizeY>");
+                voStream.println("    <cStageDate>" + poRec.getoJClientMain().getcStageDate()+ "</cStageDate>");
+                voStream.println("    <cStageZeroTime>" + poRec.getoJClientMain().getcStageZeroTime()+ "</cStageZeroTime>");
                 voStream.println("  </JClientMain>");
                 //Form JAbout
                 voStream.println("  <JAbout>");

@@ -137,7 +137,7 @@ public class Utils {
  * @return eu.oreplay.db.Event Dummy event with one dummy stage
  */
 public static eu.oreplay.db.Event createDummyEventOneStage () {
-    eu.oreplay.db.Event voEveSrc = Utils.createDummyEventOneStage("", "", "", "");
+    eu.oreplay.db.Event voEveSrc = Utils.createDummyEventOneStage("", "", "", "", "", "");
     return voEveSrc;
 }
 /**
@@ -147,10 +147,12 @@ public static eu.oreplay.db.Event createDummyEventOneStage () {
  * @param pcEveDesc String Event's description
  * @param pcStaId String Stage's Id
  * @param pcStaDesc String Stage's description
+ * @param pcStaDate String Stage's date (yyyy-MM-dd)
+ * @param pcStaZeroTime String Stage's time (HH:mm:ss)
  * @return eu.oreplay.db.Event Dummy event with one dummy stage
  */
 public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId, 
-        String pcEveDesc, String pcStaId, String pcStaDesc) {
+        String pcEveDesc, String pcStaId, String pcStaDesc, String pcStaDate, String pcStaZeroTime) {
     eu.oreplay.db.Event voEveSrc = null;
     try {
         //Create a basic event and stage information
@@ -164,8 +166,25 @@ public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId,
         voSta.setDescription(pcStaDesc.equals("")?Utils.DUMMY_STAGE_DESC:pcStaDesc);
         if (pcStaId.equals("")) {
             voSta.setOrderNumber(1);
-            voSta.setBaseDate(Utils.parse("01/02/2024", "dd/MM/yyyy"));
-            voSta.setBaseTime(Utils.parse("11:00:00", "HH:mm:ss"));
+            //Try to set the stage date and zero time from the parameters passed to the method
+            try {
+                if (!pcStaDate.equals("")) {
+                    voSta.setBaseDate(Utils.parse(pcStaDate, "yyyy-MM-dd"));
+                } else {
+                    voSta.setBaseDate(new Date());
+                }
+            }catch (Exception eDate) {
+                voSta.setBaseDate(new Date());
+            }
+            try {
+                if (!pcStaZeroTime.equals("")) {
+                    voSta.setBaseTime(Utils.parse(pcStaZeroTime, "HH:mm:ss"));
+                } else {
+                    voSta.setBaseTime(Utils.parse("10:30:00", "HH:mm:ss"));
+                }
+            }catch(Exception eTime) {
+                voSta.setBaseTime(Utils.parse("10:30:00", "HH:mm:ss"));
+            }
             voSta.setStageDiscipline(new StageDiscipline());
             voSta.setStageType(new StageType());
         }

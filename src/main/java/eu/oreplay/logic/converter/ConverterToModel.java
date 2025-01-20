@@ -57,6 +57,8 @@ public abstract class ConverterToModel {
     private String cSource;
     private String cIofVersion;
     private boolean bIncludeScore;
+    private String cStageDate;
+    private String cStageZeroTime;
 
     public ConverterToModel() {
         initializeValues();
@@ -175,6 +177,22 @@ public abstract class ConverterToModel {
     public void setbIncludeScore(boolean bIncludeScore) {
         this.bIncludeScore = bIncludeScore;
     }
+
+    @JsonIgnore
+    public String getcStageDate() {
+        return cStageDate;
+    }
+    public void setcStageDate(String cStageDate) {
+        this.cStageDate = cStageDate;
+    }
+    @JsonIgnore
+    public String getcStageZeroTime() {
+        return cStageZeroTime;
+    }
+    public void setcStageZeroTime(String cStageZeroTime) {
+        this.cStageZeroTime = cStageZeroTime;
+    }
+    
     
     /**
      * Returns the flag that checks the existence of the source file
@@ -198,6 +216,8 @@ public abstract class ConverterToModel {
         cSource = OTHER_VALUES;
         cIofVersion = OTHER_VALUES;
         bIncludeScore = false;
+        cStageDate = "";
+        cStageZeroTime = "";
     }
     /**
      * Copy values of the properties from another object
@@ -216,6 +236,8 @@ public abstract class ConverterToModel {
         cSource = poSrc.getcSource();
         cIofVersion = poSrc.getcIofVersion();
         bIncludeScore = poSrc.isbIncludeScore();
+        cStageDate = poSrc.getcStageDate();
+        cStageZeroTime = poSrc.getcStageZeroTime();
     }
     @JsonIgnore
     public boolean isCsv () {

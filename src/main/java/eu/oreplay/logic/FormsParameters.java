@@ -201,6 +201,8 @@ public class FormsParameters {
      * Internal class that manages the parameters of the main form, JClientMain
      */
     public class ParJClientMain extends ParBase{
+        private String cStageDate = ""; //Uses yyyy-MM-dd format
+        private String cStageZeroTime = ""; //Uses HH:mm:ss format
         /**
          * Constructor by default
          */
@@ -213,6 +215,29 @@ public class FormsParameters {
          */
         public ParJClientMain(ParPosition oPos) {
             this.oPos = oPos;
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcDate String Stage Date (yyyy-MM-dd)
+         * @param pcTime String Stage Zero Time (HH:mm:ss)
+         */
+        public ParJClientMain(ParPosition oPos, String pcDate, String pcTime) {
+            this.oPos = oPos;
+            this.cStageDate = pcDate;
+            this.cStageZeroTime = pcTime;
+        }
+        public String getcStageDate() {
+            return cStageDate;
+        }
+        public void setcStageDate(String cStageDate) {
+            this.cStageDate = cStageDate;
+        }
+        public String getcStageZeroTime() {
+            return cStageZeroTime;
+        }
+        public void setcStageZeroTime(String cStageZeroTime) {
+            this.cStageZeroTime = cStageZeroTime;
         }
     }
     /**
