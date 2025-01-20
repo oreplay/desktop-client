@@ -17,6 +17,8 @@ public class ConnBackStatus implements java.io.Serializable {
     public static final int STAGE_SELECTED = 3;
     public static final int UPLOAD_OFF = 4;
     public static final int UPLOAD_ON = 5;    
+    public static final int EXT_CSV = 6;
+    public static final int EXT_XML = 7;
     
     private int nStatus = DISCONNECTED;
     private String cServer = "";

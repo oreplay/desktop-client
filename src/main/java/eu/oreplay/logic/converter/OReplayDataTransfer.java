@@ -262,7 +262,7 @@ public class OReplayDataTransfer {
                     if (poConv.getcExtension().equals(ConverterToModel.EXT_XML) && 
                             poConv.getcIofVersion().equals(ConverterToModel.IOF_VERSION_3)) {
                         //Creates a dummy event with one stage
-                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc);
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, "", "");
                         //Set the specific properties for CSV
                         ((ConverterIofToModel)poConv).setSpecificProperties(voSrcEve);
                         if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
@@ -279,7 +279,8 @@ public class OReplayDataTransfer {
                         //Gets an encoding for the text file depending on the UTF mark
                         String vcEncoding = (poConv.isbUtf()?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1);
                         //Creates a dummy event with one stage
-                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc);
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, 
+                                poConv.getcStageDate(), poConv.getcStageZeroTime());
                         //Set the specific properties for CSV
                         if (poConv.isClassic())
                             ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);

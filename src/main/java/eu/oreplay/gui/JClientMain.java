@@ -8,10 +8,6 @@ import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.xml.FormsParametersXMLHandler;
 import eu.oreplay.utils.Utils;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import javax.swing.JOptionPane;
 import org.apache.logging.log4j.*;
 
@@ -26,6 +22,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private static FormsParameters oForms = null;
     private static Logger oLog = LogManager.getLogger(JClientMain.class.getName());
     private ConnBackStatus oStatus = new ConnBackStatus();
+    private static String cStageDate = "";
+    private static String cStageZeroTime = "";
 
     /**
      * Creates new form JClientMain
@@ -51,6 +49,18 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     }
     public static void setoLog(Logger oLog) {
         JClientMain.oLog = oLog;
+    }
+    public static String getcStageDate() {
+        return cStageDate;
+    }
+    public static void setcStageDate(String cStageDate) {
+        JClientMain.cStageDate = cStageDate;
+    }
+    public static String getcStageZeroTime() {
+        return cStageZeroTime;
+    }
+    public static void setcStageZeroTime(String cStageZeroTime) {
+        JClientMain.cStageZeroTime = cStageZeroTime;
     }
     public ConnBackStatus getoStatus() {
         return oStatus;
@@ -94,6 +104,11 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         pnlUpload = new eu.oreplay.gui.ConnBackUploadPanel();
         txtOffset = new javax.swing.JTextField();
         lblOffset = new javax.swing.JLabel();
+        lblStageDate = new javax.swing.JLabel();
+        txtStageDate = new javax.swing.JTextField();
+        lblStageZeroTime = new javax.swing.JLabel();
+        txtStageZeroTime = new javax.swing.JTextField();
+        lblCsvWarning = new javax.swing.JLabel();
         mnuMain = new javax.swing.JMenuBar();
         mnuFile = new javax.swing.JMenu();
         mnuTest = new javax.swing.JMenuItem();
@@ -134,6 +149,31 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
 
         lblOffset.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblOffset.setText(resMessages.getString("timezone_offset"));
+
+        lblStageDate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblStageDate.setText(resMessages.getString("csv_file_date"));
+
+        txtStageDate.setToolTipText(resMessages.getString("format_date"));
+        txtStageDate.setMaximumSize(new java.awt.Dimension(64, 22));
+        txtStageDate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtStageDateFocusLost(evt);
+            }
+        });
+
+        lblStageZeroTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblStageZeroTime.setText(resMessages.getString("csv_file_zerotime"));
+
+        txtStageZeroTime.setToolTipText(resMessages.getString("format_time"));
+        txtStageZeroTime.setMaximumSize(new java.awt.Dimension(64, 22));
+        txtStageZeroTime.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtStageZeroTimeFocusLost(evt);
+            }
+        });
+
+        lblCsvWarning.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCsvWarning.setText(resMessages.getString("csv_file_warning"));
 
         mnuFile.setText(resMessages.getString("file"));
 
@@ -205,9 +245,20 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnlUpload, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblOffset, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtOffset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblOffset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtOffset, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblStageDate, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtStageDate, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblStageZeroTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtStageZeroTime, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblCsvWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -222,6 +273,16 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                     .addComponent(pnlUpload, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblCsvWarning)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtStageDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStageDate))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtStageZeroTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStageZeroTime))
+                        .addGap(38, 38, 38)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtOffset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblOffset))))
@@ -288,6 +349,16 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         this.stopListenersBeforeExit();
     }//GEN-LAST:event_formWindowClosing
 
+    private void txtStageDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtStageDateFocusLost
+        // TODO add your handling code here:
+        this.getDateAndTimeValues();
+    }//GEN-LAST:event_txtStageDateFocusLost
+
+    private void txtStageZeroTimeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtStageZeroTimeFocusLost
+        // TODO add your handling code here:
+        this.getDateAndTimeValues();
+    }//GEN-LAST:event_txtStageZeroTimeFocusLost
+
     /**
      * @param args the command line arguments
      */
@@ -333,6 +404,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                             oForms.getoJClientMain().getoPos().getnPosY(), 
                             oForms.getoJClientMain().getoPos().getnSizeX(),
                             oForms.getoJClientMain().getoPos().getnSizeY());                
+                    cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resMessages.getString("format_date_dash")), resMessages.getString("format_date"));
+                    cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resMessages.getString("format_time")), resMessages.getString("format_time"));
                 }catch (Exception e) {
                     oLog.error(resMessages.getString("error_exception"), e);
                 }
@@ -344,7 +417,10 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JLabel lblCsvWarning;
     private javax.swing.JLabel lblOffset;
+    private javax.swing.JLabel lblStageDate;
+    private javax.swing.JLabel lblStageZeroTime;
     private javax.swing.JMenuItem mnuAbout;
     private javax.swing.JMenuItem mnuEnglish;
     private javax.swing.JMenuItem mnuExit;
@@ -358,6 +434,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private eu.oreplay.gui.ConnBackLoginPanel pnlLogin;
     private eu.oreplay.gui.ConnBackUploadPanel pnlUpload;
     private javax.swing.JTextField txtOffset;
+    private javax.swing.JTextField txtStageDate;
+    private javax.swing.JTextField txtStageZeroTime;
     // End of variables declaration//GEN-END:variables
 
     private void stopListenersBeforeExit() {
@@ -389,6 +467,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
      */
     private void changeLanguage (String pcLocale) {
         try {
+            String vcOldDate = resMessages.getString("format_date");
+            String vcOldTime = resMessages.getString("format_time");
             //Change the resources locale
             java.util.Locale voLocale = new java.util.Locale(pcLocale);
             java.util.Locale.setDefault(voLocale);
@@ -404,6 +484,18 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             mnuLanguage.setText(resMessages.getString("language"));
             mnuEnglish.setText(resMessages.getString("english"));
             mnuSpanish.setText(resMessages.getString("spanish"));
+            //Labels
+            lblCsvWarning.setText(resMessages.getString("csv_file_warning"));
+            lblStageDate.setText(resMessages.getString("csv_file_date"));
+            lblStageZeroTime.setText(resMessages.getString("csv_file_zerotime"));
+            lblOffset.setText(resMessages.getString("timezone_offset"));
+            //And change the format of the date and zero time
+            cStageDate = Utils.format(Utils.parse(txtStageDate.getText(), vcOldDate), resMessages.getString("format_date"));
+            cStageZeroTime = Utils.format(Utils.parse(txtStageZeroTime.getText(), vcOldTime), resMessages.getString("format_time"));
+            txtStageDate.setText(cStageDate);
+            txtStageDate.setToolTipText(resMessages.getString("format_date"));
+            txtStageZeroTime.setText(cStageZeroTime);
+            txtStageZeroTime.setToolTipText(resMessages.getString("format_time"));
             //Force the panels to do the same
             pnlCheck.changeLanguage(pcLocale);
             pnlLogin.changeLanguage(pcLocale);
@@ -427,6 +519,10 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                         oForms.getoJClientMain().getoPos().getnPosY(), 
                         oForms.getoJClientMain().getoPos().getnSizeX(),
                         oForms.getoJClientMain().getoPos().getnSizeY());
+                cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resMessages.getString("format_date_dash")), resMessages.getString("format_date"));
+                cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resMessages.getString("format_time")), resMessages.getString("format_time"));
+                txtStageDate.setText(cStageDate);
+                txtStageZeroTime.setText(cStageZeroTime);
             } else {
                 oForms = new FormsParameters();
             }
@@ -453,6 +549,10 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 }catch (Exception ePos) {
                     
                 }
+                //Tries to save the values of date and zero time
+                oForms.getoJClientMain().setcStageDate(Utils.format(Utils.parse(cStageDate, resMessages.getString("format_date")), resMessages.getString("format_date_dash")));
+                oForms.getoJClientMain().setcStageZeroTime(Utils.format(Utils.parse(cStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time")));
+                //Save the file
                 String vcFile = cPathApp+"FormsParameters.xml";
                 FormsParametersXMLHandler.writeXmlData(oForms, vcFile);
             }
@@ -507,6 +607,18 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 pnlLogin.enableForStage();
                 pnlUpload.setoStatus(oStatus);
                 pnlUpload.enableForUpload();
+            //If a file extension is selected, hide or show extra fields
+            } else if (e.getoStatus().getnStatus()==ConnBackStatus.EXT_CSV ||
+                    e.getoStatus().getnStatus()==ConnBackStatus.EXT_XML) {
+                boolean vbCsv = true;
+                if (e.getoStatus().getnStatus()==ConnBackStatus.EXT_XML)
+                    vbCsv = false;
+                lblCsvWarning.setVisible(vbCsv);
+                lblStageDate.setVisible(vbCsv);
+                lblStageZeroTime.setVisible(vbCsv);
+                txtStageDate.setVisible(vbCsv);
+                txtStageZeroTime.setVisible(vbCsv);
+                pnlUpload.setoStatus(oStatus);
             }
 
         }
@@ -566,5 +678,48 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             oLog.error(resMessages.getString("error_exception"), e);
         }
     }    
+    /**
+     * Gets the date and time value and parse them to the locale format (yyyy-MM-dd and HH:mm:ss)
+     */
+    private void getDateAndTimeValues() {
+        try {
+            //Tries to save the values of date and zero time
+            String vcStageDate = txtStageDate.getText();
+            cStageDate = Utils.format(Utils.parse(vcStageDate, resMessages.getString("format_date")), resMessages.getString("format_date"));
+            String vcStageZeroTime = txtStageZeroTime.getText();
+            cStageZeroTime = Utils.format(Utils.parse(vcStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time"));
+        }catch(Exception e) {
+            cStageDate = "";
+            cStageZeroTime = "";
+        }
+    }
+    /**
+     * Gets the date value and parse it to the storage format (yyyy-MM-dd)
+     * @return String Date as yyyy-MM-dd
+     */
+    public static String getDateForTransfer() {
+        String vcResul = "";
+        try {
+            //Tries to save the values of date and zero time
+            vcResul = Utils.format(Utils.parse(cStageDate, resMessages.getString("format_date")), resMessages.getString("format_date_dash"));
+        }catch(Exception e) {
+            vcResul = "";
+        }
+        return vcResul;
+    }
+    /**
+     * Gets the zero time value and parse it to the storage format (HH:mm:ss)
+     * @return String Zero Time as HH:mm:ss
+     */
+    public static String getZeroTimeForTransfer() {
+        String vcResul = "";
+        try {
+            //Tries to save the values of date and zero time
+            vcResul = Utils.format(Utils.parse(cStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time"));
+        }catch(Exception e) {
+            vcResul = "";
+        }
+        return vcResul;
+    }
     
 }

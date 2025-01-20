@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.3.3"},
-        {"version", "v0.3.2"},
+        {"main", "OReplay. Cliente de Escritorio 0.3.4"},
+        {"version", "v0.3.4"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
@@ -191,6 +191,9 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"info", "Información"},
         {"error", "Error"},
         {"confirm", "Confirmación"},
+        {"csv_file_warning", "Solo necesario para subidas CSV"},
+        {"csv_file_date", "Fecha de la etapa"},
+        {"csv_file_zerotime", "Hora cero de la etapa"},
 
         {"title_main", "Bienvenido al cliente de escritorio de OReplay"},
         {"title_splash", "Bienvenido al cliente de escritorio de OReplay"},
@@ -256,6 +259,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"info_classprocess_stopped", "Proceso de categoría parado"},
         {"info_classprocess_finished", "Proceso de categoría finalizado"},
         {"info_new_version", "Hay una versión más moderna del cliente de escritorio.\nReemplaza tu distribución o descarga el instalador\npara windows más moderno para actualizar"},
+        {"info_date_time_needed", "Formato CSV. Es necesario escribir un valor correcto de fecha y hora de comienzo de la etapa"},
 
         {"error_exception", "Algo fue mal y el programa entró en un bloque de excepción"},
         {"error_format_unknown", "Formato desconocido o no soportado aún"},
