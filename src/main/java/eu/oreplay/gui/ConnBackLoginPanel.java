@@ -56,6 +56,11 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         lblEveId.setText(resMessages.getString("event_id"));
         lblToken.setText(resMessages.getString("token"));
         lblStaId.setText(resMessages.getString("stage"));
+        btnLogin.setToolTipText(resMessages.getString("tooltip_login"));
+        btnWeb.setToolTipText(resMessages.getString("tooltip_event_web"));
+        txtEveId.setToolTipText(resMessages.getString("tooltip_event_id"));
+        txtToken.setToolTipText(resMessages.getString("tooltip_token"));
+        lstStages.setToolTipText(resMessages.getString("tooltip_stage_list"));
     }
     public void initFormParameters(FormsParameters.ParConnBackLoginPanel poParam) {
         try {
@@ -151,6 +156,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
 
         btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_login.png"))); // NOI18N
         btnLogin.setText(resMessages.getString("login"));
+        btnLogin.setToolTipText(resMessages.getString("tooltip_login"));
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
@@ -161,18 +167,20 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         lblEveId.setText(resMessages.getString("event_id"));
 
         txtEveId.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        txtEveId.setToolTipText(resMessages.getString("tooltip_event_id"));
 
         lblToken.setBackground(new java.awt.Color(255, 255, 255));
         lblToken.setText(resMessages.getString("token"));
 
         txtToken.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        txtToken.setToolTipText(resMessages.getString("tooltip_token"));
 
         lblStaId.setBackground(new java.awt.Color(255, 255, 255));
         lblStaId.setText(resMessages.getString("stage"));
 
         lstStages.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         lstStages.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lstStages.setToolTipText("");
+        lstStages.setToolTipText(resMessages.getString("tooltip_stage_list"));
         lstStages.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstStagesValueChanged(evt);
@@ -185,6 +193,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
 
         btnWeb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_web.png"))); // NOI18N
         btnWeb.setText(resMessages.getString("gotoweb"));
+        btnWeb.setToolTipText(resMessages.getString("tooltip_event_web"));
         btnWeb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnWebActionPerformed(evt);

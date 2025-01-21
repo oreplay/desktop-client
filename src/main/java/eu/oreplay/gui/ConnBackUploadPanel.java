@@ -68,6 +68,10 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
         btnFolder.setText(resMessages.getString("browse"));
         lblExtension.setText(resMessages.getString("extension"));
         chkSplit.setText(resMessages.getString("split_class"));
+        txtFolder.setToolTipText(resMessages.getString("tooltip_upload_folder"));
+        lstExtensions.setToolTipText(resMessages.getString("tooltip_extensions"));
+        chkSplit.setToolTipText(resMessages.getString("tooltip_split_cat"));
+        btnUpload.setToolTipText(resMessages.getString("tooltip_start_stop"));
     }
     public void initFormParameters(FormsParameters.ParConnBackUploadPanel poParam) {
         try {
@@ -165,6 +169,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
 
         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_start.png"))); // NOI18N
         btnUpload.setText(resMessages.getString("run"));
+        btnUpload.setToolTipText(resMessages.getString("tooltip_start_stop"));
         btnUpload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUploadActionPerformed(evt);
@@ -179,6 +184,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
         lblFolder.setText(resMessages.getString("folder"));
 
         txtFolder.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        txtFolder.setToolTipText(resMessages.getString("tooltip_upload_folder"));
 
         btnFolder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_browse.png"))); // NOI18N
         btnFolder.setText(resMessages.getString("browse"));
@@ -198,7 +204,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             public String getElementAt(int i) { return strings[i]; }
         });
         lstExtensions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lstExtensions.setToolTipText("");
+        lstExtensions.setToolTipText(resMessages.getString("tooltip_extensions"));
         lstExtensions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstExtensionsValueChanged(evt);
@@ -207,6 +213,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(lstExtensions);
 
         chkSplit.setText(resMessages.getString("split_class"));
+        chkSplit.setToolTipText(resMessages.getString("tooltip_split_cat"));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
