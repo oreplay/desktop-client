@@ -120,6 +120,9 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="resMessages.getString(&quot;login&quot;)" type="code"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_login&quot;)" type="code"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLoginActionPerformed"/>
@@ -140,6 +143,9 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="10" style="0"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_event_id&quot;)" type="code"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblToken">
@@ -156,6 +162,9 @@
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="10" style="0"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_token&quot;)" type="code"/>
         </Property>
       </Properties>
     </Component>
@@ -185,7 +194,9 @@
               <StringArray count="0"/>
             </Property>
             <Property name="selectionMode" type="int" value="0"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="resMessages.getString(&quot;tooltip_stage_list&quot;)" type="code"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstStagesValueChanged"/>
@@ -213,6 +224,9 @@
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="resMessages.getString(&quot;gotoweb&quot;)" type="code"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_event_web&quot;)" type="code"/>
         </Property>
       </Properties>
       <Events>

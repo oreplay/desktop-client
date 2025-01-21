@@ -45,6 +45,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
         //Change the texts
         lblTitle.setText("1. " + resMessages.getString("check_connection"));
         btnProcess.setText(resMessages.getString("btn_check"));
+        btnProcess.setToolTipText(resMessages.getString("tooltip_check_connection"));
     }
     public void initFormParameters(FormsParameters.ParConnBackCheckPanel poParam) {
         try {
@@ -125,6 +126,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
 
         btnProcess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_refresh.png"))); // NOI18N
         btnProcess.setText(resMessages.getString("btn_check"));
+        btnProcess.setToolTipText(resMessages.getString("tooltip_check_connection"));
         btnProcess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnProcessActionPerformed(evt);

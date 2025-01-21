@@ -112,6 +112,9 @@
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="resMessages.getString(&quot;run&quot;)" type="code"/>
         </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_start_stop&quot;)" type="code"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUploadActionPerformed"/>
@@ -145,6 +148,9 @@
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="10" style="0"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_upload_folder&quot;)" type="code"/>
         </Property>
       </Properties>
     </Component>
@@ -190,7 +196,9 @@
               </StringArray>
             </Property>
             <Property name="selectionMode" type="int" value="0"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="resMessages.getString(&quot;tooltip_extensions&quot;)" type="code"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="lstExtensionsValueChanged"/>
@@ -205,6 +213,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="resMessages.getString(&quot;split_class&quot;)" type="code"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_split_cat&quot;)" type="code"/>
         </Property>
       </Properties>
     </Component>

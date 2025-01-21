@@ -116,6 +116,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         mnuExit = new javax.swing.JMenuItem();
         mnuHelp = new javax.swing.JMenu();
         mnuAbout = new javax.swing.JMenuItem();
+        mnuManual = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mnuLanguage = new javax.swing.JMenu();
         mnuEnglish = new javax.swing.JMenuItem();
@@ -205,6 +206,14 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             }
         });
         mnuHelp.add(mnuAbout);
+
+        mnuManual.setText(resMessages.getString("online_manual"));
+        mnuManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuManualActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuManual);
         mnuHelp.add(jSeparator1);
 
         mnuLanguage.setText(resMessages.getString("language"));
@@ -359,6 +368,11 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         this.getDateAndTimeValues();
     }//GEN-LAST:event_txtStageZeroTimeFocusLost
 
+    private void mnuManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuManualActionPerformed
+        // TODO add your handling code here:
+        this.gotoWeb();
+    }//GEN-LAST:event_mnuManualActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -428,6 +442,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenu mnuLanguage;
     private javax.swing.JMenuBar mnuMain;
+    private javax.swing.JMenuItem mnuManual;
     private javax.swing.JMenuItem mnuSpanish;
     private javax.swing.JMenuItem mnuTest;
     private eu.oreplay.gui.ConnBackCheckPanel pnlCheck;
@@ -481,6 +496,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             mnuExit.setText(resMessages.getString("exit"));
             mnuHelp.setText(resMessages.getString("help"));
             mnuAbout.setText(resMessages.getString("about"));
+            mnuManual.setText(resMessages.getString("online_manual"));
             mnuLanguage.setText(resMessages.getString("language"));
             mnuEnglish.setText(resMessages.getString("english"));
             mnuSpanish.setText(resMessages.getString("spanish"));
@@ -721,5 +737,12 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         }
         return vcResul;
     }
-    
+    /**
+     * Opens a web explorer to the page of the documentation for organizers
+     */
+    private void gotoWeb() {
+        String vcUrl = "https://www.oreplay.es/organizers";
+        //Launch web explorer
+        Utils.openUrlInExplorer(vcUrl, 0);
+    }
 }
