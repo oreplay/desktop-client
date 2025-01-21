@@ -241,6 +241,11 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                     voRet.setStatusCode(Utils.STATUS_OK_ID);
                     if (vcNc.equals("X") || vcNc.equals("1"))
                         voRet.setStatusCode(Utils.STATUS_NC_ID);
+                    //Get the status
+                    String vcStatus = COL_TEA_STATUS[vnColIndex]>=0?vaRecord[COL_TEA_STATUS[vnColIndex]].trim().replaceAll("\"", ""):"0";
+                    if (vcStatus.equals(""))
+                        vcStatus = "0";
+                    voRet.setStatusCode(vcStatus.charAt(0));
                     //Add the result to the list
                     vlRet.add(voRet);
                     //Add the list to the team data
@@ -483,6 +488,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         //Add the club to the runner
                         voTea.setClub(voClu);
                     }
+                    //---------------------------------------------------------
                     //Process the runners, taking in account the number of legs
                     List<eu.oreplay.db.Runner> vlRun = new ArrayList<>();
                     for (int j=0; j<vnLegs; j++) {
@@ -526,20 +532,20 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                             }
                             //Transform the finish time value
                             try {
-                                String vcTime = COL_FINISH[vnColIndex]>=0?vaRecord[COL_FINISH[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"";
+                                String vcTime = COL_FINISH[vnColIndex]>=0?vaRecord[COL_FINISH[vnColIndex]+vnColIni].trim().replaceAll("\"", "").replaceAll(",", "."):"";
                                 java.util.Date vdTime = Utils.formatRelativeTimeFromBase(vcTime, 
                                         voSta.getBaseDate(), voSta.getBaseTime());
                                 voRes.setFinishTime(vdTime);
                             }catch(Exception eFinish) {
                             }      
                             //Converts time to a value in seconds
-                            vnTimeSecs = Utils.formatTimeInSeconds(COL_TIME[vnColIndex]>=0?vaRecord[COL_TIME[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"");
+                            vnTimeSecs = Utils.formatTimeInSeconds(COL_TIME[vnColIndex]>=0?vaRecord[COL_TIME[vnColIndex]+vnColIni].trim().replaceAll("\"", "").replaceAll(",", "."):"");
                             //Using String constructor to avoid problems with floating point approximations
                             vnTimeSeconds = new BigDecimal(vnTimeSecs + "");
                             //If it has no decimals, stores only the integer part
                             voRes.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
                             //Get the status
-                            vcStatus = COL_STATUS[vnColIndex]>=0?vaRecord[COL_STATUS[vnColIndex]].trim().replaceAll("\"", ""):"0";
+                            vcStatus = COL_STATUS[vnColIndex]>=0?vaRecord[COL_STATUS[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"0";
                             if (vcStatus.equals(""))
                                 vcStatus = "0";
                             voRes.setStatusCode(vcStatus.charAt(0));
@@ -548,7 +554,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                             /*
                             vnPosition = 0;
                             try {
-                                vnPosition = Integer.parseInt(COL_POSITION[vnColIndex]>=0?vaRecord[COL_POSITION[vnColIndex]].trim().replaceAll("\"", ""):"0");
+                                vnPosition = Integer.parseInt(COL_POSITION[vnColIndex]>=0?vaRecord[COL_POSITION[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"0");
                             }catch (Exception ePos){};
                             voRes.setPosition(vnPosition);
                             //Calculates time behind the first of the class
@@ -674,6 +680,69 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         voTea.setBibNumber(vcTeaBib);
                         voTea.setBibAlt(COL_TEA_BIBALT[vnColIndex]>=0?vaRecord[COL_TEA_BIBALT[vnColIndex]].trim().replaceAll("\"", ""):"");
                         voTea.setTeamName(COL_TEA_NAME[vnColIndex]>=0?vaRecord[COL_TEA_NAME[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        //--------------------------------------------------------
+                        //Get the list of results of the team, or create a new one
+                        List<eu.oreplay.db.TeamResult> vlRet = voTea.getTeamResultList();
+                        eu.oreplay.db.TeamResult voRet = null;
+                        if (vlRet==null) {
+                            vlRet = new ArrayList<eu.oreplay.db.TeamResult>();
+                            voRet = new eu.oreplay.db.TeamResult();
+                        } else {
+                            if (vlRet.size()>0) {
+                                voRet = vlRet.get(0);
+                            } else {
+                                voRet = new eu.oreplay.db.TeamResult();
+                            }
+                        }
+                        voRet.setId("");
+                        voRet.setStageOrder(voSta.getOrderNumber());
+                        //Compose the type of result, which is a Stage Result
+                        eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
+                        voResType.setId(Utils.RESULT_STAGE_ID);
+                        voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                        voRet.setResultType(voResType);
+                        //Transform the start time value
+                        try {
+                            String vcTime = COL_TEA_START[vnColIndex]>=0?vaRecord[COL_TEA_START[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"";
+                            java.util.Date vdTime = Utils.formatRelativeTimeFromBase(vcTime, 
+                                    voSta.getBaseDate(), voSta.getBaseTime());
+                            voRet.setStartTime(vdTime);
+                        }catch(Exception eStart) {
+                        }
+                        String vcNc = (COL_TEA_NC[vnColIndex]>=0?vaRecord[COL_TEA_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
+                        voRet.setStatusCode(Utils.STATUS_OK_ID);
+                        if (vcNc.equals("X") || vcNc.equals("1"))
+                            voRet.setStatusCode(Utils.STATUS_NC_ID);
+                        //Converts time to a value in seconds
+                        double vnTimeSecs = Utils.formatTimeInSeconds(COL_TEA_TIME[vnColIndex]>=0?vaRecord[COL_TEA_TIME[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"");
+                        //Using String constructor to avoid problems with floating point approximations
+                        BigDecimal vnTimeSeconds = new BigDecimal(vnTimeSecs + "");
+                        //If it has no decimals, stores only the integer part
+                        voRet.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+                        //Get the status
+                        String vcStatus = COL_TEA_STATUS[vnColIndex]>=0?vaRecord[COL_TEA_STATUS[vnColIndex]].trim().replaceAll("\"", ""):"0";
+                        if (vcStatus.equals(""))
+                            vcStatus = "0";
+                        voRet.setStatusCode(vcStatus.charAt(0));
+                        //Get the position
+                        int vnPosition = 0;
+                        try {
+                            vnPosition = Integer.parseInt(COL_TEA_POSITION[vnColIndex]>=0?vaRecord[COL_TEA_POSITION[vnColIndex]].trim().replaceAll("\"", ""):"0");
+                        }catch (Exception ePos){};
+                        voRet.setPosition(vnPosition);
+                        //Calculates time behind the first of the class
+                        BigDecimal vnTimeBehind = this.calculateTimeBehindTeam(vlTea, vnTimeSeconds);
+                        //If it has no decimals, stores only the integer part
+                        voRet.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
+                        //Add the result to the list
+                        if (vlRet.size()==0) {
+                            vlRet.add(voRet);
+                        } else {
+                            vlRet.set(0, voRet);
+                        }
+                        //Add the list to the team data
+                        voTea.setTeamResultList(vlRet);                  
+                        //----------------------------------------------------
                         //Get or create the list of radiocontrols of the class
                         ArrayList<eu.oreplay.db.ClazzControl> vlClaCon = (voCla.getClazzControlList()!=null?(ArrayList)voCla.getClazzControlList():new ArrayList<>());                    
                         //Process the runner and put it on the team
@@ -716,9 +785,10 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                             //---------------------------------------
                             //OS has a field for the runner's course combination (COL_COU_COMBINATION), but our model not
                             //---------------------------------------
-                            //Add the course to the class
-                            voCla.setCourse(voCou);
+                            //Add the course to the runner
+                            voRun.setCourse(voCou);
                         }
+                        //---------------------------------------------------------
                         //Start Time is set in a first element of RunnerResult List
                         ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
                         eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
@@ -726,7 +796,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         voRes.setStageOrder(voSta.getOrderNumber());
                         voRes.setLegNumber(vnLeg);
                         //Compose the type of result, which is a Stage Result
-                        eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
+                        voResType = new eu.oreplay.db.ResultType();
                         voResType.setId(Utils.RESULT_STAGE_ID);
                         voResType.setDescription(Utils.RESULT_STAGE_DESC);
                         voRes.setResultType(voResType);
@@ -747,13 +817,13 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         }catch(Exception eFinish) {
                         }      
                         //Converts time to a value in seconds
-                        double vnTimeSecs = Utils.formatTimeInSeconds(COL_TIME[vnColIndex]>=0?vaRecord[COL_TIME[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"");
+                        vnTimeSecs = Utils.formatTimeInSeconds(COL_TIME[vnColIndex]>=0?vaRecord[COL_TIME[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"");
                         //Using String constructor to avoid problems with floating point approximations
-                        BigDecimal vnTimeSeconds = new BigDecimal(vnTimeSecs + "");
+                        vnTimeSeconds = new BigDecimal(vnTimeSecs + "");
                         //If it has no decimals, stores only the integer part
                         voRes.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
                         //Get the status
-                        String vcStatus = COL_STATUS[vnColIndex]>=0?vaRecord[COL_STATUS[vnColIndex]].trim().replaceAll("\"", ""):"0";
+                        vcStatus = COL_STATUS[vnColIndex]>=0?vaRecord[COL_STATUS[vnColIndex]].trim().replaceAll("\"", ""):"0";
                         if (vcStatus.equals(""))
                             vcStatus = "0";
                         voRes.setStatusCode(vcStatus.charAt(0));
