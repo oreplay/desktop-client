@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.3.4"},
-        {"version", "v0.3.4"},
+        {"main", "OReplay. Desktop Client 0.3.5"},
+        {"version", "v0.3.5"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -29,6 +29,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"help", "Help"},
         {"configuration", "Configuration"},
         {"online_manual", "Online Manual"},
+        {"check_updates", "Check for Updates"},
         {"event", "Event"},
         {"server", "Server"},
         {"server_value", "www.oreplay.es"},
@@ -271,6 +272,8 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_classprocess_stopped", "Class process stopped"},
         {"info_classprocess_finished", "Class process finished"},
         {"info_new_version", "There is a newer version of the desktop client.\n Replace your release or download\nthe newest windows installer to update"},
+        {"info_current_version", "Your version is up to date"},
+        {"info_connection_version", "Could not connect to check for updates."},
         {"info_date_time_needed", "Formato CSV. Es necesario escribir un valor correcto de fecha y hora de comienzo de la etapa"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},

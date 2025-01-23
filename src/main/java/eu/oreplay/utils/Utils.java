@@ -1123,10 +1123,10 @@ public static void openUrlInExplorer (String pcUrl, int pnOption) {
  * version has changed, because in this case a message should be shown to the user in 
  * order to update the application
  * @param pcCurrent String Current version for comparison
- * @return boolean Flag to indicate if version has changed
+ * @return int -1:connection NOK; 0:same version; 1:different version
  */
-public static boolean checkForNewVersion(String pcCurrent) {
-    boolean vbResul = false;
+public static int checkForNewVersion(String pcCurrent) {
+    int vnResul = -1;
     try {
         //Gets an HTTP Client to make a request
         HttpClient voClient = HttpClient.newBuilder()
@@ -1153,9 +1153,18 @@ public static boolean checkForNewVersion(String pcCurrent) {
             if (vlData!=null) {
                 for (CustomProperty voData : vlData) {
                     if (voData!=null) {
-                        if (voData.getPropertyName().equals("oreplaydesktopclientver") && 
-                                !voData.getValue().equals(pcCurrent)) {
-                            vbResul = true;
+                        if (voData.getPropertyName().equals("oreplaydesktopclientver")) {
+                            //Convert version text to numbers and check if GitHub property is greater than current version
+                            //If it's equal or less, there is no change (less can be when I forget to update the property in Github for a long time
+                            try {
+                                if (Utils.versionGreaterThan(voData.getValue(), pcCurrent)) {
+                                    vnResul = 1;
+                                } else {
+                                    vnResul = 0;
+                                }
+                            }catch(Exception eCheck) {
+                                vnResul = 0;
+                            }
                         }
                     }
                 }
@@ -1163,6 +1172,34 @@ public static boolean checkForNewVersion(String pcCurrent) {
         }
     }catch(Exception e) {
         oLog.error("Exception", e);
+        vnResul = -1;
+    }
+    return vnResul;
+}
+/**
+ * Converts to version values to numbers and checks if first value is greater than second
+ * @param pcProperty String Version in form vnnn.nnn.nnn
+ * @param pcCurrent String Version in form vnnn.nnn.nnn
+ * @return Flag to indicate if first is greater than second
+ */
+public static boolean versionGreaterThan (String pcProperty, String pcCurrent) {
+    boolean vbResul = false;
+    try {
+        //Convert the first value
+        String vcProperty = pcProperty.replace("v", "");
+        String[] vaProperty = vcProperty.split("\\.");
+        long vnProperty = Long.parseLong(vaProperty[0])*1000000 + Long.parseLong(vaProperty[1])*1000 + Long.parseLong(vaProperty[2]);
+        //Convert the second value
+        String vcCurrent = pcCurrent.replace("v", "");
+        String[] vaCurrent = vcCurrent.split("\\.");
+        long vnCurrent = Long.parseLong(vaCurrent[0])*1000000 + Long.parseLong(vaCurrent[1])*1000 + Long.parseLong(vaCurrent[2]);
+        //And compare
+        if (vnProperty>vnCurrent) {
+            vbResul = true;
+        }
+    }catch (Exception e) {
+        oLog.error("Exception", e);
+        vbResul = false;
     }
     return vbResul;
 }

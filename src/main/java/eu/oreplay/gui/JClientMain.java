@@ -118,6 +118,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         mnuAbout = new javax.swing.JMenuItem();
         mnuManual = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        mnuCheckUpdate = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         mnuLanguage = new javax.swing.JMenu();
         mnuEnglish = new javax.swing.JMenuItem();
         mnuSpanish = new javax.swing.JMenuItem();
@@ -215,6 +217,15 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         });
         mnuHelp.add(mnuManual);
         mnuHelp.add(jSeparator1);
+
+        mnuCheckUpdate.setText(resMessages.getString("check_updates"));
+        mnuCheckUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCheckUpdateActionPerformed(evt);
+            }
+        });
+        mnuHelp.add(mnuCheckUpdate);
+        mnuHelp.add(jSeparator3);
 
         mnuLanguage.setText(resMessages.getString("language"));
 
@@ -373,6 +384,11 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         this.gotoWeb();
     }//GEN-LAST:event_mnuManualActionPerformed
 
+    private void mnuCheckUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCheckUpdateActionPerformed
+        // TODO add your handling code here:
+        this.checkForNewVersion();
+    }//GEN-LAST:event_mnuCheckUpdateActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -431,11 +447,13 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JLabel lblCsvWarning;
     private javax.swing.JLabel lblOffset;
     private javax.swing.JLabel lblStageDate;
     private javax.swing.JLabel lblStageZeroTime;
     private javax.swing.JMenuItem mnuAbout;
+    private javax.swing.JMenuItem mnuCheckUpdate;
     private javax.swing.JMenuItem mnuEnglish;
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
@@ -681,15 +699,19 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
      * Checks for a version change; If so, show a message to recommend an update
      */
     private void checkForNewVersion() {
-        boolean vbChanged = false;
+        int vnChanged = 0;
+        String vcMessage = resMessages.getString("info_current_version");
         try {
-            vbChanged = Utils.checkForNewVersion(resMessages.getString("version"));
-            if (vbChanged) {
-                JOptionPane.showMessageDialog(JClientMain.this, 
-                        resMessages.getString("info_new_version"),
-                        resMessages.getString("info"), 
-                        JOptionPane.INFORMATION_MESSAGE);
+            vnChanged = Utils.checkForNewVersion(resMessages.getString("version"));
+            if (vnChanged>0) {
+                vcMessage = resMessages.getString("info_new_version");
+            } else if (vnChanged<0) {
+                vcMessage = resMessages.getString("info_connection_version");
             }
+            JOptionPane.showMessageDialog(JClientMain.this, 
+                    vcMessage,
+                    resMessages.getString("info"), 
+                    JOptionPane.INFORMATION_MESSAGE);
         }catch(Exception e) {
             oLog.error(resMessages.getString("error_exception"), e);
         }

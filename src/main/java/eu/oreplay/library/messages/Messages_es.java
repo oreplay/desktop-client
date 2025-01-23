@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.3.4"},
-        {"version", "v0.3.4"},
+        {"main", "OReplay. Cliente de Escritorio 0.3.5"},
+        {"version", "v0.3.5"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
@@ -29,6 +29,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"help", "Ayuda"},
         {"configuration", "Configuración"},
         {"online_manual", "Manual Online"},
+        {"check_updates", "Comprobar actualizaciones"},
         {"event", "Evento"},
         {"server", "Servidor"},
         {"server_value", "www.oreplay.es"},
@@ -271,6 +272,8 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"info_classprocess_stopped", "Proceso de categoría parado"},
         {"info_classprocess_finished", "Proceso de categoría finalizado"},
         {"info_new_version", "Hay una versión más moderna del cliente de escritorio.\nReemplaza tu distribución o descarga el instalador\npara windows más moderno para actualizar"},
+        {"info_current_version", "Su versión está actualizada"},
+        {"info_connection_version", "No pudo conectar para comprobar actualizaciones."},
         {"info_date_time_needed", "Formato CSV. Es necesario escribir un valor correcto de fecha y hora de comienzo de la etapa"},
 
         {"error_exception", "Algo fue mal y el programa entró en un bloque de excepción"},
