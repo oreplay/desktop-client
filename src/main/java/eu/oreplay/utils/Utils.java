@@ -1136,7 +1136,8 @@ public static int checkForNewVersion(String pcCurrent) {
         //Sets the request to the current server
         HttpRequest voReq = HttpRequest.newBuilder()
             .GET()
-            .uri(new URI("https://api.github.com/repos/jarufe/mi_repo/properties/values"))
+            .uri(new URI("https://api.github.com/repos/oreplay/desktop-client/properties/values"))
+            //.uri(new URI("https://api.github.com/repos/jarufe/mi_repo/properties/values"))
             .header("Accept", "application/vnd.github+json")
             .build();
         //Sends the request an gets the response
