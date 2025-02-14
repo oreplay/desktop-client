@@ -263,7 +263,7 @@ public class OReplayDataTransfer {
                             poConv.getcIofVersion().equals(ConverterToModel.IOF_VERSION_3)) {
                         //Creates a dummy event with one stage
                         eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, "", "");
-                        //Set the specific properties for CSV
+                        //Set the specific properties for XML
                         ((ConverterIofToModel)poConv).setSpecificProperties(voSrcEve);
                         if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
                             //Parses the contents
@@ -328,7 +328,6 @@ public class OReplayDataTransfer {
                                     voMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
                                     vcResul = voMapper.writerWithDefaultPrettyPrinter().writeValueAsString(voData);
                                     vaResul.put(vcClassName, vcResul);
-//System.out.println("Llego B, " + vcClassName + ", tam resul: " + vcResul.length());
                                 }
                             }
                         }
