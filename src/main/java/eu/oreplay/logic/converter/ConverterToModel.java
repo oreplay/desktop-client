@@ -35,6 +35,7 @@ public abstract class ConverterToModel {
     public static final String RES_TOTALS = "Totals";
     public static final String RES_BREAKDOWN = "Breakdown";
     public static final String RES_RADIO = "Radiocontrols";
+    public static final String RES_ANSWERS = "Answers";
     public static final String SRC_GENERICXML = "IOFXML";
     public static final String SRC_OE2010 = "OE2010";
     public static final String SRC_OS2010 = "OS2010";
@@ -45,6 +46,11 @@ public abstract class ConverterToModel {
     public static final String SRC_SITIMING = "SiTiming";
     public static final String SRC_MEOS = "MeOS";
     public static final String SRC_OPRE = "ControlOPrecision";
+    public static final String TRAILO_TYPE_PREO = "PreO";
+    public static final String TRAILO_TYPE_TEMPO = "TempO";
+    public static final String TRAILO_TYPE_SPRINT = "Sprint";
+    public static final String TRAILO_AT_FINISH = "Finish";
+    public static final String TRAILO_AT_INTERMEDIATE = "Intermediate";
 
     private String cFile;
     private boolean bExists;
@@ -59,6 +65,10 @@ public abstract class ConverterToModel {
     private boolean bIncludeScore;
     private String cStageDate;
     private String cStageZeroTime;
+    private String cTrailoType;
+    private String cTrailoAt;
+    private String cTrailoNormal;
+    private String cTrailoGroup;
 
     public ConverterToModel() {
         initializeValues();
@@ -192,6 +202,35 @@ public abstract class ConverterToModel {
     public void setcStageZeroTime(String cStageZeroTime) {
         this.cStageZeroTime = cStageZeroTime;
     }
+
+    @JsonProperty("trailo_type")
+    public String getcTrailoType() {
+        return cTrailoType;
+    }
+    public void setcTrailoType(String cTrailoType) {
+        this.cTrailoType = cTrailoType;
+    }
+    @JsonProperty("trailo_at")
+    public String getcTrailoAt() {
+        return cTrailoAt;
+    }
+    public void setcTrailoAt(String cTrailoAt) {
+        this.cTrailoAt = cTrailoAt;
+    }
+    @JsonProperty("trailo_normal")
+    public String getcTrailoNormal() {
+        return cTrailoNormal;
+    }
+    public void setcTrailoNormal(String cTrailoNormal) {
+        this.cTrailoNormal = cTrailoNormal;
+    }
+    @JsonProperty("trailo_group")
+    public String getcTrailoGroup() {
+        return cTrailoGroup;
+    }
+    public void setcTrailoGroup(String cTrailoGroup) {
+        this.cTrailoGroup = cTrailoGroup;
+    }
     
     
     /**
@@ -218,6 +257,10 @@ public abstract class ConverterToModel {
         bIncludeScore = false;
         cStageDate = "";
         cStageZeroTime = "";
+        cTrailoType = OTHER_VALUES;
+        cTrailoAt = OTHER_VALUES;
+        cTrailoNormal = "0";
+        cTrailoGroup = "0";
     }
     /**
      * Copy values of the properties from another object
@@ -238,6 +281,10 @@ public abstract class ConverterToModel {
         bIncludeScore = poSrc.isbIncludeScore();
         cStageDate = poSrc.getcStageDate();
         cStageZeroTime = poSrc.getcStageZeroTime();
+        cTrailoType = poSrc.getcTrailoType();
+        cTrailoAt = poSrc.getcTrailoAt();
+        cTrailoNormal = poSrc.getcTrailoNormal();
+        cTrailoGroup = poSrc.getcTrailoGroup();
     }
     @JsonIgnore
     public boolean isCsv () {
@@ -494,6 +541,8 @@ public abstract class ConverterToModel {
                         cSource = SRC_SITIMING;
                     } else if (vcTopValues.contains("MeOS")) {
                         cSource = SRC_MEOS;
+                    } else if (vcTopValues.contains("ControlOPrecision")) {
+                        cSource = SRC_OPRE;
                     }
                     //IOF Version
                     if (vcTopValues.contains("iofVersion=2.0")) {
@@ -546,8 +595,8 @@ public abstract class ConverterToModel {
                           new InputStreamReader(voIs, (bUtf?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1)));
             //Read the first characters of the file and concatenate them (more than the checking for known data)
             String vcTopValues = "";
-            char[] vaChars = new char[5000];
-            int vnMaxRead = voBr.read(vaChars, 0, 5000);
+            char[] vaChars = new char[10000];
+            int vnMaxRead = voBr.read(vaChars, 0, 10000);
             vcTopValues = new String(vaChars, 0, vnMaxRead);
             //Removes all " characters
             vcTopValues = vcTopValues.replaceAll("\"", "");
@@ -556,14 +605,37 @@ public abstract class ConverterToModel {
             cResultsType = OTHER_VALUES;
             //Ask for some values if confirmed that is XML for results
             if (cExtension.equals(EXT_XML) && cContents.equals(CONTENTS_RESULT)) {
-                if (vcTopValues.contains("<SplitTime")) {
-                    cResultsType = RES_BREAKDOWN;
-                    if (vcTopValues.contains("SplitTimeControls:")) {
-                        cResultsType = RES_RADIO;
+                //If it's not a TrailO competition, check the existence of Splits tags
+                if (!cSource.equals(SRC_OPRE)) {
+                    if (vcTopValues.contains("<SplitTime")) {
+                        cResultsType = RES_BREAKDOWN;
+                        if (vcTopValues.contains("SplitTimeControls:")) {
+                            cResultsType = RES_RADIO;
+                        }
+                    } else {
+                        cResultsType = RES_TOTALS;
                     }
                 } else {
-                    cResultsType = RES_TOTALS;
-                }               
+                    //It it's TrailO, check at the header for the rest of parameters
+                    int vnCreator = vcTopValues.indexOf("creator");
+                    if (vnCreator>0) {
+                        int vnEndTag = vcTopValues.indexOf(">", vnCreator);
+                        if (vnEndTag>0) {
+                            String vcTrailoParams = vcTopValues.substring(vnCreator+8, vnEndTag);
+                            String[] vaTrailoParams = vcTrailoParams.split(";");
+                            if (vaTrailoParams.length>2)
+                                cTrailoType = vaTrailoParams[2];
+                            if (vaTrailoParams.length>3)
+                                cResultsType = vaTrailoParams[3];
+                            if (vaTrailoParams.length>4)
+                                cTrailoAt = vaTrailoParams[4];
+                            if (vaTrailoParams.length>5)
+                                cTrailoNormal = vaTrailoParams[5];
+                            if (vaTrailoParams.length>6)
+                                cTrailoGroup = vaTrailoParams[6];
+                        }
+                    }
+                }
                 //If XML contains Score tags, set the flag to true
                 if (vcTopValues.contains("<Score type=")) {
                     bIncludeScore = true;
