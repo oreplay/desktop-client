@@ -29,16 +29,46 @@ By now, Java is being explored as the development language. A desktop applicatio
 - **Conversion to JSON**
 - **Uploading to the server**, and letting the backend make all of the big checkings, calculations and operations with the database
 
+Current file processing capabilities (uploading from csv files are currently disabled to avoid problems with dates in backend):
+
+| CSV             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols |
+| :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: |
+| Classic         |                   |         |        |                    |               |
+|                 | OE2010            |    X    | X      | X                  | X             |
+|                 | OEv12             |    X    | X      | X                  | X             |
+| Relays          |                   |         |        |                    |               |
+|                 | OS2010            |    X    | X      | X                  | X             |
+|                 | OSv12             |    X    | X      | X                  | X             |
+| Rogaine         |                   |         |        |                    |               |
+|                 | OEScore2010       |    X    | X      | X                  | N/A           |
+|                 | OEScorev12        |    X    | X      | X                  | N/A           |
+
+| XML             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols |
+| :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: |
+| Classic         |                   |         |        |                    |               |
+|                 | OE2010            |    X    | X      | X                  | X             |
+|                 | OEv12             |    X    | X      | X                  | X             |
+| Relays          |                   |         |        |                    |               |
+|                 | OS2010            |    X    | X      | X                  | X             |
+|                 | OSv12             |    X    | X      | X                  | X             |
+| Rogaine         |                   |         |        |                    |               |
+|                 | MeOS              |    X    | X      | X                  | X             |
+|                 | OEScorev12        |    X    | X      | X                  | X             |
+|                 | SiTiming          |         | X      | X                  | X             |
+| Trail-O         |                   |         |        |                    |               |
+|                 | ControlOPrecision |         | X      | X                  | X             |
+
 # For starting collaboration
 
 Cloning GitHub Netbeans project
 
 Although sometimes is better to spend long time with stable versions of products, in this case a migration to the last versions has been done, thinking that it could help the new collaborators. Initially, OReplay desktop-client was created using Netbeans 11.3 and Java JDK 1.8. Now, the project has been migrated to **Netbeans 21**, **Java OpenJDK 21** and **Maven**
 
-- Ensure you've got a proper Java JDK installed or Install it (Netbeans will use it)
-  - [OpenJDK](https://openjdk.org)
-- Install Netbeans
+- Install Netbeans (tested with Netbeans 24)
   - [NetBeans](https://netbeans.apache.org/front/main/index.html)
+  - Ensure you've got a proper Java JDK (tested in version 21) installed or Install it (Netbeans will use it)
+    - In Netbeans go to: Tools -> Java Platform in order to check and download the JDK
+    - [OpenJDK](https://openjdk.org)
 - Clone the GitHub project in Netbeans
   - [Netbeans Git tutorial](https://netbeans.apache.org/tutorial/main/kb/docs/ide/git/)
   - Team -> Git -> Clone
@@ -47,14 +77,14 @@ Although sometimes is better to spend long time with stable versions of products
     - Destination folder: the path where your other Netbeans projects are or specify a new one
   - Select Remote Branches: main
   - Destination Directory. Set a name for your Netbeans project in field Clone Name, for example OReplay
-- Add-ons, managed by Maven through POM file
+- Add-ons, managed by Maven through POM file (no need to manually configure them in Netbeans)
   - EclipseLink (JPA 2.2). Java Persistence, database management
   - JAXB Bindings. XML to Java Classes converter
   - Apache Commons IO
   - Apache Commons Codec
   - Jackson (Java Classes to JSON converter)
 - Regenerate JAXB code
-  - Some errors will arise because after cloning there will be no code for the JAXB binding. These errors disappear when cleaning and building the project again
+  - Some errors will arise because after cloning there will be no code for the JAXB binding. These errors disappear when cleaning and building the project again (right-click on the project and click "Clean and Build").
 
 # Pushing changes to the GitHub repository (remote)
 
