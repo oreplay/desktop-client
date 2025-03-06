@@ -566,7 +566,6 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 }
 
             } catch (BadLocationException e1) {
-                e1.printStackTrace();
             }
         }
         @Override
