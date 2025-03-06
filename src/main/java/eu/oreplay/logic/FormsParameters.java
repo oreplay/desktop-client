@@ -357,6 +357,7 @@ public class FormsParameters {
     public class ParConnBackLoginPanel extends ParBase{
         private String cEveId = "";
         private String cToken = "";
+        private String cIdToken = "";
         private String cStaId = "";
         private String cEveDesc = "";
         private String cStaDesc = "";
@@ -367,6 +368,7 @@ public class FormsParameters {
             oPos = new ParPosition (200, 200, 450, 200);
             cEveId = "";
             cToken = "";
+            cIdToken = "";
             cStaId = "";
             cEveDesc = "";
             cStaDesc = "";
@@ -379,6 +381,7 @@ public class FormsParameters {
             this.oPos = oPos;
             cEveId = "";
             cToken = "";
+            cIdToken = "";
             cStaId = "";
             cEveDesc = "";
             cStaDesc = "";
@@ -394,6 +397,7 @@ public class FormsParameters {
             this.oPos = oPos;
             cEveId = pcEveId;
             cToken = pcToken;
+            cIdToken = "";
             cStaId = pcStaId;
             cEveDesc = "";
             cStaDesc = "";
@@ -412,6 +416,27 @@ public class FormsParameters {
             this.oPos = oPos;
             cEveId = pcEveId;
             cToken = pcToken;
+            cIdToken = "";
+            cStaId = pcStaId;
+            cEveDesc = pcEveDesc;
+            cStaDesc = pcStaDesc;
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcEveId String Event's id
+         * @param pcToken String Event's secret
+         * @param pcIdToken String Event's Id + Token
+         * @param pcStaId String Stage's id
+         * @param pcEveDesc String Event's description
+         * @param pcStaDesc String Stage's description
+         */
+        public ParConnBackLoginPanel(ParPosition oPos, String pcEveId, String pcToken, String pcIdToken,
+                String pcStaId, String pcEveDesc, String pcStaDesc) {
+            this.oPos = oPos;
+            cEveId = pcEveId;
+            cToken = pcToken;
+            cIdToken = pcIdToken;
             cStaId = pcStaId;
             cEveDesc = pcEveDesc;
             cStaDesc = pcStaDesc;
@@ -431,6 +456,14 @@ public class FormsParameters {
 
         public void setcToken(String cToken) {
             this.cToken = cToken;
+        }
+
+        public String getcIdToken() {
+            return cIdToken;
+        }
+
+        public void setcIdToken(String cIdToken) {
+            this.cIdToken = cIdToken;
         }
 
         public String getcStaId() {

@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages_es extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Cliente de Escritorio 0.3.6"},
-        {"version", "v0.3.6"},
+        {"main", "OReplay. Cliente de Escritorio 0.3.7"},
+        {"version", "v0.3.7"},
         {"about_description", "OReplay es un servicio web libre que pretende proporcionar un espacio moderno, amigable y de código abierto para todos los eventos de orientación.<BR>Se pueden subir resultados en vivo y finales para visualizarlos durante y después del evento."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "Equipo de Desarrollo de OReplay"},
@@ -185,6 +185,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"login_event", "Login a un evento"},
         {"event_id", "Id. Evento"},
         {"token", "Token"},
+        {"idtoken", "Clave Secreta"},
         {"secret", "Secreto"},
         {"select", "Seleccionar"},
         {"upload_data", "Subir datos al servidor"},
@@ -227,6 +228,7 @@ public class Messages_es extends java.util.ListResourceBundle {
         {"tooltip_check_connection", "Comprueba la conexión con el servidor de O-Replay"},
         {"tooltip_event_id", "Id del evento que se ha creado en O-Replay"},
         {"tooltip_token", "Token o valor de seguridad asociado al evento en O-Replay"},
+        {"tooltip_idtoken", "Clave Secreta tal y como ha sido copiada de O-Replay"},
         {"tooltip_login", "Realiza el login al evento usando el Id y Token"},
         {"tooltip_event_web", "Abre un navegador y accede a la página del evento en O-Replay"},
         {"tooltip_stage_list", "Lista de etapas del evento. Seleccionar una"},
