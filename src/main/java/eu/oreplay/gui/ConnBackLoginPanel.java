@@ -16,7 +16,11 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import javax.swing.DefaultListModel;
-import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 /**
  *
@@ -28,10 +32,12 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private java.util.List lListeners = new java.util.ArrayList();
     private String cEveId = "";
     private String cToken = "";
+    private String cIdToken = "";
     private String cStaId = "";
     private String cEveDesc = "";
     private String cStaDesc = "";
     private java.util.HashMap<Integer, eu.oreplay.db.Stage> lStages = new java.util.HashMap<>();
+    private DocumentListenerIdToken oDoc = new DocumentListenerIdToken();
     
     /**
      * Creates new form ConnBackLoginPanel
@@ -39,6 +45,9 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     public ConnBackLoginPanel() {
         initComponents();
         this.setDefaultValues();
+        //txtEveId.getDocument().addDocumentListener(oDoc);
+        //txtToken.getDocument().addDocumentListener(oDoc);
+        txtIdToken.getDocument().addDocumentListener(oDoc);
     }
     /**
      * Forces app language change
@@ -55,11 +64,13 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         btnWeb.setText(resMessages.getString("gotoweb"));
         lblEveId.setText(resMessages.getString("event_id"));
         lblToken.setText(resMessages.getString("token"));
+        lblIdToken.setText(resMessages.getString("idtoken"));
         lblStaId.setText(resMessages.getString("stage"));
         btnLogin.setToolTipText(resMessages.getString("tooltip_login"));
         btnWeb.setToolTipText(resMessages.getString("tooltip_event_web"));
         txtEveId.setToolTipText(resMessages.getString("tooltip_event_id"));
         txtToken.setToolTipText(resMessages.getString("tooltip_token"));
+        txtIdToken.setToolTipText(resMessages.getString("tooltip_idtoken"));
         lstStages.setToolTipText(resMessages.getString("tooltip_stage_list"));
     }
     public void initFormParameters(FormsParameters.ParConnBackLoginPanel poParam) {
@@ -72,6 +83,11 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             */
             cEveId = poParam.getcEveId();
             cToken = poParam.getcToken();
+            cIdToken = poParam.getcIdToken();
+            if (cIdToken.equals("")) {
+                cEveId = "";
+                cToken = "";
+            }
             cStaId = poParam.getcStaId();
             cEveDesc = poParam.getcEveDesc();
             cStaDesc = poParam.getcStaDesc();
@@ -92,6 +108,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             */
             voParam.setcEveId(cEveId);
             voParam.setcToken(cToken);
+            voParam.setcIdToken(cIdToken);
             voParam.setcStaId(cStaId);
             voParam.setcEveDesc(cEveDesc);
             voParam.setcStaDesc(cStaDesc);
@@ -145,6 +162,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         lstStages = new javax.swing.JList<>();
         lblStatus = new javax.swing.JLabel();
         btnWeb = new javax.swing.JButton();
+        lblIdToken = new javax.swing.JLabel();
+        txtIdToken = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(450, 200));
@@ -200,6 +219,12 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             }
         });
 
+        lblIdToken.setBackground(new java.awt.Color(255, 255, 255));
+        lblIdToken.setText(resMessages.getString("idtoken"));
+
+        txtIdToken.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
+        txtIdToken.setToolTipText(resMessages.getString("tooltip_idtoken"));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -221,13 +246,17 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnWeb, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblEveId, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtEveId)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblToken, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtToken))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblEveId, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblIdToken, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtEveId)))
+                                .addComponent(txtIdToken)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -237,12 +266,14 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblEveId)
-                    .addComponent(txtEveId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblIdToken)
+                    .addComponent(txtIdToken, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblToken)
-                    .addComponent(txtToken, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtToken, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEveId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblEveId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -261,7 +292,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        if (!txtEveId.equals("") && !txtToken.equals("")) {
+        if (!txtEveId.getText().equals("") && !txtToken.getText().equals("")) {
             this.login();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
@@ -282,6 +313,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnWeb;
     private javax.swing.JLabel lblEveId;
+    private javax.swing.JLabel lblIdToken;
     private javax.swing.JLabel lblStaId;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblTitle;
@@ -289,6 +321,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private javax.swing.JList<String> lstStages;
     private javax.swing.JScrollPane scrStages;
     private javax.swing.JTextField txtEveId;
+    private javax.swing.JTextField txtIdToken;
     private javax.swing.JTextField txtToken;
     // End of variables declaration//GEN-END:variables
 
@@ -298,9 +331,15 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     public void setDefaultValues() {
         txtEveId.setText("");
         txtToken.setText("");
+        txtIdToken.setText("");
         lstStages.setModel(new DefaultListModel<>());
+        lblEveId.setVisible(false);
+        lblToken.setVisible(false);
+        txtEveId.setVisible(false);
+        txtToken.setVisible(false);
         txtEveId.setEnabled(false);
         txtToken.setEnabled(false);
+        txtIdToken.setEnabled(false);
         lstStages.setEnabled(false);
         btnLogin.setEnabled(false);
         btnWeb.setEnabled(false);
@@ -312,13 +351,26 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     public void enableForLogin() {
         txtEveId.setText(cEveId);
         txtToken.setText(cToken);
+        txtIdToken.setText(cIdToken);
         lstStages.setModel(new DefaultListModel<>());
+        lblEveId.setVisible(false);
+        lblToken.setVisible(false);
+        txtEveId.setVisible(false);
+        txtToken.setVisible(false);
         txtEveId.setEnabled(true);
         txtToken.setEnabled(true);
+        txtIdToken.setEnabled(true);
         lstStages.setEnabled(false);
         btnLogin.setEnabled(true);
         btnWeb.setEnabled(false);
         lblStatus.setText("");
+    }
+    /**
+     * Populates Event Id and Token from IdToken (concatenated value)
+     */
+    public void populateIdToken() {
+        txtEveId.setText(cEveId);
+        txtToken.setText(cToken);
     }
     /**
      * Allows to select a stage
@@ -337,6 +389,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         oStatus.setcEveDesc("");
         oStatus.setcStaDesc("");
         oStatus.setcToken("");
+        oStatus.setcIdToken("");
         oStatus.setnStatus(ConnBackStatus.LOGIN_NOOK);
         lblStatus.setText(pcMessage);
         lstStages.setModel(new DefaultListModel<String>());
@@ -404,9 +457,11 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                     //Fire the event
                     cEveId = txtEveId.getText();
                     cToken = txtToken.getText();
+                    cIdToken = txtIdToken.getText();
                     oStatus.setcEveId(cEveId);
                     oStatus.setcEveDesc(cEveDesc);
                     oStatus.setcToken(cToken);
+                    oStatus.setcIdToken(cIdToken);
                     //If there are several stages, status is only login ok
                     //But, if only one, select it inmediatly
                     if (!vbOneStage) {
@@ -439,6 +494,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             //Fire the event
             cEveId = txtEveId.getText();
             cToken = txtToken.getText();
+            cIdToken = txtIdToken.getText();
             cStaId = lStages.get(vnRow).getId();
             cStaDesc = lStages.get(vnRow).getDescription();
             oStatus.setcEveId(cEveId);
@@ -446,6 +502,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             oStatus.setcEveDesc(cEveDesc);
             oStatus.setcStaDesc(cStaDesc);
             oStatus.setcToken(cToken);
+            oStatus.setcIdToken(cIdToken);
             oStatus.setnStatus(ConnBackStatus.STAGE_SELECTED);
             this.fireEvent();
         }
@@ -470,4 +527,50 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Inner class that is a Listener for the JTextField to know when their value
+     * change; used for event id and token when the user pastes a content; 
+     * if there comes a concatenation of EventId and Token, this Listener splits
+     * the values to fill those two JTextField
+     */
+    private class DocumentListenerIdToken implements DocumentListener {
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+
+        }
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            Document voDoc = e.getDocument();
+            try {
+                String vcText = voDoc.getText(0, voDoc.getLength());
+                if (vcText!=null) {
+                    if (vcText.length()>8) {
+                        //If the text concatenates EventId(36) + Token (40), then split those two values
+                        if (vcText.length()>36 && vcText.charAt(8)=='-') {
+                            String vcId = vcText.substring(0, 36);
+                            String vcToken = vcText.substring(36);
+                            SwingUtilities.invokeLater(() -> {
+                                //Fire the event
+                                cEveId = vcId;
+                                cToken = vcToken;
+                                cIdToken = vcText;
+                                oStatus.setcEveId(cEveId);
+                                oStatus.setcToken(cToken);
+                                oStatus.setcIdToken(cIdToken);
+                                oStatus.setnStatus(ConnBackStatus.PASTE_IDTOKEN);
+                                ConnBackLoginPanel.this.fireEvent();
+                            });
+                        }
+                    }
+                }
+
+            } catch (BadLocationException e1) {
+            }
+        }
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+        }
+    }
+    
 }
