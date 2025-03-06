@@ -45,15 +45,19 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnWeb" min="-2" pref="136" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="lblEveId" min="-2" pref="79" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtEveId" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="lblToken" min="-2" pref="79" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="txtToken" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="lblEveId" min="-2" pref="79" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="lblIdToken" min="-2" pref="79" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtEveId" max="32767" attributes="0"/>
+                              <Component id="txtIdToken" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -69,13 +73,15 @@
               <Component id="lblTitle" min="-2" pref="28" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblEveId" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtEveId" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblIdToken" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtIdToken" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lblToken" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtToken" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtEveId" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="lblEveId" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -232,6 +238,26 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnWebActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblIdToken">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;idtoken&quot;)" type="code"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtIdToken">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="10" style="0"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="resMessages.getString(&quot;tooltip_idtoken&quot;)" type="code"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

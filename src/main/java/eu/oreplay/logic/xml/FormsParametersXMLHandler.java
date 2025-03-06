@@ -174,6 +174,14 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e10) {}
+                } else if (lname.toLowerCase().equals("cidtoken")) {
+                    try {
+                        switch (nType) {
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcIdToken(content);
+                                break;
+                        }
+                    }catch(Exception e10) {}
                 } else if (lname.toLowerCase().equals("cstaid")) {
                     try {
                         switch (nType) {
@@ -336,6 +344,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                 voStream.println("    <nSizeY>" + poRec.getoConnBackLoginPanel().getoPos().getnSizeY()+ "</nSizeY>");
                 voStream.println("    <cEveId>" + poRec.getoConnBackLoginPanel().getcEveId()+ "</cEveId>");
                 voStream.println("    <cToken>" + poRec.getoConnBackLoginPanel().getcToken()+ "</cToken>");
+                voStream.println("    <cIdToken>" + poRec.getoConnBackLoginPanel().getcIdToken()+ "</cIdToken>");
                 voStream.println("    <cStaId>" + poRec.getoConnBackLoginPanel().getcStaId()+ "</cStaId>");
                 voStream.println("    <cEveDesc>" + poRec.getoConnBackLoginPanel().getcEveDesc()+ "</cEveDesc>");
                 voStream.println("    <cStaDesc>" + poRec.getoConnBackLoginPanel().getcStaDesc()+ "</cStaDesc>");

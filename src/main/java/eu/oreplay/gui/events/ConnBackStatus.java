@@ -19,6 +19,7 @@ public class ConnBackStatus implements java.io.Serializable {
     public static final int UPLOAD_ON = 5;    
     public static final int EXT_CSV = 6;
     public static final int EXT_XML = 7;
+    public static final int PASTE_IDTOKEN = 8;
     
     private int nStatus = DISCONNECTED;
     private String cServer = "";
@@ -27,6 +28,7 @@ public class ConnBackStatus implements java.io.Serializable {
     private String cEveDesc = "";
     private String cStaDesc = "";
     private String cToken = "";
+    private String cIdToken = "";
 
     public ConnBackStatus() {
         nStatus = DISCONNECTED;
@@ -36,6 +38,7 @@ public class ConnBackStatus implements java.io.Serializable {
         cEveDesc = "";
         cStaDesc = "";
         cToken = "";
+        cIdToken = "";
     }
     public ConnBackStatus(int pnStatus) {
         nStatus = pnStatus;
@@ -44,6 +47,7 @@ public class ConnBackStatus implements java.io.Serializable {
         cEveDesc = "";
         cStaDesc = "";
         cToken = "";
+        cIdToken = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer) {
         nStatus = pnStatus;
@@ -53,6 +57,7 @@ public class ConnBackStatus implements java.io.Serializable {
         cEveDesc = "";
         cStaDesc = "";
         cToken = "";
+        cIdToken = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, String pcStaId) {
         nStatus = pnStatus;
@@ -62,6 +67,7 @@ public class ConnBackStatus implements java.io.Serializable {
         cEveDesc = "";
         cStaDesc = "";
         cToken = "";
+        cIdToken = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, String pcStaId, String pcToken) {
         nStatus = pnStatus;
@@ -71,6 +77,7 @@ public class ConnBackStatus implements java.io.Serializable {
         cEveDesc = "";
         cStaDesc = "";
         cToken = pcToken;
+        cIdToken = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
             String pcStaId, String pcEveDesc, String pcStaDesc) {
@@ -81,6 +88,7 @@ public class ConnBackStatus implements java.io.Serializable {
         cEveDesc = pcEveDesc;
         cStaDesc = pcStaDesc;
         cToken = "";
+        cIdToken = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
             String pcStaId, String pcEveDesc, String pcStaDesc, String pcToken) {
@@ -91,6 +99,19 @@ public class ConnBackStatus implements java.io.Serializable {
         cEveDesc = pcEveDesc;
         cStaDesc = pcStaDesc;
         cToken = pcToken;
+        cIdToken = "";
+    }
+    public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
+            String pcStaId, String pcEveDesc, String pcStaDesc, String pcToken,
+            String pcIdToken) {
+        nStatus = pnStatus;
+        cServer = pcServer;
+        cEveId = pcEveId;
+        cStaId = pcStaId;
+        cEveDesc = pcEveDesc;
+        cStaDesc = pcStaDesc;
+        cToken = pcToken;
+        cIdToken = pcIdToken;
     }
     
 
@@ -148,6 +169,14 @@ public class ConnBackStatus implements java.io.Serializable {
 
     public void setcToken(String cToken) {
         this.cToken = cToken;
+    }
+
+    public String getcIdToken() {
+        return cIdToken;
+    }
+
+    public void setcIdToken(String cIdToken) {
+        this.cIdToken = cIdToken;
     }
 
     /**

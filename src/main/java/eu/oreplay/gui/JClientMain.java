@@ -641,6 +641,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 pnlLogin.enableForStage();
                 pnlUpload.setoStatus(oStatus);
                 pnlUpload.enableForUpload();
+            //If a text is pasted into EventId or Token, split the contents
+            } else if (e.getoStatus().getnStatus()==ConnBackStatus.PASTE_IDTOKEN) {
+                pnlLogin.populateIdToken();
             //If a file extension is selected, hide or show extra fields
             } else if (e.getoStatus().getnStatus()==ConnBackStatus.EXT_CSV ||
                     e.getoStatus().getnStatus()==ConnBackStatus.EXT_XML) {
