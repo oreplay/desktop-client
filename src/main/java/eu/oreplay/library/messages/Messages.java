@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.3.7"},
-        {"version", "v0.3.7"},
+        {"main", "OReplay. Desktop Client 0.3.8"},
+        {"version", "v0.3.8"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -266,7 +266,8 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_connection_timeout", "Timeout reached before connection."},
         {"info_connection_break", "Connection break while processing data."},
         {"info_login_ok", "Login Ok."},
-        {"info_login_nook", "Login failed."},
+        {"info_login_nook", "Login failed.\nMay be the secret key is no longer valid."},
+        {"info_login_nook_connection", "Connection problem while checking login."},
         {"info_data_novalid", "No valid data"},
         {"info_upload_started", "Upload process started"},
         {"info_upload_stopped", "Upload process stopped"},
