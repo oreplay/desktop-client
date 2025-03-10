@@ -16,6 +16,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -393,6 +394,11 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         oStatus.setnStatus(ConnBackStatus.LOGIN_NOOK);
         lblStatus.setText(pcMessage);
         lstStages.setModel(new DefaultListModel<String>());
+        //Shows a message
+        JOptionPane.showMessageDialog(this, 
+                pcMessage,
+                resMessages.getString("info"), 
+                JOptionPane.INFORMATION_MESSAGE);
         //And fires the event to notify it
         this.fireEvent();
     }
@@ -480,7 +486,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 this.loginNoOk(resMessages.getString("info_login_nook"));
             }
         } catch (Exception eNet) {
-            this.loginNoOk(resMessages.getString("info_login_nook"));
+            this.loginNoOk(resMessages.getString("info_login_nook_connection"));
         }
     }
     /**
