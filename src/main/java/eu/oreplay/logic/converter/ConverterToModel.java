@@ -32,6 +32,7 @@ public abstract class ConverterToModel {
     public static final String IOF_VERSION_3 = "3.0";
     public static final String CONTENTS_START = "StartList";
     public static final String CONTENTS_RESULT = "ResultList";
+    public static final String CONTENTS_ENTRY = "EntryList";
     public static final String RES_TOTALS = "Totals";
     public static final String RES_BREAKDOWN = "Breakdown";
     public static final String RES_RADIO = "Radiocontrols";
@@ -514,13 +515,17 @@ public abstract class ConverterToModel {
                     vbResul = true;
                 }
             } else if (cExtension.equals(EXT_XML)) {
-                if (vcTopValues.contains("StartList") || vcTopValues.contains("ResultList")) {
+                if (vcTopValues.contains("StartList") || vcTopValues.contains("ResultList") ||
+                         vcTopValues.contains("EntryList")) {
                     //Contents
                     if (vcTopValues.contains("StartList")) {
                         cContents = CONTENTS_START;
                         cResultsType = OTHER_VALUES;
-                    } else {
+                    } else if (vcTopValues.contains("ResultList")) {
                         cContents = CONTENTS_RESULT;
+                    } else if (vcTopValues.contains("EntryList")) {
+                        cContents = CONTENTS_ENTRY;
+                        cResultsType = OTHER_VALUES;
                     }
                     //Source
                     if (vcTopValues.contains("SportSoftware OE2010")) {
@@ -655,4 +660,6 @@ public abstract class ConverterToModel {
     public abstract eu.oreplay.db.Event convertStartList (File poFile);
     public abstract eu.oreplay.db.Event convertResultList (String pcFile);
     public abstract eu.oreplay.db.Event convertResultList (File poFile);
+    public abstract eu.oreplay.db.Event convertEntryList (String pcFile);
+    public abstract eu.oreplay.db.Event convertEntryList (File poFile);
 }

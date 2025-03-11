@@ -122,6 +122,19 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     }
 
     @Override
+    public eu.oreplay.db.Event convertEntryList (String pcFile) {
+        File voFile = new File(pcFile);
+        eu.oreplay.db.Event voResul = convertEntryList (voFile);
+        voFile = null;
+        return voResul;
+    }
+    @Override
+    public eu.oreplay.db.Event convertEntryList (File poFile) {
+        eu.oreplay.db.Event voEve = null;
+        return voEve;
+    }    
+
+    @Override
     public eu.oreplay.db.Event convertStartList (String pcFile) {
         File voFile = new File(pcFile);
         eu.oreplay.db.Event voResul = convertStartList (voFile);

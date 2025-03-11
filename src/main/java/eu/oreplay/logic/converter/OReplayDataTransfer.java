@@ -271,6 +271,9 @@ public class OReplayDataTransfer {
                         } else if (poConv.getcContents().equals(ConverterToModel.CONTENTS_START)) {
                             //Parses the contents
                             voEve = poConv.convertStartList(poConv.getcFile());
+                        } else if (poConv.getcContents().equals(ConverterToModel.CONTENTS_ENTRY)) {
+                            //Parses the contents
+                            voEve = poConv.convertEntryList(poConv.getcFile());
                         } else {
                             vcResul = "error_not_supported_xml_contents";
                         }
