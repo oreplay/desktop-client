@@ -14,14 +14,10 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 import javax.xml.bind.JAXBContext;
-import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.io.input.BOMInputStream;
 
 /**
@@ -54,6 +50,252 @@ public class ConverterIofToModel extends ConverterToModel {
         this.oEve = oEve;
     }
 
+    @Override
+    public eu.oreplay.db.Event convertEntryList (String pcFile) {
+        File voFile = new File(pcFile);
+        eu.oreplay.db.Event voResul = convertEntryList (voFile);
+        voFile = null;
+        return voResul;
+    }
+    @Override
+    public eu.oreplay.db.Event convertEntryList (File poFile) {
+        eu.oreplay.db.Event voEve = null;
+        eu.oreplay.logic.iof.EntryList voEntry = null;
+        JAXBContext voContext = null;
+        InputStream voIs = null;
+        try {
+            if (isbUtf())
+                voIs = new BOMInputStream(new FileInputStream(poFile));
+            else
+                voIs = new FileInputStream(poFile);
+            voContext = JAXBContext.newInstance(EntryList.class);
+            voEntry = (EntryList) voContext.createUnmarshaller()
+                    .unmarshal(voIs);
+            voIs.close();
+            if (getcSource().equals(ConverterToModel.SRC_OE2010) ||
+                    getcSource().equals(ConverterToModel.SRC_OEV12) ||
+                    getcSource().equals(ConverterToModel.SRC_GENERICXML) || 
+                    getcSource().equals(ConverterToModel.SRC_MEOS)) {
+                voEve = convertEntryListSingleStageClassic (voEntry);
+            } else if (getcSource().equals(ConverterToModel.SRC_OS2010) ||
+                    getcSource().equals(ConverterToModel.SRC_OSV12)) {
+                voEve = convertEntryListSingleStageRelay (voEntry);
+            } else if (getcSource().equals(ConverterToModel.SRC_OESCOREV12) ||
+                    getcSource().equals(ConverterToModel.SRC_OESCORE2010) ||
+                    getcSource().equals(ConverterToModel.SRC_SITIMING)) {
+                voEve = convertEntryListSingleStageRogaine (voEntry);
+            }
+        }catch(Exception e) { 
+            voEve = null;
+        }
+        return voEve;
+    }
+    /**
+     * Given a representation of IOF XML for entry list, this method creates a 
+     * structure following the OReplay data model and feeds with the data that
+     * came in the XML file; this method is for 1-stage, classic Foot-O event
+     * @param poEntry EntryList Object that represents an IOF XML file for entry list
+     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners, teams)
+     */
+    public eu.oreplay.db.Event convertEntryListSingleStageClassic (eu.oreplay.logic.iof.EntryList poEntry) {
+        eu.oreplay.db.Event voEve = null;
+        //HashMap to store Classes. For each class its runners or teams.
+        HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<>();
+        try {
+            if (poEntry!=null) {
+                //Try to set the date and time of the stage from the XML
+                try {
+                    oEve.getStageList().get(0).setBaseDate(poEntry.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
+                    oEve.getStageList().get(0).setBaseTime(poEntry.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                }catch(Exception eDateTime) {
+                }
+                //Event's data
+                voEve = Utils.copyBasicEventData(oEve);
+                //Stage's data
+                eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
+                //---------------------------------------------------------------------------
+                //Some files would only have individual persons. Some other would have also teams and then teammembers
+                //Start processing individuals
+                //---------------------------------------------------------------------------
+                if (poEntry.getPersonEntry()!=null) {
+                    for (eu.oreplay.logic.iof.PersonEntry voPersonEntry : poEntry.getPersonEntry()) {
+                        eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
+                        voRun.setId("");
+                        voRun.setUuid("");
+                        eu.oreplay.logic.iof.Person voPerson = voPersonEntry.getPerson();
+                        if (voPerson!=null) {
+                            try {
+                                voRun.setDbId(voPerson.getId().get(0).getValue());
+                            }catch(Exception eEntryId) {
+                            }
+                            voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
+                            voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
+                            Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
+                            voRun.setSex(vcSex);
+                        }
+                        //SiTiming treats teams as one person with serveral SiCards. I get only the first one
+                        voRun.setSicard(voPersonEntry.getControlCard()!=null?(!voPersonEntry.getControlCard().isEmpty()?(voPersonEntry.getControlCard().get(0)!=null?voPersonEntry.getControlCard().get(0).getValue():""):""):"");                        
+                        //Get Club info
+                        if (voPersonEntry.getOrganisation()!=null) {
+                            eu.oreplay.logic.iof.Organisation voOrg = voPersonEntry.getOrganisation();
+                            eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
+                            voClu.setId("");
+                            voClu.setUuid("");
+                            voClu.setOeKey(voOrg.getId()!=null?voOrg.getId().getValue():"");
+                            voClu.setShortName(voOrg.getShortName());
+                            voClu.setLongName(voOrg.getName());
+                            //Add the club to the runner
+                            voRun.setClub(voClu);
+                        }
+                        //Get Class info
+                        eu.oreplay.db.Clazz voCla = new eu.oreplay.db.Clazz();
+                        voCla.setId("");
+                        voCla.setUuid("");
+                        if (voPersonEntry.getClazz()!=null) {
+                            if (voPersonEntry.getClazz().size()>0) {
+                                eu.oreplay.logic.iof.Class voClass = voPersonEntry.getClazz().get(0);
+                                if (voClass!=null) {
+                                    voCla.setOeKey((voClass.getId()!=null?voClass.getId().getValue():""));
+                                    voCla.setShortName(voClass.getShortName());
+                                    voCla.setLongName(voClass.getName());
+                                }
+                            }
+                        }                        
+                        //Search for the class in the HashMap
+                        if (vlCla.containsKey(voCla.getOeKey())) {
+                            voCla = vlCla.get(voCla.getOeKey());
+                        }
+                        //Process the runner and put it on the class
+                        List<eu.oreplay.db.Runner> vlRun = voCla.getRunnerList();
+                        if (vlRun==null)
+                            vlRun = new ArrayList<>();                      
+                        //Add the runner to the list of runners
+                        vlRun.add(voRun);
+                        //Set the list of runners to the class again
+                        voCla.setRunnerList(vlRun);
+                        //Remove the previous contents of the class from the HashMap and insert it again
+                        vlCla.remove(voCla.getOeKey());
+                        vlCla.put(voCla.getOeKey(), voCla);
+                    }
+                }
+                //---------------------------------------------------------------------------
+                //Now, process the teams if the file has teams instead of individuals
+                //---------------------------------------------------------------------------
+                if (poEntry.getTeamEntry()!=null) {
+                    for (eu.oreplay.logic.iof.TeamEntry voTeamEntry : poEntry.getTeamEntry()) {
+                        eu.oreplay.db.Team voTea = new eu.oreplay.db.Team();
+                        voTea.setId("");
+                        voTea.setUuid("");
+                        voTea.setTeamName((voTeamEntry.getName()!=null?voTeamEntry.getName():""));
+                        //Get Club info
+                        if (voTeamEntry.getOrganisation()!=null) {
+                            if (!voTeamEntry.getOrganisation().isEmpty()) {
+                                eu.oreplay.logic.iof.Organisation voOrg = voTeamEntry.getOrganisation().get(0);
+                                eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
+                                voClu.setId("");
+                                voClu.setUuid("");
+                                voClu.setOeKey(voOrg.getId()!=null?voOrg.getId().getValue():"");
+                                voClu.setShortName(voOrg.getShortName());
+                                voClu.setLongName(voOrg.getName());
+                                //Add the club to the team
+                                voTea.setClub(voClu);
+                            }
+                        }
+                        //Process the team's runners
+                        if (voTeamEntry.getTeamEntryPerson()!=null) {
+                            //Process each runner of the team
+                            ArrayList<eu.oreplay.db.Runner> vlRun = new ArrayList<>();
+                            for (eu.oreplay.logic.iof.TeamEntryPerson voTeamEntryPerson : voTeamEntry.getTeamEntryPerson()) {
+                                eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
+                                voRun.setId("");
+                                voRun.setUuid("");
+                                eu.oreplay.logic.iof.Person voPerson = voTeamEntryPerson.getPerson();
+                                if (voPerson!=null) {
+                                    voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
+                                    voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
+                                    Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
+                                    voRun.setSex(vcSex);
+                                }
+                                //Add the club to the runner, copying the same of the team
+                                voRun.setClub(voTea.getClub());
+                                //SiCard
+                                voRun.setSicard(voTeamEntryPerson.getControlCard()!=null?(!voTeamEntryPerson.getControlCard().isEmpty()?(voTeamEntryPerson.getControlCard().get(0)!=null?voTeamEntryPerson.getControlCard().get(0).getValue():""):""):"");
+                                //Leg
+                                if (voTeamEntryPerson.getLeg()!=null)
+                                    voRun.setLegNumber(voTeamEntryPerson.getLeg().intValue());
+                                //Add the runner to the list of runners
+                                vlRun.add(voRun);                                        
+                            }
+                            //Set the list of runners to the team
+                            voTea.setRunnerList(vlRun);
+                        }
+                        //Get Class info
+                        eu.oreplay.db.Clazz voCla = new eu.oreplay.db.Clazz();
+                        voCla.setId("");
+                        voCla.setUuid("");
+                        if (voTeamEntry.getClazz()!=null) {
+                            if (!voTeamEntry.getClazz().isEmpty()) {
+                                eu.oreplay.logic.iof.Class voClass = voTeamEntry.getClazz().get(0);
+                                if (voClass!=null) {
+                                    voCla.setOeKey((voClass.getId()!=null?voClass.getId().getValue():""));
+                                    voCla.setShortName(voClass.getShortName());
+                                    voCla.setLongName(voClass.getName());
+                                }
+                            }
+                        }                        
+                        //Search for the class in the HashMap
+                        if (vlCla.containsKey(voCla.getOeKey())) {
+                            voCla = vlCla.get(voCla.getOeKey());
+                        }
+                        //Process the team and put it on the class
+                        List<eu.oreplay.db.Team> vlTea = voCla.getTeamList();
+                        if (vlTea==null)
+                            vlTea = new ArrayList<>();                      
+                        //Add the team to the list of teams of the class
+                        vlTea.add(voTea);
+                        //Set the list of teams to the class again
+                        voCla.setTeamList(vlTea);
+                        //Remove the previous contents of the class from the HashMap and insert it again
+                        vlCla.remove(voCla.getOeKey());
+                        vlCla.put(voCla.getOeKey(), voCla);
+                    }
+                }
+                //Add the lis of classes to the stage
+                List<eu.oreplay.db.Clazz> vlClaNew = new ArrayList<>(vlCla.values());
+                voSta.setClazzList(vlClaNew);
+                //Add the stage to the event
+                ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
+                vlSta.add(voSta);
+                voEve.setStageList(vlSta);
+            }
+        }catch(Exception e) {
+        }
+        return voEve;
+    }
+
+    /**
+     * Given a representation of IOF XML for entry list, this method creates a 
+     * structure following the OReplay data model and feeds with the data that
+     * came in the XML file; this method is for 1-stage, Relay event
+     * @param poEntry EntryList Object that represents an IOF XML file for entry list
+     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners, teams)
+     */
+    public eu.oreplay.db.Event convertEntryListSingleStageRelay (eu.oreplay.logic.iof.EntryList poEntry) {
+        eu.oreplay.db.Event voEve = convertEntryListSingleStageClassic (poEntry);
+        return voEve;
+    }
+    /**
+     * Given a representation of IOF XML for entry list, this method creates a 
+     * structure following the OReplay data model and feeds with the data that
+     * came in the XML file; this method is for 1-stage, Rogaine event
+     * @param poEntry EntryList Object that represents an IOF XML file for entry list
+     * @return eu.oreplay.db.Event Event and all the related subclasses in there (stage, classes, runners, teams)
+     */
+    public eu.oreplay.db.Event convertEntryListSingleStageRogaine (eu.oreplay.logic.iof.EntryList poEntry) {
+        eu.oreplay.db.Event voEve = convertEntryListSingleStageClassic (poEntry);
+        return voEve;
+    }
+    
     @Override
     public eu.oreplay.db.Event convertStartList (String pcFile) {
         File voFile = new File(pcFile);
@@ -353,7 +595,6 @@ public class ConverterIofToModel extends ConverterToModel {
                 voEve.setStageList(vlSta);
             }
         }catch(Exception e) {
-            e.printStackTrace();
         }
         return voEve;
     }
@@ -1092,7 +1333,6 @@ public class ConverterIofToModel extends ConverterToModel {
                 voEve.setStageList(vlSta);
             }
         }catch(Exception e) {
-            e.printStackTrace();
         }
         return voEve;
     }
