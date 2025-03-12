@@ -150,10 +150,11 @@ public class UserFederation implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof UserFederation)) {
             vbResul = false;
-        }
-        UserFederation other = (UserFederation) object;
-        if ((this.userFederationPK == null && other.userFederationPK != null) || (this.userFederationPK != null && !this.userFederationPK.equals(other.userFederationPK))) {
-            vbResul = false;
+        } else {
+            UserFederation other = (UserFederation) object;
+            if ((this.userFederationPK == null && other.userFederationPK != null) || (this.userFederationPK != null && !this.userFederationPK.equals(other.userFederationPK))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

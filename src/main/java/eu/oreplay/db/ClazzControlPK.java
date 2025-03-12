@@ -88,19 +88,20 @@ public class ClazzControlPK implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof ClazzControlPK)) {
             vbResul = false;
-        }
-        ClazzControlPK other = (ClazzControlPK) object;
-        if ((this.classId == null && other.classId != null) || (this.classId != null && !this.classId.equals(other.classId))) {
-            vbResul = false;
-        }
-        if ((this.controlId == null && other.controlId != null) || (this.controlId != null && !this.controlId.equals(other.controlId))) {
-            vbResul = false;
-        }
-        if (this.idLeg != other.idLeg) {
-            vbResul = false;
-        }
-        if (this.idRevisit != other.idRevisit) {
-            vbResul = false;
+        } else {
+            ClazzControlPK other = (ClazzControlPK) object;
+            if ((this.classId == null && other.classId != null) || (this.classId != null && !this.classId.equals(other.classId))) {
+                vbResul = false;
+            }
+            if ((this.controlId == null && other.controlId != null) || (this.controlId != null && !this.controlId.equals(other.controlId))) {
+                vbResul = false;
+            }
+            if (this.idLeg != other.idLeg) {
+                vbResul = false;
+            }
+            if (this.idRevisit != other.idRevisit) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

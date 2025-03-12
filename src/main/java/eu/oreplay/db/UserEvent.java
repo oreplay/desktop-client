@@ -150,10 +150,11 @@ public class UserEvent implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof UserEvent)) {
             vbResul = false;
-        }
-        UserEvent other = (UserEvent) object;
-        if ((this.userEventPK == null && other.userEventPK != null) || (this.userEventPK != null && !this.userEventPK.equals(other.userEventPK))) {
-            vbResul = false;
+        } else {
+            UserEvent other = (UserEvent) object;
+            if ((this.userEventPK == null && other.userEventPK != null) || (this.userEventPK != null && !this.userEventPK.equals(other.userEventPK))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

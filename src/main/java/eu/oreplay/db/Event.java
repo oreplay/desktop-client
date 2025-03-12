@@ -406,10 +406,11 @@ public class Event implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Event)) {
             vbResul = false;
-        }
-        Event other = (Event) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            Event other = (Event) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

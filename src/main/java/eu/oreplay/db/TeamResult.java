@@ -409,10 +409,11 @@ public class TeamResult implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof TeamResult)) {
             vbResul = false;
-        }
-        TeamResult other = (TeamResult) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            TeamResult other = (TeamResult) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

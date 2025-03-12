@@ -147,10 +147,11 @@ public class Federation implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Federation)) {
             vbResul = false;
-        }
-        Federation other = (Federation) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            Federation other = (Federation) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

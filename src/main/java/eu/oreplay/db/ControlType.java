@@ -137,10 +137,11 @@ public class ControlType implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof ControlType)) {
             vbResul = false;
-        }
-        ControlType other = (ControlType) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            ControlType other = (ControlType) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }
