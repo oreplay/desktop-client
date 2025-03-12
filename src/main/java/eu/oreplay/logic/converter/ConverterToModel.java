@@ -298,34 +298,29 @@ public abstract class ConverterToModel {
     @JsonIgnore
     public boolean isClassic () {
         boolean vbResul = false;
-        if (getcSource()!=null) {
-            if (getcSource().equals(ConverterToModel.SRC_OE2010) ||
-                    getcSource().equals(ConverterToModel.SRC_OEV12)) {
-                vbResul = true;
-            }
+        if (getcSource()!=null && 
+            (getcSource().equals(ConverterToModel.SRC_OE2010) || getcSource().equals(ConverterToModel.SRC_OEV12))) {
+            vbResul = true;
         }
         return vbResul;
     }    
     @JsonIgnore
     public boolean isRelay () {
         boolean vbResul = false;
-        if (getcSource()!=null) {
-            if (getcSource().equals(ConverterToModel.SRC_OS2010) ||
-                    getcSource().equals(ConverterToModel.SRC_OSV12)) {
-                vbResul = true;
-            }
+        if (getcSource()!=null && 
+            (getcSource().equals(ConverterToModel.SRC_OS2010) || getcSource().equals(ConverterToModel.SRC_OSV12))) {
+            vbResul = true;
         }
         return vbResul;
     }    
     @JsonIgnore
     public boolean isScoring () {
         boolean vbResul = false;
-        if (getcSource()!=null) {
-            if (getcSource().equals(ConverterToModel.SRC_OESCORE2010) ||
+        if (getcSource()!=null && 
+            (getcSource().equals(ConverterToModel.SRC_OESCORE2010) ||
                     getcSource().equals(ConverterToModel.SRC_OESCOREV12) ||
-                    isbIncludeScore()) {
-                vbResul = true;
-            }
+                    isbIncludeScore())) {
+            vbResul = true;
         }
         return vbResul;
     }    

@@ -4,7 +4,6 @@
  */
 package eu.oreplay.gui;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import java.net.URI;
@@ -168,7 +167,6 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
-        // TODO add your handling code here:
         this.checkConnectionThread();
     }//GEN-LAST:event_btnProcessActionPerformed
 
@@ -272,10 +270,10 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                     }
                 } 
                 catch (InterruptedException e) { 
-                    e.printStackTrace(); 
+                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
                 } 
                 catch (ExecutionException e) { 
-                    e.printStackTrace(); 
+                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
                 } 
             } 
         }; 

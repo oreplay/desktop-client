@@ -164,7 +164,6 @@ public class JAbout extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
         try {
             //Read the parameters to store
             FormsParameters voParent = new FormsParameters();

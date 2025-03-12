@@ -213,14 +213,12 @@ public static eu.oreplay.db.Stage copyBasicOneStageData (eu.oreplay.db.Event poE
     eu.oreplay.db.Stage voSta = null;
     if (poEve!=null) {
         voSta = new eu.oreplay.db.Stage();
-        if (poEve.getStageList()!=null) {
-            if (!poEve.getStageList().isEmpty()) {
-                voSta.setId(poEve.getStageList().get(0).getId());
-                voSta.setOrderNumber(poEve.getStageList().get(0).getOrderNumber());
-                voSta.setDescription(poEve.getStageList().get(0).getDescription());
-                voSta.setBaseDate(poEve.getStageList().get(0).getBaseDate());
-                voSta.setBaseTime(poEve.getStageList().get(0).getBaseTime());
-            }
+        if (poEve.getStageList()!=null && !poEve.getStageList().isEmpty()) {
+            voSta.setId(poEve.getStageList().get(0).getId());
+            voSta.setOrderNumber(poEve.getStageList().get(0).getOrderNumber());
+            voSta.setDescription(poEve.getStageList().get(0).getDescription());
+            voSta.setBaseDate(poEve.getStageList().get(0).getBaseDate());
+            voSta.setBaseTime(poEve.getStageList().get(0).getBaseTime());
         }
     }
     return voSta;
@@ -302,7 +300,7 @@ public static eu.oreplay.db.Event copyExtendedEventData (eu.oreplay.db.Event poE
             }
         }
     }catch(Exception e) {
-        e.printStackTrace();
+        voEve = null;
     }
     return voEve;
 }
@@ -1044,10 +1042,8 @@ public static List<String> findFilesInDir (String pcPath, String pcExtension, bo
 public static String findFirstFileInDir (String pcPath, String pcExtension, boolean pbSubdir) {
     String vcResul = null;
     List<String> vlResul = Utils.findFilesInDir(pcPath, pcExtension, pbSubdir);
-    if (vlResul!=null) {
-        if (vlResul.size()>0) {
-            vcResul = vlResul.get(0);
-        }
+    if (vlResul!=null && !vlResul.isEmpty()) {
+        vcResul = vlResul.get(0);
     }    
     return vcResul;
 }
@@ -1089,7 +1085,6 @@ public static void openUrlInExplorer (String pcUrl, int pnOption) {
                 voDesk.browse(new URI(pcUrl));
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     } else {
         //Second option, using OS commands depending on OS
@@ -1113,7 +1108,6 @@ public static void openUrlInExplorer (String pcUrl, int pnOption) {
                 voRt.exec(new String[] { "sh", "-c", vcCmd.toString() });
             }
         }catch (Exception e){
-             e.printStackTrace();
         }
     }
 }
@@ -1153,19 +1147,17 @@ public static int checkForNewVersion(String pcCurrent) {
             //If there are data, check for version property
             if (vlData!=null) {
                 for (CustomProperty voData : vlData) {
-                    if (voData!=null) {
-                        if (voData.getPropertyName().equals("oreplaydesktopclientver")) {
-                            //Convert version text to numbers and check if GitHub property is greater than current version
-                            //If it's equal or less, there is no change (less can be when I forget to update the property in Github for a long time
-                            try {
-                                if (Utils.versionGreaterThan(voData.getValue(), pcCurrent)) {
-                                    vnResul = 1;
-                                } else {
-                                    vnResul = 0;
-                                }
-                            }catch(Exception eCheck) {
+                    if (voData!=null && voData.getPropertyName().equals("oreplaydesktopclientver")) {
+                        //Convert version text to numbers and check if GitHub property is greater than current version
+                        //If it's equal or less, there is no change (less can be when I forget to update the property in Github for a long time
+                        try {
+                            if (Utils.versionGreaterThan(voData.getValue(), pcCurrent)) {
+                                vnResul = 1;
+                            } else {
                                 vnResul = 0;
                             }
+                        }catch(Exception eCheck) {
+                            vnResul = 0;
                         }
                     }
                 }

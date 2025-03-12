@@ -38,7 +38,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private String cEveDesc = "";
     private String cStaDesc = "";
     private java.util.HashMap<Integer, eu.oreplay.db.Stage> lStages = new java.util.HashMap<>();
-    private DocumentListenerIdToken oDoc = new DocumentListenerIdToken();
+    private transient DocumentListenerIdToken oDoc = new DocumentListenerIdToken();
     
     /**
      * Creates new form ConnBackLoginPanel
@@ -46,8 +46,6 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     public ConnBackLoginPanel() {
         initComponents();
         this.setDefaultValues();
-        //txtEveId.getDocument().addDocumentListener(oDoc);
-        //txtToken.getDocument().addDocumentListener(oDoc);
         txtIdToken.getDocument().addDocumentListener(oDoc);
     }
     /**
@@ -292,20 +290,17 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
         if (!txtEveId.getText().equals("") && !txtToken.getText().equals("")) {
             this.login();
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void lstStagesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStagesValueChanged
-        // TODO add your handling code here:
         if (!evt.getValueIsAdjusting())
             this.stageSelected();
     }//GEN-LAST:event_lstStagesValueChanged
 
     private void btnWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWebActionPerformed
-        // TODO add your handling code here:
         this.gotoWeb();
     }//GEN-LAST:event_btnWebActionPerformed
 
@@ -479,7 +474,6 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                     }
                     this.fireEvent();
                 }catch(Exception eJson) {
-                    eJson.printStackTrace();
                     this.loginNoOk(resMessages.getString("info_data_novalid"));
                 }
             } else {
@@ -530,7 +524,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 Utils.openUrlInExplorer(vcUrl, 0);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     
@@ -542,7 +536,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
      */
     private class DocumentListenerIdToken implements DocumentListener {
         @Override
-        public void changedUpdate(DocumentEvent e) {
+        public void changedUpdate(DocumentEvent e) { // Noncompliant - method is empty
 
         }
         @Override
@@ -550,32 +544,28 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             Document voDoc = e.getDocument();
             try {
                 String vcText = voDoc.getText(0, voDoc.getLength());
-                if (vcText!=null) {
-                    if (vcText.length()>8) {
-                        //If the text concatenates EventId(36) + Token (40), then split those two values
-                        if (vcText.length()>36 && vcText.charAt(8)=='-') {
-                            String vcId = vcText.substring(0, 36);
-                            String vcToken = vcText.substring(36);
-                            SwingUtilities.invokeLater(() -> {
-                                //Fire the event
-                                cEveId = vcId;
-                                cToken = vcToken;
-                                cIdToken = vcText;
-                                oStatus.setcEveId(cEveId);
-                                oStatus.setcToken(cToken);
-                                oStatus.setcIdToken(cIdToken);
-                                oStatus.setnStatus(ConnBackStatus.PASTE_IDTOKEN);
-                                ConnBackLoginPanel.this.fireEvent();
-                            });
-                        }
-                    }
+                //If the text concatenates EventId(36) + Token (40), then split those two values
+                if (vcText!=null && vcText.length()>36 && vcText.charAt(8)=='-') {
+                    String vcId = vcText.substring(0, 36);
+                    String vcToken = vcText.substring(36);
+                    SwingUtilities.invokeLater(() -> {
+                        //Fire the event
+                        cEveId = vcId;
+                        cToken = vcToken;
+                        cIdToken = vcText;
+                        oStatus.setcEveId(cEveId);
+                        oStatus.setcToken(cToken);
+                        oStatus.setcIdToken(cIdToken);
+                        oStatus.setnStatus(ConnBackStatus.PASTE_IDTOKEN);
+                        ConnBackLoginPanel.this.fireEvent();
+                    });
                 }
 
             } catch (BadLocationException e1) {
             }
         }
         @Override
-        public void removeUpdate(DocumentEvent e) {
+        public void removeUpdate(DocumentEvent e) { // Noncompliant - method is empty
         }
     }
     

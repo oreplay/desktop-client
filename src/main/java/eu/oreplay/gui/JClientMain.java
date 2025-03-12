@@ -313,32 +313,26 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     }// </editor-fold>//GEN-END:initComponents
 
     private void mnuExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuExitActionPerformed
-        // TODO add your handling code here:
         this.exitApp();
     }//GEN-LAST:event_mnuExitActionPerformed
 
     private void mnuEnglishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEnglishActionPerformed
-        // TODO add your handling code here:
         this.changeLanguage("en");
     }//GEN-LAST:event_mnuEnglishActionPerformed
 
     private void mnuSpanishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSpanishActionPerformed
-        // TODO add your handling code here:
         this.changeLanguage("es");
     }//GEN-LAST:event_mnuSpanishActionPerformed
 
     private void mnuAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAboutActionPerformed
-        // TODO add your handling code here:
         this.manageAbout();
     }//GEN-LAST:event_mnuAboutActionPerformed
 
     private void mnuTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuTestActionPerformed
-        // TODO add your handling code here:
         this.manageTest();
     }//GEN-LAST:event_mnuTestActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
         if (bFirstOpen) {
             oLog.info(resMessages.getString("info_enter_app"));
             Utils.setoLog(oLog);  //Sets log file in the Utils static class for using it during the app execution
@@ -365,27 +359,22 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     }//GEN-LAST:event_formWindowOpened
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
         this.stopListenersBeforeExit();
     }//GEN-LAST:event_formWindowClosing
 
     private void txtStageDateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtStageDateFocusLost
-        // TODO add your handling code here:
         this.getDateAndTimeValues();
     }//GEN-LAST:event_txtStageDateFocusLost
 
     private void txtStageZeroTimeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtStageZeroTimeFocusLost
-        // TODO add your handling code here:
         this.getDateAndTimeValues();
     }//GEN-LAST:event_txtStageZeroTimeFocusLost
 
     private void mnuManualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuManualActionPerformed
-        // TODO add your handling code here:
         this.gotoWeb();
     }//GEN-LAST:event_mnuManualActionPerformed
 
     private void mnuCheckUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCheckUpdateActionPerformed
-        // TODO add your handling code here:
         this.checkForNewVersion();
     }//GEN-LAST:event_mnuCheckUpdateActionPerformed
 

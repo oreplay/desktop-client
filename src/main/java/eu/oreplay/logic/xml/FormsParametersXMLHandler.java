@@ -39,22 +39,22 @@ public class FormsParametersXMLHandler extends DefaultHandler {
     public void startElement(String uri, String lname, String qname,
             Attributes attributes) {
         vcBuffer.setLength(0);
-        if (lname.toLowerCase().equals("formsparameters")) {
+        if (lname.equalsIgnoreCase("formsparameters")) {
             oRec = new FormsParameters();
             nType = 0;
-        } else if (lname.toLowerCase().equals("jclientmain")) {
+        } else if (lname.equalsIgnoreCase("jclientmain")) {
             nType = 1;
-        } else if (lname.toLowerCase().equals("jabout")) {
+        } else if (lname.equalsIgnoreCase("jabout")) {
             nType = 2;
-        } else if (lname.toLowerCase().equals("jtest")) {
+        } else if (lname.equalsIgnoreCase("jtest")) {
             nType = 3;
-        } else if (lname.toLowerCase().equals("connbackcheckpanel")) {
+        } else if (lname.equalsIgnoreCase("connbackcheckpanel")) {
             nType = 4;
-        } else if (lname.toLowerCase().equals("connbackloginpanel")) {
+        } else if (lname.equalsIgnoreCase("connbackloginpanel")) {
             nType = 5;
-        } else if (lname.toLowerCase().equals("connbackuploadpanel")) {
+        } else if (lname.equalsIgnoreCase("connbackuploadpanel")) {
             nType = 6;
-        } else if (lname.toLowerCase().equals("servers")) {
+        } else if (lname.equalsIgnoreCase("servers")) {
             if (nType==4) {
                 lServers = new ArrayList<String>();
             }
@@ -66,11 +66,11 @@ public class FormsParametersXMLHandler extends DefaultHandler {
     }
 
     public void endElement(String uri, String lname, String qname) {
-        if (lname.toLowerCase().equals("formsparameters")) {
+        if (lname.equalsIgnoreCase("formsparameters")) {
         } else {
             if (oRec!=null) {
                 String content = vcBuffer.toString().trim();
-                if (lname.toLowerCase().equals("nposx")) {
+                if (lname.equalsIgnoreCase("nposx")) {
                     try {
                         switch (nType) {
                             case 1:
@@ -84,7 +84,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e1) {}
-                } else if (lname.toLowerCase().equals("nposy")) {
+                } else if (lname.equalsIgnoreCase("nposy")) {
                     try {
                         switch (nType) {
                             case 1:
@@ -98,7 +98,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e2) {}
-                } else if (lname.toLowerCase().equals("nsizex")) {
+                } else if (lname.equalsIgnoreCase("nsizex")) {
                     try {
                         switch (nType) {
                             case 1:
@@ -112,7 +112,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e3) {}
-                } else if (lname.toLowerCase().equals("nsizey")) {
+                } else if (lname.equalsIgnoreCase("nsizey")) {
                     try {
                         switch (nType) {
                             case 1:
@@ -126,7 +126,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e4) {}
-                } else if (lname.toLowerCase().equals("cversion")) {
+                } else if (lname.equalsIgnoreCase("cversion")) {
                     try {
                         switch (nType) {
                             case 2:
@@ -134,7 +134,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e5) {}
-                } else if (lname.toLowerCase().equals("cpath")) {
+                } else if (lname.equalsIgnoreCase("cpath")) {
                     try {
                         switch (nType) {
                             case 3:
@@ -142,7 +142,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e6) {}
-                } else if (lname.toLowerCase().equals("servers")) {
+                } else if (lname.equalsIgnoreCase("servers")) {
                     try {
                         switch (nType) {
                             case 4:
@@ -150,7 +150,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e7) {}
-                } else if (lname.toLowerCase().equals("server")) {
+                } else if (lname.equalsIgnoreCase("server")) {
                     try {
                         switch (nType) {
                             case 4:
@@ -158,7 +158,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e8) {}
-                } else if (lname.toLowerCase().equals("ceveid")) {
+                } else if (lname.equalsIgnoreCase("ceveid")) {
                     try {
                         switch (nType) {
                             case 5:
@@ -166,7 +166,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e9) {}
-                } else if (lname.toLowerCase().equals("ctoken")) {
+                } else if (lname.equalsIgnoreCase("ctoken")) {
                     try {
                         switch (nType) {
                             case 5:
@@ -174,7 +174,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e10) {}
-                } else if (lname.toLowerCase().equals("cidtoken")) {
+                } else if (lname.equalsIgnoreCase("cidtoken")) {
                     try {
                         switch (nType) {
                             case 5:
@@ -182,7 +182,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e10) {}
-                } else if (lname.toLowerCase().equals("cstaid")) {
+                } else if (lname.equalsIgnoreCase("cstaid")) {
                     try {
                         switch (nType) {
                             case 5:
@@ -190,7 +190,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e11) {}
-                } else if (lname.toLowerCase().equals("cevedesc")) {
+                } else if (lname.equalsIgnoreCase("cevedesc")) {
                     try {
                         switch (nType) {
                             case 5:
@@ -198,7 +198,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e9) {}
-                } else if (lname.toLowerCase().equals("cstadesc")) {
+                } else if (lname.equalsIgnoreCase("cstadesc")) {
                     try {
                         switch (nType) {
                             case 5:
@@ -206,7 +206,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e9) {}
-                } else if (lname.toLowerCase().equals("cfolder")) {
+                } else if (lname.equalsIgnoreCase("cfolder")) {
                     try {
                         switch (nType) {
                             case 6:
@@ -214,7 +214,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e12) {}
-                } else if (lname.toLowerCase().equals("cextension")) {
+                } else if (lname.equalsIgnoreCase("cextension")) {
                     try {
                         switch (nType) {
                             case 6:
@@ -222,19 +222,19 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e13) {}
-                } else if (lname.toLowerCase().equals("bsplit")) {
+                } else if (lname.equalsIgnoreCase("bsplit")) {
                     try {
                         switch (nType) {
                             case 6:
-                                if (content.toUpperCase().equals("T") || content.toUpperCase().equals("V") ||
-                                        content.toUpperCase().equals("1") || content.toUpperCase().equals("S"))
+                                if (content.equalsIgnoreCase("T") || content.equalsIgnoreCase("V") ||
+                                        content.equalsIgnoreCase("1") || content.equalsIgnoreCase("S"))
                                     oRec.getoConnBackUploadPanel().setbSplit(true);
                                 else
                                     oRec.getoConnBackUploadPanel().setbSplit(false);
                                 break;
                         }
                     }catch(Exception e14) {}
-                } else if (lname.toLowerCase().equals("cstagedate")) {
+                } else if (lname.equalsIgnoreCase("cstagedate")) {
                     try {
                         switch (nType) {
                             case 1:
@@ -242,7 +242,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e15) {}
-                } else if (lname.toLowerCase().equals("cstagezerotime")) {
+                } else if (lname.equalsIgnoreCase("cstagezerotime")) {
                     try {
                         switch (nType) {
                             case 1:

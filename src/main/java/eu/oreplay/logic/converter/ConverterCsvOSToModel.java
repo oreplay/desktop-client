@@ -1002,7 +1002,6 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                 voEve.setStageList(vlSta);
             }
         }catch (Exception e) {
-            e.printStackTrace();
         }
         return voEve;
     }
@@ -1074,14 +1073,12 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                 int i = 0;
                 while (i<plRun.size() && !vbFound) {
                     eu.oreplay.db.Runner voRun = plRun.get(i);
-                    if (voRun!=null) {
-                        if (voRun.getRunnerResultList()!=null) {
-                            if (!voRun.getRunnerResultList().isEmpty()) {
-                                eu.oreplay.db.RunnerResult voRes = voRun.getRunnerResultList().get(0);
-                                if (voRes.getPosition()==1) {
-                                    vnResul = pnCurrent.subtract(voRes.getTimeSeconds());
-                                    vbFound = true;
-                                }
+                    if (voRun!=null && voRun.getRunnerResultList()!=null) {
+                        if (!voRun.getRunnerResultList().isEmpty()) {
+                            eu.oreplay.db.RunnerResult voRes = voRun.getRunnerResultList().get(0);
+                            if (voRes.getPosition()==1) {
+                                vnResul = pnCurrent.subtract(voRes.getTimeSeconds());
+                                vbFound = true;
                             }
                         }
                     }
@@ -1110,15 +1107,11 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                 int i = 0;
                 while (i<plTea.size() && !vbFound) {
                     eu.oreplay.db.Team voTea = plTea.get(i);
-                    if (voTea!=null) {
-                        if (voTea.getTeamResultList()!=null) {
-                            if (!voTea.getTeamResultList().isEmpty()) {
-                                eu.oreplay.db.TeamResult voRet = voTea.getTeamResultList().get(0);
-                                if (voRet.getPosition()==1) {
-                                    vnResul = pnCurrent.subtract(voRet.getTimeSeconds());
-                                    vbFound = true;
-                                }
-                            }
+                    if (voTea!=null && voTea.getTeamResultList()!=null && !voTea.getTeamResultList().isEmpty()) {
+                        eu.oreplay.db.TeamResult voRet = voTea.getTeamResultList().get(0);
+                        if (voRet.getPosition()==1) {
+                            vnResul = pnCurrent.subtract(voRet.getTimeSeconds());
+                            vbFound = true;
                         }
                     }
                     i++;

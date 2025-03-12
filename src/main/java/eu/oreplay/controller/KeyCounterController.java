@@ -18,6 +18,8 @@ public class KeyCounterController {
     private javax.persistence.EntityManager oEM;
     private java.util.Map<String, String> oPersMap = null;
     private String cManager = "OReplayPU";
+    private static final String PARAM_1 = "idEntity";
+    private static final String PARAM_2 = "idKey";
     private List<KeyCounter> oList;
     private javax.persistence.Query oQuery;
 
@@ -75,13 +77,11 @@ public class KeyCounterController {
         KeyCounter voResul = null;
         this.setoEM(oEM);
         oQuery = oEM.createNamedQuery("KeyCounter.ByKey");
-        oQuery.setParameter("idEntity",pcTable.toUpperCase());
-        oQuery.setParameter("idKey", pcKey);
+        oQuery.setParameter(PARAM_1,pcTable.toUpperCase());
+        oQuery.setParameter(PARAM_2, pcKey);
         oList = oQuery.getResultList();
-        if (oList!=null) {
-            if (!oList.isEmpty()) {
-                voResul = oList.get(0);
-            }
+        if (oList!=null && !oList.isEmpty()) {
+            voResul = oList.get(0);
         }
         return voResul;
     }
@@ -114,16 +114,14 @@ public class KeyCounterController {
         oEM.getTransaction().begin();
         try {
             oQuery = oEM.createNamedQuery("KeyCounter.ByKey");
-            oQuery.setParameter("idEntity",pcTable.toUpperCase());
-            oQuery.setParameter("idKey", pcKey);
+            oQuery.setParameter(PARAM_1,pcTable.toUpperCase());
+            oQuery.setParameter(PARAM_2, pcKey);
             oQuery.setLockMode(LockModeType.PESSIMISTIC_WRITE);
             oList = oQuery.getResultList();
             KeyCounter voKeyCounter = null;
-            if (oList!=null) {
-                if (!oList.isEmpty()) {
-                    //Take the first record as it should be only 1
-                    voKeyCounter = oList.get(0);
-                }
+            if (oList!=null && !oList.isEmpty()) {
+                //Take the first record as it should be only 1
+                voKeyCounter = oList.get(0);
             }
             if (voKeyCounter==null) {
                 voKeyCounter = new KeyCounter();
@@ -153,7 +151,7 @@ public class KeyCounterController {
      * This is only to reassign records from scratch, if necessary.
      * @param pcTable String Table name
      * @param pcKey String Value of the key to perform the search
-     * @return int Si todo correcto, devuelve 1
+     * @return int If all is Ok, returns 1
      */
     public int assignKeyCounterNew(String pcTable, String pcKey) {
         return assignKeyCounterNew (pcTable, pcKey, 1);
@@ -177,16 +175,14 @@ public class KeyCounterController {
         oEM.getTransaction().begin();
         try {
             oQuery = oEM.createNamedQuery("KeyCounter.PorClave");
-            oQuery.setParameter("idEntity",pcTable.toUpperCase());
-            oQuery.setParameter("idKey", pcKey);
+            oQuery.setParameter(PARAM_1,pcTable.toUpperCase());
+            oQuery.setParameter(PARAM_2, pcKey);
             oQuery.setLockMode(LockModeType.PESSIMISTIC_WRITE);
             oList = oQuery.getResultList();
             KeyCounter voKeyCounter = null;
-            if (oList!=null) {
-                if (!oList.isEmpty()) {
-                    //Take the first record as it should be only 1
-                    voKeyCounter = oList.get(0);
-                }
+            if (oList!=null && !oList.isEmpty()) {
+                //Take the first record as it should be only 1
+                voKeyCounter = oList.get(0);
             }
             if (voKeyCounter==null) {
                 voKeyCounter = new KeyCounter();

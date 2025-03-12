@@ -77,31 +77,32 @@ public class ClazzControlPK implements Serializable {
         int hash = 0;
         hash += (classId != null ? classId.hashCode() : 0);
         hash += (controlId != null ? controlId.hashCode() : 0);
-        hash += (int) idLeg;
-        hash += (int) idRevisit;
+        hash += idLeg;
+        hash += idRevisit;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        boolean vbResul = true;
+        // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof ClazzControlPK)) {
-            return false;
+            vbResul = false;
         }
         ClazzControlPK other = (ClazzControlPK) object;
         if ((this.classId == null && other.classId != null) || (this.classId != null && !this.classId.equals(other.classId))) {
-            return false;
+            vbResul = false;
         }
         if ((this.controlId == null && other.controlId != null) || (this.controlId != null && !this.controlId.equals(other.controlId))) {
-            return false;
+            vbResul = false;
         }
         if (this.idLeg != other.idLeg) {
-            return false;
+            vbResul = false;
         }
         if (this.idRevisit != other.idRevisit) {
-            return false;
+            vbResul = false;
         }
-        return true;
+        return vbResul;
     }
 
     @Override
