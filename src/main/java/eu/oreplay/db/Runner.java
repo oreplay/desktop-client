@@ -431,10 +431,11 @@ public class Runner implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Runner)) {
             vbResul = false;
-        }
-        Runner other = (Runner) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            Runner other = (Runner) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

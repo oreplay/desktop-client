@@ -137,10 +137,11 @@ public class StageType implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof StageType)) {
             vbResul = false;
-        }
-        StageType other = (StageType) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            StageType other = (StageType) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

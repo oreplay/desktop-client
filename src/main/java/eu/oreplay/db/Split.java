@@ -405,10 +405,11 @@ public class Split implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Split)) {
             vbResul = false;
-        }
-        Split other = (Split) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            Split other = (Split) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

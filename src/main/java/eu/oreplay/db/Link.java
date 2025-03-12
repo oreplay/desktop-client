@@ -134,10 +134,11 @@ public class Link implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Link)) {
             vbResul = false;
-        }
-        Link other = (Link) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            Link other = (Link) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

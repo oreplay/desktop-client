@@ -87,10 +87,11 @@ public class KeyCounter implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof KeyCounter)) {
             vbResul = false;
-        }
-        KeyCounter other = (KeyCounter) object;
-        if ((this.keyCounterPK == null && other.keyCounterPK != null) || (this.keyCounterPK != null && !this.keyCounterPK.equals(other.keyCounterPK))) {
-            vbResul = false;
+        } else {
+            KeyCounter other = (KeyCounter) object;
+            if ((this.keyCounterPK == null && other.keyCounterPK != null) || (this.keyCounterPK != null && !this.keyCounterPK.equals(other.keyCounterPK))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

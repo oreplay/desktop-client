@@ -62,13 +62,14 @@ public class KeyCounterPK implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof KeyCounterPK)) {
             vbResul = false;
-        }
-        KeyCounterPK other = (KeyCounterPK) object;
-        if ((this.idEntity == null && other.idEntity != null) || (this.idEntity != null && !this.idEntity.equals(other.idEntity))) {
-            vbResul = false;
-        }
-        if ((this.idKey == null && other.idKey != null) || (this.idKey != null && !this.idKey.equals(other.idKey))) {
-            vbResul = false;
+        } else {
+            KeyCounterPK other = (KeyCounterPK) object;
+            if ((this.idEntity == null && other.idEntity != null) || (this.idEntity != null && !this.idEntity.equals(other.idEntity))) {
+                vbResul = false;
+            }
+            if ((this.idKey == null && other.idKey != null) || (this.idKey != null && !this.idKey.equals(other.idKey))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }

@@ -137,10 +137,11 @@ public class StageDiscipline implements Serializable {
         // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof StageDiscipline)) {
             vbResul = false;
-        }
-        StageDiscipline other = (StageDiscipline) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            vbResul = false;
+        } else {
+            StageDiscipline other = (StageDiscipline) object;
+            if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+                vbResul = false;
+            }
         }
         return vbResul;
     }
