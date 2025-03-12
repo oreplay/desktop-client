@@ -148,10 +148,9 @@ public class UserEvent implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserEvent)) {
+        if (!(object instanceof UserEvent other)) {
             vbResul = false;
         } else {
-            UserEvent other = (UserEvent) object;
             if ((this.userEventPK == null && other.userEventPK != null) || (this.userEventPK != null && !this.userEventPK.equals(other.userEventPK))) {
                 vbResul = false;
             }

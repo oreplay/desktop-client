@@ -86,10 +86,9 @@ public class ClazzControlPK implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ClazzControlPK)) {
+        if (!(object instanceof ClazzControlPK other)) {
             vbResul = false;
         } else {
-            ClazzControlPK other = (ClazzControlPK) object;
             if ((this.classId == null && other.classId != null) || (this.classId != null && !this.classId.equals(other.classId))) {
                 vbResul = false;
             }

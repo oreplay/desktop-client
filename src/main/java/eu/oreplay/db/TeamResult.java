@@ -407,10 +407,9 @@ public class TeamResult implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TeamResult)) {
+        if (!(object instanceof TeamResult other)) {
             vbResul = false;
         } else {
-            TeamResult other = (TeamResult) object;
             if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
                 vbResul = false;
             }

@@ -303,10 +303,9 @@ public class Course implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Course)) {
+        if (!(object instanceof Course other)) {
             vbResul = false;
         } else {
-            Course other = (Course) object;
             if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
                 vbResul = false;
             }
