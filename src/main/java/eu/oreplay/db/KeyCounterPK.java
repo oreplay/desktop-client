@@ -60,10 +60,9 @@ public class KeyCounterPK implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof KeyCounterPK)) {
+        if (!(object instanceof KeyCounterPK other)) {
             vbResul = false;
         } else {
-            KeyCounterPK other = (KeyCounterPK) object;
             if ((this.idEntity == null && other.idEntity != null) || (this.idEntity != null && !this.idEntity.equals(other.idEntity))) {
                 vbResul = false;
             }

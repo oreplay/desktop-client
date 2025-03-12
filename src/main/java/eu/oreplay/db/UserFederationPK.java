@@ -60,10 +60,9 @@ public class UserFederationPK implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UserFederationPK)) {
+        if (!(object instanceof UserFederationPK other)) {
             vbResul = false;
         } else {
-            UserFederationPK other = (UserFederationPK) object;
             if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
                 vbResul = false;
             }
