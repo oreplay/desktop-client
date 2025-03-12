@@ -141,8 +141,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
     }
     @Override
     public eu.oreplay.db.Event convertEntryList (File poFile) {
-        eu.oreplay.db.Event voEve = null;
-        return voEve;
+        return null;
     }    
 
     @Override
@@ -249,6 +248,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                 voSta.getBaseDate(), voSta.getBaseTime());
                         voRet.setStartTime(vdTime);
                     }catch(Exception eStart) {
+                        //Nothing to do
                     }
                     String vcNc = (COL_TEA_NC[vnColIndex]>=0?vaRecord[COL_TEA_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
                     voRet.setStatusCode(Utils.STATUS_OK_ID);
@@ -315,6 +315,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                         voSta.getBaseDate(), voSta.getBaseTime());
                                 voRes.setStartTime(vdTime);
                             }catch(Exception eStart) {
+                                //Nothing to do
                             }
                             voRes.setStatusCode(voRet.getStatusCode());
                             //Add the result to the list
@@ -459,6 +460,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                 voSta.getBaseDate(), voSta.getBaseTime());
                         voRet.setStartTime(vdTime);
                     }catch(Exception eStart) {
+                        //Nothing to do
                     }
                     String vcNc = (COL_TEA_NC[vnColIndex]>=0?vaRecord[COL_TEA_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
                     voRet.setStatusCode(Utils.STATUS_OK_ID);
@@ -479,7 +481,9 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                     int vnPosition = 0;
                     try {
                         vnPosition = Integer.parseInt(COL_TEA_POSITION[vnColIndex]>=0?vaRecord[COL_TEA_POSITION[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                    }catch (Exception ePos){};
+                    }catch (Exception ePos){
+                        //Nothing to do
+                    };
                     voRet.setPosition(vnPosition);
                     //Calculates time behind the first of the class
                     BigDecimal vnTimeBehind = this.calculateTimeBehindTeam(vlTea, vnTimeSeconds);
@@ -542,6 +546,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                         voSta.getBaseDate(), voSta.getBaseTime());
                                 voRes.setStartTime(vdTime);
                             }catch(Exception eStart) {
+                                //Nothing to do
                             }
                             //Transform the finish time value
                             try {
@@ -550,6 +555,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                         voSta.getBaseDate(), voSta.getBaseTime());
                                 voRes.setFinishTime(vdTime);
                             }catch(Exception eFinish) {
+                                //Nothing to do
                             }      
                             //Converts time to a value in seconds
                             vnTimeSecs = Utils.formatTimeInSeconds(COL_TIME[vnColIndex]>=0?vaRecord[COL_TIME[vnColIndex]+vnColIni].trim().replaceAll("\"", "").replaceAll(",", "."):"");
@@ -562,19 +568,6 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                             if (vcStatus.equals(""))
                                 vcStatus = "0";
                             voRes.setStatusCode(vcStatus.charAt(0));
-                            //Get the position
-                            //------IN THIS KIND OF RESULTS, THERE IS NO POSITION FOR EACH LEG------
-                            /*
-                            vnPosition = 0;
-                            try {
-                                vnPosition = Integer.parseInt(COL_POSITION[vnColIndex]>=0?vaRecord[COL_POSITION[vnColIndex]+vnColIni].trim().replaceAll("\"", ""):"0");
-                            }catch (Exception ePos){};
-                            voRes.setPosition(vnPosition);
-                            //Calculates time behind the first of the class
-                            vnTimeBehind = this.calculateTimeBehind(vlRun, vnTimeSeconds);
-                            //If it has no decimals, stores only the integer part
-                            voRes.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
-                            */
                             //Set remainder fields for points and times
                             voRes.setPointsAdjusted(0);
                             voRes.setPointsBonus(0);
@@ -721,6 +714,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                     voSta.getBaseDate(), voSta.getBaseTime());
                             voRet.setStartTime(vdTime);
                         }catch(Exception eStart) {
+                            //Nothing to do
                         }
                         String vcNc = (COL_TEA_NC[vnColIndex]>=0?vaRecord[COL_TEA_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
                         voRet.setStatusCode(Utils.STATUS_OK_ID);
@@ -741,7 +735,9 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         int vnPosition = 0;
                         try {
                             vnPosition = Integer.parseInt(COL_TEA_POSITION[vnColIndex]>=0?vaRecord[COL_TEA_POSITION[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                        }catch (Exception ePos){};
+                        }catch (Exception ePos){
+                            //Nothing to do
+                        };
                         voRet.setPosition(vnPosition);
                         //Calculates time behind the first of the class
                         BigDecimal vnTimeBehind = this.calculateTimeBehindTeam(vlTea, vnTimeSeconds);
@@ -793,7 +789,9 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                             int vnControls = 0;
                             try {
                                 vnControls = Integer.parseInt(COL_COU_CONTROLS[vnColIndex]>=0?vaRecord[COL_COU_CONTROLS[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                            }catch (Exception eNumCon){};
+                            }catch (Exception eNumCon){
+                                //Nothing to do
+                            };
                             voCou.setControls(vnControls);
                             //---------------------------------------
                             //OS has a field for the runner's course combination (COL_COU_COMBINATION), but our model not
@@ -820,6 +818,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                     voSta.getBaseDate(), voSta.getBaseTime());
                             voRes.setStartTime(vdTime);
                         }catch(Exception eStart) {
+                            //Nothing to do
                         }
                         //Transform the finish time value
                         try {
@@ -828,6 +827,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                     voSta.getBaseDate(), voSta.getBaseTime());
                             voRes.setFinishTime(vdTime);
                         }catch(Exception eFinish) {
+                            //Nothing to do
                         }      
                         //Converts time to a value in seconds
                         vnTimeSecs = Utils.formatTimeInSeconds(COL_TIME[vnColIndex]>=0?vaRecord[COL_TIME[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"");
@@ -840,19 +840,6 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         if (vcStatus.equals(""))
                             vcStatus = "0";
                         voRes.setStatusCode(vcStatus.charAt(0));
-                        //Get the position
-                        //------IN THIS KIND OF RESULTS, THERE CAN BE POSITION BUT SOMETIMES IS FOR LEG, OTHER FOR CATEGORY, SO BETTER NOT TO USE IT------
-                        /*
-                        int vnPosition = 0;
-                        try {
-                            vnPosition = Integer.parseInt(COL_POSITION[vnColIndex]>=0?vaRecord[COL_POSITION[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                        }catch (Exception ePos){};
-                        voRes.setPosition(vnPosition);
-                        //Calculates time behind the first of the class
-                        BigDecimal vnTimeBehind = this.calculateTimeBehind(vlRun, vnTimeSeconds);
-                        //If it has no decimals, stores only the integer part
-                        voRes.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
-                        */
                         //Set remainder fields for points and times
                         voRes.setPointsAdjusted(0);
                         voRes.setPointsBonus(0);
@@ -862,21 +849,6 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         voRes.setTimeBonus(BigDecimal.ZERO);
                         voRes.setTimeNeutralization(BigDecimal.ZERO);
                         voRes.setTimePenalty(BigDecimal.ZERO);
-                        //Now, the club of the runner
-                        //------IN THIS KIND OF RESULTS, THERE IS NO CLUB INFO------
-                        /*
-                        if (!(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"").equals("")) {
-                            eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
-                            voClu.setId("");
-                            voClu.setUuid("");
-                            voClu.setOeKey(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            voClu.setCity(COL_CLU_CITY[vnColIndex]>=0?vaRecord[COL_CLU_CITY[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            voClu.setShortName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            voClu.setLongName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            //Add the club to the runner
-                            voRun.setClub(voClu);
-                        }
-                        */
                         //Now, process Splits or radiocontrols, if present
                         if ((vbSplit && COL_SPLIT_STATION[vnColIndex]>=0) ||
                                 (vbRadio && COL_RADIO_NUM[vnColIndex]>=0)) {
@@ -1002,6 +974,7 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                 voEve.setStageList(vlSta);
             }
         }catch (Exception e) {
+            //Nothing to do
         }
         return voEve;
     }

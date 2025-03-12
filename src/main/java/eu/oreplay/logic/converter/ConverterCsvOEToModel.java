@@ -130,8 +130,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
     }
     @Override
     public eu.oreplay.db.Event convertEntryList (File poFile) {
-        eu.oreplay.db.Event voEve = null;
-        return voEve;
+        return null;
     }    
 
     @Override
@@ -215,7 +214,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         int vnControls = 0;
                         try {
                             vnControls = Integer.parseInt(COL_COU_CONTROLS[vnColIndex]>=0?vaRecord[COL_COU_CONTROLS[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                        }catch (Exception eNumCon){};
+                        }catch (Exception eNumCon){
+                            //Nothing to do
+                        };
                         voCou.setControls(vnControls);
                         //Add the course to the class
                         voCla.setCourse(voCou);
@@ -240,7 +241,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                             vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
                         }
                         voRun.setBirthDate(vdBirth);
-                    }catch(Exception eDate) {}
+                    }catch(Exception eDate) {
+                        //Nothing to do
+                    }
                     //If the event belongs to FEDO, some fields come in Num or Text columns
                     if (oEve.getFederation()!=null) {
                         if (oEve.getFederation().getId().equals("FEDO")) {
@@ -254,7 +257,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                                     vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
                                 }
                                 voRun.setBirthDate(vdBirth);
-                            }catch(Exception eDate) {}
+                            }catch(Exception eDate) {
+                                //Nothing to do
+                            }
                             //License
                             voRun.setLicense(COL_LIC_FEDO[vnColIndex]>=0?vaRecord[COL_LIC_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
                             //DNI
@@ -285,6 +290,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                                 voSta.getBaseDate(), voSta.getBaseTime());
                         voRes.setStartTime(vdTime);
                     }catch(Exception eStart) {
+                        //Nothing to do
                     }
                     String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
                     voRes.setStatusCode(Utils.STATUS_OK_ID);
@@ -421,7 +427,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                             int vnControls = 0;
                             try {
                                 vnControls = Integer.parseInt(COL_COU_CONTROLS[vnColIndex]>=0?vaRecord[COL_COU_CONTROLS[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                            }catch (Exception eNumCon){};
+                            }catch (Exception eNumCon){
+                                //Nothing to do
+                            };
                             voCou.setControls(vnControls);
                             //Add the course to the class
                             voCla.setCourse(voCou);
@@ -446,7 +454,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                                 vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
                             }
                             voRun.setBirthDate(vdBirth);
-                        }catch(Exception eDate) {}
+                        }catch(Exception eDate) {
+                            //Nothing to do
+                        }
                         //If the event belongs to FEDO, some fields come in Num or Text columns
                         if (oEve.getFederation()!=null) {
                             if (oEve.getFederation().getId().equals("FEDO")) {
@@ -460,7 +470,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                                         vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
                                     }
                                     voRun.setBirthDate(vdBirth);
-                                }catch(Exception eDate) {}
+                                }catch(Exception eDate) {
+                                    //Nothing to do
+                                }
                                 //License
                                 voRun.setLicense(COL_LIC_FEDO[vnColIndex]>=0?vaRecord[COL_LIC_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
                                 //DNI
@@ -491,6 +503,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                                     voSta.getBaseDate(), voSta.getBaseTime());
                             voRes.setStartTime(vdTime);
                         }catch(Exception eStart) {
+                            //Nothing to do
                         }
                         //Transform the finish time value
                         try {
@@ -499,6 +512,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                                     voSta.getBaseDate(), voSta.getBaseTime());
                             voRes.setFinishTime(vdTime);
                         }catch(Exception eFinish) {
+                            //Nothing to do
                         }      
                         //Converts time to a value in seconds
                         double vnTimeSecs = Utils.formatTimeInSeconds(COL_TIME[vnColIndex]>=0?vaRecord[COL_TIME[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"");
@@ -520,7 +534,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         int vnPosition = 0;
                         try {
                             vnPosition = Integer.parseInt(COL_POSITION[vnColIndex]>=0?vaRecord[COL_POSITION[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                        }catch (Exception ePos){};
+                        }catch (Exception ePos){
+                            //Nothing to do
+                        };
                         voRes.setPosition(vnPosition);
                         //Calculates time behind the first of the class
                         BigDecimal vnTimeBehind = this.calculateTimeBehind(vlRun, vnTimeSeconds);
@@ -664,6 +680,7 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                 voEve.setStageList(vlSta);
             }
         }catch (Exception e) {
+            //Nothing to do
         }
         return voEve;
     }

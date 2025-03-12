@@ -24,6 +24,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
     private ConnBackStatus oStatus = new ConnBackStatus();
     private java.util.List lListeners = new java.util.ArrayList();
     private java.util.List<String> lServers = new java.util.ArrayList<String>();
+    private static final String MESSAGE_ERROR_1 = "error_exception";    
     
     /**
      * Creates new form ConnBackCheckPanel
@@ -56,7 +57,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
             */
             lServers = poParam.getlServers();
         }catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }
     }
     public void saveFormParameters() {
@@ -74,7 +75,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
             //Calls the method in the main form to receive and to store the parameters
             JClientMain.updateFormsParameters("ConnBackCheckPanel", voParam);
         } catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }                
     }
     public void initialize (ConnBackStatus poStatus) {
@@ -270,10 +271,10 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                     }
                 } 
                 catch (InterruptedException e) { 
-                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+                    JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
                 } 
                 catch (ExecutionException e) { 
-                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+                    JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
                 } 
             } 
         }; 

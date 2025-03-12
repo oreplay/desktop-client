@@ -39,6 +39,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private String cStaDesc = "";
     private java.util.HashMap<Integer, eu.oreplay.db.Stage> lStages = new java.util.HashMap<>();
     private transient DocumentListenerIdToken oDoc = new DocumentListenerIdToken();
+    private static final String MESSAGE_ERROR_1 = "error_exception";    
     
     /**
      * Creates new form ConnBackLoginPanel
@@ -91,7 +92,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             cEveDesc = poParam.getcEveDesc();
             cStaDesc = poParam.getcStaDesc();
         }catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }
     }
     public void saveFormParameters() {
@@ -114,7 +115,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             //Calls the method in the main form to receive and to store the parameters
             JClientMain.updateFormsParameters("ConnBackLoginPanel", voParam);
         } catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }                
     }
     public void initialize (ConnBackStatus poStatus) {
@@ -524,7 +525,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 Utils.openUrlInExplorer(vcUrl, 0);
             }
         } catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }
     }
     
@@ -562,6 +563,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 }
 
             } catch (BadLocationException e1) {
+                JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e1);
             }
         }
         @Override
