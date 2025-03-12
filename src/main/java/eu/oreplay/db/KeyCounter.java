@@ -13,7 +13,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -84,15 +83,16 @@ public class KeyCounter implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        boolean vbResul = true;
+        // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof KeyCounter)) {
-            return false;
+            vbResul = false;
         }
         KeyCounter other = (KeyCounter) object;
         if ((this.keyCounterPK == null && other.keyCounterPK != null) || (this.keyCounterPK != null && !this.keyCounterPK.equals(other.keyCounterPK))) {
-            return false;
+            vbResul = false;
         }
-        return true;
+        return vbResul;
     }
 
     @Override

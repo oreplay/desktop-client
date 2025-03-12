@@ -231,15 +231,16 @@ public class ClazzControl implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        boolean vbResul = true;
+        // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof ClazzControl)) {
-            return false;
+            vbResul = false;
         }
         ClazzControl other = (ClazzControl) object;
         if ((this.clazzControlPK == null && other.clazzControlPK != null) || (this.clazzControlPK != null && !this.clazzControlPK.equals(other.clazzControlPK))) {
-            return false;
+            vbResul = false;
         }
-        return true;
+        return vbResul;
     }
 
     @Override

@@ -287,15 +287,16 @@ public class Control implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        boolean vbResul = true;
+        // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Control)) {
-            return false;
+            vbResul = false;
         }
         Control other = (Control) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
+            vbResul = false;
         }
-        return true;
+        return vbResul;
     }
 
     @Override

@@ -269,17 +269,14 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadActionPerformed
-        // TODO add your handling code here:
         this.startStopUpload();
     }//GEN-LAST:event_btnUploadActionPerformed
 
     private void btnFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFolderActionPerformed
-        // TODO add your handling code here:
         this.selectFileForReading();
     }//GEN-LAST:event_btnFolderActionPerformed
 
     private void lstExtensionsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstExtensionsValueChanged
-        // TODO add your handling code here:
         if (!evt.getValueIsAdjusting())
             this.extensionSelected();
     }//GEN-LAST:event_lstExtensionsValueChanged
@@ -371,7 +368,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 }
             }
         }catch(Exception e) {
-            e.printStackTrace();
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -497,28 +494,24 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                             ObjectMapper voMapper = new ObjectMapper();
                                             UploadResponse voData = voMapper.readValue(vcContents, UploadResponse.class);
                                             //If there are data, get the human readable strings
-                                            if (voData!=null) {
-                                                if (voData.getoMeta()!=null) {
-                                                    if (voData.getoMeta().getlHuman()!=null) {
-                                                        if (voData.getoMeta().getlHuman().size()>0) {
-                                                            String vcColor = "#000000";
-                                                            try {
-                                                                vcColor = voData.getoMeta().getcHumanColor();
-                                                            }catch(Exception eColor) {
-                                                                vcColor = "#000000";
-                                                            }
-                                                            for (int i=0; i<voData.getoMeta().getlHuman().size(); i++) {
-                                                                String vcData = voData.getoMeta().getlHuman().get(i);
-                                                                //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                                                                publish(vcColor + "<JARUTAG>" + vcData);
-                                                            }
-                                                            vbFound = true;
-                                                        }
-                                                    }
+                                            if (voData!=null && voData.getoMeta()!=null && 
+                                                    voData.getoMeta().getlHuman()!=null && 
+                                                    !voData.getoMeta().getlHuman().isEmpty()) {
+                                                String vcColor = "#000000";
+                                                try {
+                                                    vcColor = voData.getoMeta().getcHumanColor();
+                                                }catch(Exception eColor) {
+                                                    vcColor = "#000000";
                                                 }
+                                                for (int i=0; i<voData.getoMeta().getlHuman().size(); i++) {
+                                                    String vcData = voData.getoMeta().getlHuman().get(i);
+                                                    //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                                    publish(vcColor + "<JARUTAG>" + vcData);
+                                                }
+                                                vbFound = true;
                                             }
                                         }catch (Exception eParseResp) {
-                                            eParseResp.printStackTrace();
+                                            JClientMain.getoLog().error(resMessages.getString("error_exception"), eParseResp);
                                             vbFound = false;
                                         }
                                         if (!vbFound) {
@@ -657,7 +650,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             vcLine = "<span style=\"color:" + pcColor + "\">" + pcLine + "</span><br>";
         }catch(Exception e) {
             vcLine = "";
-            e.printStackTrace();
+            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
         vcResul = oSB.append(vcLine).toString() + "\n";
         return vcResul;

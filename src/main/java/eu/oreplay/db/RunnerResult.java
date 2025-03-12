@@ -5,7 +5,6 @@
  */
 package eu.oreplay.db;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
@@ -430,15 +429,16 @@ public class RunnerResult implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        boolean vbResul = true;
+        // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof RunnerResult)) {
-            return false;
+            vbResul = false;
         }
         RunnerResult other = (RunnerResult) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
+            vbResul = false;
         }
-        return true;
+        return vbResul;
     }
 
     @Override

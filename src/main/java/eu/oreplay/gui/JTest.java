@@ -360,33 +360,27 @@ public class JTest extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-        // TODO add your handling code here:
         this.saveFormParameters();
         this.dispose();
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSrcFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSrcFileActionPerformed
-        // TODO add your handling code here:
         this.selectFileForReading();
     }//GEN-LAST:event_btnSrcFileActionPerformed
 
     private void btnDstFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDstFileActionPerformed
-        // TODO add your handling code here:
         this.selectFileForWriting();
     }//GEN-LAST:event_btnDstFileActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
         this.saveFormParameters();
     }//GEN-LAST:event_formWindowClosing
 
     private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
-        // TODO add your handling code here:
         this.processFile();
     }//GEN-LAST:event_btnProcessActionPerformed
 

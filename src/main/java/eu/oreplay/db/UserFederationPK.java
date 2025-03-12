@@ -58,18 +58,19 @@ public class UserFederationPK implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        boolean vbResul = true;
+        // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof UserFederationPK)) {
-            return false;
+            vbResul = false;
         }
         UserFederationPK other = (UserFederationPK) object;
         if ((this.userId == null && other.userId != null) || (this.userId != null && !this.userId.equals(other.userId))) {
-            return false;
+            vbResul = false;
         }
         if ((this.federationId == null && other.federationId != null) || (this.federationId != null && !this.federationId.equals(other.federationId))) {
-            return false;
+            vbResul = false;
         }
-        return true;
+        return vbResul;
     }
 
     @Override

@@ -207,17 +207,14 @@ public class OReplayDataTransfer {
         String vcResul = "";
         try {
             HashMap<String, String> vaResul = processFile(poConv, pcEveId, pcEveDesc, pcStaId, pcStaDesc, false);
-            if (vaResul!=null) {
-                if (vaResul.size()>0) {
-                    Map.Entry<String, String> vaFirst = vaResul.entrySet()
-                        .stream()
-                        .findFirst()
-                        .get();
-                    vcResul = vaFirst.getValue();
-                }
+            if (vaResul!=null && !vaResul.isEmpty()) {
+                Map.Entry<String, String> vaFirst = vaResul.entrySet()
+                    .stream()
+                    .findFirst()
+                    .get();
+                vcResul = vaFirst.getValue();
             }
         }catch(Exception e) {
-            e.printStackTrace();
             vcResul = "";
         }
         return vcResul;
