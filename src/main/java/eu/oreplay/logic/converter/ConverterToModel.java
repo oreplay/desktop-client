@@ -594,53 +594,72 @@ public abstract class ConverterToModel {
             BufferedReader voBr = new BufferedReader(
                           new InputStreamReader(voIs, (bUtf?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1)));
             //Read the first characters of the file and concatenate them (more than the checking for known data)
-            String vcTopValues = "";
-            char[] vaChars = new char[10000];
-            int vnMaxRead = voBr.read(vaChars, 0, 10000);
-            vcTopValues = new String(vaChars, 0, vnMaxRead);
-            //Removes all " characters
-            vcTopValues = vcTopValues.replaceAll("\"", "");
-            vcTopValues = vcTopValues.replaceAll("'", "");
+            //Make consecutive, incremental readings until all of the needed information is collected
+            boolean vbContinue = true;
+            int vnLoop = 0;
+            int vnLimit = 10000;
             //Put value by default
             cResultsType = OTHER_VALUES;
-            //Ask for some values if confirmed that is XML for results
-            if (cExtension.equals(EXT_XML) && cContents.equals(CONTENTS_RESULT)) {
-                //If it's not a TrailO competition, check the existence of Splits tags
-                if (!cSource.equals(SRC_OPRE)) {
-                    if (vcTopValues.contains("<SplitTime")) {
-                        cResultsType = RES_BREAKDOWN;
-                        if (vcTopValues.contains("SplitTimeControls:")) {
-                            cResultsType = RES_RADIO;
+            //Search by blocks of data. Putting a loop limit to avoid problems repeating excesive times
+            while (vbContinue && vnLoop<500) {
+                String vcTopValues = "";
+                char[] vaChars = new char[vnLimit];
+                int vnMaxRead = voBr.read(vaChars, 0, vnLimit);
+                vcTopValues = new String(vaChars, 0, vnMaxRead);
+                //Stop making loops if characters read are less than requested
+                if (vnMaxRead < vnLimit) {
+                    vbContinue = false;
+                }
+                //Removes all " characters
+                vcTopValues = vcTopValues.replaceAll("\"", "");
+                vcTopValues = vcTopValues.replaceAll("'", "");
+                //Ask for some values if confirmed that is XML for results
+                if (cExtension.equals(EXT_XML) && cContents.equals(CONTENTS_RESULT)) {
+                    //If it's not a TrailO competition, check the existence of Splits tags
+                    if (!cSource.equals(SRC_OPRE)) {
+                        if (vcTopValues.contains("<SplitTime")) {
+                            cResultsType = RES_BREAKDOWN;
+                            if (vcTopValues.contains("SplitTimeControls:")) {
+                                cResultsType = RES_RADIO;
+                            }
+                            //There is no need for further readings, because this comment appears before a split time when there is a radiocontrol result list
+                            vbContinue = false;
+                        } else {
+                            cResultsType = RES_TOTALS;
                         }
                     } else {
-                        cResultsType = RES_TOTALS;
-                    }
-                } else {
-                    //It it's TrailO, check at the header for the rest of parameters
-                    int vnCreator = vcTopValues.indexOf("creator");
-                    if (vnCreator>0) {
-                        int vnEndTag = vcTopValues.indexOf(">", vnCreator);
-                        if (vnEndTag>0) {
-                            String vcTrailoParams = vcTopValues.substring(vnCreator+8, vnEndTag);
-                            String[] vaTrailoParams = vcTrailoParams.split(";");
-                            if (vaTrailoParams.length>2)
-                                cTrailoType = vaTrailoParams[2];
-                            if (vaTrailoParams.length>3)
-                                cResultsType = vaTrailoParams[3];
-                            if (vaTrailoParams.length>4)
-                                cTrailoAt = vaTrailoParams[4];
-                            if (vaTrailoParams.length>5)
-                                cTrailoNormal = vaTrailoParams[5];
-                            if (vaTrailoParams.length>6)
-                                cTrailoGroup = vaTrailoParams[6];
+                        //If it's TrailO, check at the header for the rest of parameters
+                        int vnCreator = vcTopValues.indexOf("creator");
+                        if (vnCreator>0) {
+                            int vnEndTag = vcTopValues.indexOf(">", vnCreator);
+                            if (vnEndTag>0) {
+                                String vcTrailoParams = vcTopValues.substring(vnCreator+8, vnEndTag);
+                                String[] vaTrailoParams = vcTrailoParams.split(";");
+                                if (vaTrailoParams.length>2)
+                                    cTrailoType = vaTrailoParams[2];
+                                if (vaTrailoParams.length>3)
+                                    cResultsType = vaTrailoParams[3];
+                                if (vaTrailoParams.length>4)
+                                    cTrailoAt = vaTrailoParams[4];
+                                if (vaTrailoParams.length>5)
+                                    cTrailoNormal = vaTrailoParams[5];
+                                if (vaTrailoParams.length>6)
+                                    cTrailoGroup = vaTrailoParams[6];
+                            }
                         }
+                        //If it's TrailO, there is no need for further readings
+                        vbContinue = false;
                     }
+                    //If XML contains Score tags, set the flag to true
+                    if (vcTopValues.contains("<Score type=")) {
+                        bIncludeScore = true;
+                    }
+                    vbResul = true;
+                } else {
+                    vbContinue = false;
                 }
-                //If XML contains Score tags, set the flag to true
-                if (vcTopValues.contains("<Score type=")) {
-                    bIncludeScore = true;
-                }
-                vbResul = true;
+                //Increase Loop counter
+                vnLoop++;
             }
             voIs.close();
         } catch (Exception e) {
