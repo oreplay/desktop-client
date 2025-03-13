@@ -41,7 +41,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     private String cStart = "<html><head></head><body>";
     private String cEnd = "</body></html>";
 
-    
+
     /**
      * Creates new form ConnBackUploadPanel
      */
@@ -76,8 +76,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     public void initFormParameters(FormsParameters.ParConnBackUploadPanel poParam) {
         try {
             /*
-            this.setBounds(poParam.getoPos().getnPosX(), 
-                poParam.getoPos().getnPosY(), 
+            this.setBounds(poParam.getoPos().getnPosX(),
+                poParam.getoPos().getnPosY(),
                 poParam.getoPos().getnSizeX(),
                 poParam.getoPos().getnSizeY());
             */
@@ -112,7 +112,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             JClientMain.updateFormsParameters("ConnBackUploadPanel", voParam);
         } catch(Exception e) {
             JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
-        }                
+        }
     }
     public void initialize (ConnBackStatus poStatus) {
         oStatus = poStatus;
@@ -137,7 +137,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             ((ConnBackListener) i.next()).handleConnBackEvent(oEvt);
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -350,7 +350,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             } else {
                 boolean vbExtAndDate = this.checkExtensionAndDate();
                 if (vbExtAndDate) {
-                    if (oStatus.isReadyToSend() && Utils.folderExists(cFolder) && 
+                    if (oStatus.isReadyToSend() && Utils.folderExists(cFolder) &&
                             !cExtension.equals("")) {
                         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_stop.png"))); // NOI18N
                         btnUpload.setText(resMessages.getString("stop"));
@@ -364,7 +364,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         this.uploadThread();
                     }
                 } else {
-                    
+
                 }
             }
         }catch(Exception e) {
@@ -402,19 +402,19 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             fireEvent();
         }
     }
- 
+
     /**
      * Performs a simple query to the server to know if it's ready to receive communications
      * There can be several servers; the execution is inside a SwingWorker to be able
      * to refresh status messages in the GUI as the requests are done
      */
-    private void uploadThread() 
-    { 
-        SwingWorker voSw = new SwingWorker() { 
+    private void uploadThread()
+    {
+        SwingWorker voSw = new SwingWorker() {
             // Method to perform tasks in background and free the GUI to refresh data
             @Override
-            protected String doInBackground() 
-                throws Exception { 
+            protected String doInBackground()
+                throws Exception {
                 boolean vbFound = false;
                 Date voStart = new Date();
                 Date voFinish = new Date();
@@ -450,12 +450,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             vaJson = new HashMap<>();
                             vaJson.put("ALL", vcJson);
                         }
-                        JClientMain.getoLog().info("Time: " + vcNow + 
-                                "; File: " + vcFile + 
-                                "; Eve Id: " + oStatus.getcEveId() + 
+                        JClientMain.getoLog().info("Time: " + vcNow +
+                                "; File: " + vcFile +
+                                "; Eve Id: " + oStatus.getcEveId() +
                                 "; Eve Desc: " + oStatus.getcEveDesc() +
-                                "; Sta Id: " + oStatus.getcStaId() + 
-                                "; Sta Desc: " + oStatus.getcStaDesc() + 
+                                "; Sta Id: " + oStatus.getcStaId() +
+                                "; Sta Desc: " + oStatus.getcStaDesc() +
                                 "; JSON parts: " + vaJson.size());
                         try {
                             //Iterate over keys of the Hashmap
@@ -477,8 +477,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                     //Sets the request to the current server
                                     HttpRequest voReq = HttpRequest.newBuilder()
                                         .POST(HttpRequest.BodyPublishers.ofString(vcJson))
-                                        .uri(new URI(oStatus.getcServer() + 
-                                                "/api/v1/events/" + oStatus.getcEveId() + "/uploads?version=301"))
+                                        .uri(new URI(oStatus.getcServer() +
+                                                "/api/v1/events/" + oStatus.getcEveId() + "/uploads?version=402"))
                                         .header("Authorization", "Bearer " + oStatus.getcToken())
                                         .header("Content-Type", "application/json")
                                         .header("Accept", "application/json")
@@ -494,8 +494,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                             ObjectMapper voMapper = new ObjectMapper();
                                             UploadResponse voData = voMapper.readValue(vcContents, UploadResponse.class);
                                             //If there are data, get the human readable strings
-                                            if (voData!=null && voData.getoMeta()!=null && 
-                                                    voData.getoMeta().getlHuman()!=null && 
+                                            if (voData!=null && voData.getoMeta()!=null &&
+                                                    voData.getoMeta().getlHuman()!=null &&
                                                     !voData.getoMeta().getlHuman().isEmpty()) {
                                                 String vcColor = "#000000";
                                                 try {
@@ -526,9 +526,9 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
                                             long vnDiff = Math.abs(voFinish.getTime() - voStartPart.getTime());
                                             long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
-                                            publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_finished") + " - " + vcNow + 
+                                            publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_finished") + " - " + vcNow +
                                                     " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
-                                            JClientMain.getoLog().info(resMessages.getString("info_classprocess_finished") + " - " + vcNow + 
+                                            JClientMain.getoLog().info(resMessages.getString("info_classprocess_finished") + " - " + vcNow +
                                                     " - " + vnDiffSec + " " + resMessages.getString("second_mid") + "\n");
                                         }
                                     } else {
@@ -556,9 +556,9 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
                             long vnDiff = Math.abs(voFinish.getTime() - voStart.getTime());
                             long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
-                            publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
+                            publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_finished") + " - " + vcNow +
                                     " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
-                            JClientMain.getoLog().info(resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
+                            JClientMain.getoLog().info(resMessages.getString("info_fileprocess_finished") + " - " + vcNow +
                                     " - " + vnDiffSec + " " + resMessages.getString("second_mid") + "\n");
                         } catch (java.net.http.HttpConnectTimeoutException eTimeout) {
                             //If any of the connections fails, set the flag not to delete the file
@@ -593,11 +593,11 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                     //Waits 0.5 seconds to let the system breathe
                     Thread.sleep(Duration.ofMillis(500));
                 }
-                return "done"; 
-            } 
+                return "done";
+            }
             // Method called when using "publish" in the doInBackground, to refresh the GUI with new data
-            @Override protected void process(java.util.List plChunks) 
-            { 
+            @Override protected void process(java.util.List plChunks)
+            {
                 String vcColor = "#000000";
                 if (plChunks!=null) {
                     for (int i=0; i<plChunks.size(); i++) {
@@ -612,31 +612,31 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         txtStatus.setText(cStart + appendString(vcValue, vcColor) + cEnd);
                     }
                 }
-            }   
+            }
             // Method called when doInBackground finishes
-            @Override protected void done() 
-            { 
-                try { 
+            @Override protected void done()
+            {
+                try {
                     //Get the message from doInBackground. In this case, it`s a String
-                    String vcMsg = (String)get(); 
+                    String vcMsg = (String)get();
                     if (!vcMsg.equals("")) {
                         //Fire the event
                         oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
                         fireEvent();
                     }
-                } 
-                catch (InterruptedException e) { 
+                }
+                catch (InterruptedException e) {
                     JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
-                } 
-                catch (ExecutionException e) { 
+                }
+                catch (ExecutionException e) {
                     JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
-                } 
-            } 
-        }; 
-        // Executes the swingworker on worker thread 
-        voSw.execute(); 
-    }     
-    
+                }
+            }
+        };
+        // Executes the swingworker on worker thread
+        voSw.execute();
+    }
+
     /**
      * Adds a new line of text, formatted with some color, to the editor pane
      * @param pcLine String Text for a new line
@@ -669,8 +669,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 String vcStageZeroTime = JClientMain.getcStageZeroTime();
                 Date voStageZeroTime = Utils.parse(vcStageZeroTime, resMessages.getString("format_time"));
                 if (voStageDate==null || voStageZeroTime==null) {
-                    JOptionPane.showMessageDialog(this , 
-                            resMessages.getString("info_date_time_needed"), 
+                    JOptionPane.showMessageDialog(this ,
+                            resMessages.getString("info_date_time_needed"),
                             resMessages.getString("info"),
                             JOptionPane.ERROR_MESSAGE);
                     vbResul = false;
