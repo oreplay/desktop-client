@@ -468,6 +468,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                     Date voStartPart = new Date();
                                     vcNow = Utils.format(voStartPart, resMessages.getString("format_datetime_milli_dash"));
                                     publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_started") + " - " + vcClass + " - " + vcNow);
+                                    //Get a version number from version resource text
+                                    long vnVersion = Utils.getVersionNumberFromText(resMessages.getString("version"));
                                     //Next, send the contents to the backend
                                     vbFound = false;
                                     //Gets an HTTP Client to make a request
@@ -478,7 +480,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                     HttpRequest voReq = HttpRequest.newBuilder()
                                         .POST(HttpRequest.BodyPublishers.ofString(vcJson))
                                         .uri(new URI(oStatus.getcServer() + 
-                                                "/api/v1/events/" + oStatus.getcEveId() + "/uploads?version=301"))
+                                                "/api/v1/events/" + oStatus.getcEveId() + "/uploads?version=" + vnVersion))
                                         .header("Authorization", "Bearer " + oStatus.getcToken())
                                         .header("Content-Type", "application/json")
                                         .header("Accept", "application/json")

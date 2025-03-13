@@ -1179,13 +1179,9 @@ public static boolean versionGreaterThan (String pcProperty, String pcCurrent) {
     boolean vbResul = false;
     try {
         //Convert the first value
-        String vcProperty = pcProperty.replace("v", "");
-        String[] vaProperty = vcProperty.split("\\.");
-        long vnProperty = Long.parseLong(vaProperty[0])*1000000 + Long.parseLong(vaProperty[1])*1000 + Long.parseLong(vaProperty[2]);
+        long vnProperty = Utils.getVersionNumberFromText(pcProperty);
         //Convert the second value
-        String vcCurrent = pcCurrent.replace("v", "");
-        String[] vaCurrent = vcCurrent.split("\\.");
-        long vnCurrent = Long.parseLong(vaCurrent[0])*1000000 + Long.parseLong(vaCurrent[1])*1000 + Long.parseLong(vaCurrent[2]);
+        long vnCurrent = Utils.getVersionNumberFromText(pcCurrent);
         //And compare
         if (vnProperty>vnCurrent) {
             vbResul = true;
@@ -1195,6 +1191,24 @@ public static boolean versionGreaterThan (String pcProperty, String pcCurrent) {
         vbResul = false;
     }
     return vbResul;
+}
+/**
+ * Converts version value to number expected by the backend
+ * @param pcCurrent String Version in form vnnn.nnn.nnn
+ * @return long Converted version number
+ */
+public static long getVersionNumberFromText (String pcCurrent) {
+    long vnResul = 0;
+    try {
+        //Convert the second value
+        String vcCurrent = pcCurrent.replace("v", "");
+        String[] vaCurrent = vcCurrent.split("\\.");
+        vnResul = Long.parseLong(vaCurrent[0])*10000 + Long.parseLong(vaCurrent[1])*100 + Long.parseLong(vaCurrent[2]);
+    }catch (Exception e) {
+        oLog.error("Exception", e);
+        vnResul = 301;
+    }
+    return vnResul;
 }
 
 }
