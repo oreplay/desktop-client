@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
+import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.*;
 
@@ -117,6 +118,8 @@ public class Utils {
     //Values for Split Status
     public static final String SPLIT_STATUS_MISSING = "Missing";
     public static final String SPLIT_STATUS_ADDITIONAL = "Additional";
+    //Strings internal to this class
+    private static final String EXCEPTION_1 = "Exception";
         
     final static int[] daysmonth = {29,31,28,31,30,31,30,31,31,30,31,30,31};
     private static Logger oLog = null;
@@ -333,6 +336,32 @@ public static Character convertIofStatusValue (String pcValue) {
     }catch(Exception e) {
     }
     return vcResul;
+}
+/**
+ * Converts a XMLGregorianCalendar timestamp to Date value; if force flag is set,
+ * then it converts the value replacing de date part of the timestamp with a base date
+ * @param poTimestamp XMLGregorianCalendar Source timestamp
+ * @param pbForce boolean Flag that indicates if a base date has to be taken in account
+ * @param pcBaseDate String Base date value
+ * @param pcFormat String Format of the base date value
+ * @return Date Converted value, taking the complete original value or replacing the date part
+ */
+public static Date convertGregorianDateFromXmlOrForced (XMLGregorianCalendar poTimestamp, boolean pbForce, String pcBaseDate, String pcFormat) {
+    Date voResul = null;
+    //At first, convert the whole timestamp
+    voResul = (poTimestamp!=null?poTimestamp.toGregorianCalendar().getTime():null);
+    try {
+        //Replace the date part of the value and put the base date value
+        if (voResul!=null && pbForce) {
+            //Get the time part
+            String vcTime = Utils.format(voResul, "HH:mm:ss.SSS");
+            //Create a Date taking the date part from the base date and the time part fromt the original value
+            voResul = Utils.parse(pcBaseDate + " " + vcTime, pcFormat + " HH:mm:ss.SSS");
+        }
+    }catch (Exception e) {
+        //Nothing to do
+    }
+    return voResul;
 }
 /**
  * Converts a string with hexadecimal representation to a byte array
@@ -1164,7 +1193,7 @@ public static int checkForNewVersion(String pcCurrent) {
             }
         }
     }catch(Exception e) {
-        oLog.error("Exception", e);
+        oLog.error(Utils.EXCEPTION_1, e);
         vnResul = -1;
     }
     return vnResul;
@@ -1187,7 +1216,7 @@ public static boolean versionGreaterThan (String pcProperty, String pcCurrent) {
             vbResul = true;
         }
     }catch (Exception e) {
-        oLog.error("Exception", e);
+        oLog.error(Utils.EXCEPTION_1, e);
         vbResul = false;
     }
     return vbResul;
@@ -1205,7 +1234,7 @@ public static long getVersionNumberFromText (String pcCurrent) {
         String[] vaCurrent = vcCurrent.split("\\.");
         vnResul = Long.parseLong(vaCurrent[0])*10000 + Long.parseLong(vaCurrent[1])*100 + Long.parseLong(vaCurrent[2]);
     }catch (Exception e) {
-        oLog.error("Exception", e);
+        oLog.error(Utils.EXCEPTION_1, e);
         vnResul = 301;
     }
     return vnResul;

@@ -259,7 +259,8 @@ public class OReplayDataTransfer {
                     if (poConv.getcExtension().equals(ConverterToModel.EXT_XML) && 
                             poConv.getcIofVersion().equals(ConverterToModel.IOF_VERSION_3)) {
                         //Creates a dummy event with one stage
-                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, "", "");
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, (poConv.isbForce()?poConv.getcStageDate():""), 
+                                (poConv.isbForce()?poConv.getcStageZeroTime():""));
                         //Set the specific properties for XML
                         ((ConverterIofToModel)poConv).setSpecificProperties(voSrcEve);
                         if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {

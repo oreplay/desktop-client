@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<!DOCTYPE FormsParameters SYSTEM "FormsParameters.dtd">-->
+<FormsParameters>
+  <JClientMain>
+    <nPosX>200</nPosX>
+    <nPosY>200</nPosY>
+    <nSizeX>785</nSizeX>
+    <nSizeY>590</nSizeY>
+    <cStageDate></cStageDate>
+    <cStageZeroTime></cStageZeroTime>
+  </JClientMain>
+  <JAbout>
+    <nPosX>200</nPosX>
+    <nPosY>200</nPosY>
+    <nSizeX>700</nSizeX>
+    <nSizeY>450</nSizeY>
+    <cVersion></cVersion>
+  </JAbout>
+  <JTest>
+    <nPosX>200</nPosX>
+    <nPosY>200</nPosY>
+    <nSizeX>800</nSizeX>
+    <nSizeY>500</nSizeY>
+    <cPath>E:\00_Sportident\00_Proyectos\OReplay\XML_Ejemplos</cPath>
+  </JTest>
+  <ConnBackCheckPanel>
+    <nPosX>200</nPosX>
+    <nPosY>200</nPosY>
+    <nSizeX>450</nSizeX>
+    <nSizeY>200</nSizeY>
+    <servers>
+      <server>http://127.0.0.1</server>
+      <server>https://www.oreplay.es</server>
+    </servers>
+  </ConnBackCheckPanel>
+  <ConnBackLoginPanel>
+    <nPosX>200</nPosX>
+    <nPosY>200</nPosY>
+    <nSizeX>450</nSizeX>
+    <nSizeY>200</nSizeY>
+    <cEveId></cEveId>
+    <cToken></cToken>
+    <cIdToken></cIdToken>
+    <cStaId></cStaId>
+    <cEveDesc></cEveDesc>
+    <cStaDesc></cStaDesc>
+  </ConnBackLoginPanel>
+  <ConnBackUploadPanel>
+    <nPosX>200</nPosX>
+    <nPosY>200</nPosY>
+    <nSizeX>300</nSizeX>
+    <nSizeY>200</nSizeY>
+    <cFolder></cFolder>
+    <cExtension></cExtension>
+    <bSplit>F</bSplit>
+  </ConnBackUploadPanel>
+</FormsParameters>
