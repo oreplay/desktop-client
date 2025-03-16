@@ -105,8 +105,13 @@ public class ConverterIofToModel extends ConverterToModel {
             if (poEntry!=null) {
                 //Try to set the date and time of the stage from the XML
                 try {
-                    oEve.getStageList().get(0).setBaseDate(poEntry.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
-                    oEve.getStageList().get(0).setBaseTime(poEntry.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                    if (!isbForce()) {
+                        oEve.getStageList().get(0).setBaseDate(poEntry.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
+                        oEve.getStageList().get(0).setBaseTime(poEntry.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                    } else {
+                        oEve.getStageList().get(0).setBaseDate(Utils.parse(getcStageDate(), getcDateFormat()));
+                        oEve.getStageList().get(0).setBaseTime(Utils.convertGregorianDateFromXmlOrForced(poEntry.getEvent().getStartTime().getTime(), isbForce(), getcStageDate(), getcDateFormat()));
+                    }
                 }catch(Exception eDateTime) {
                 }
                 //Event's data
@@ -134,7 +139,9 @@ public class ConverterIofToModel extends ConverterToModel {
                             voRun.setSex(vcSex);
                         }
                         //SiTiming treats teams as one person with serveral SiCards. I get only the first one
-                        voRun.setSicard(voPersonEntry.getControlCard()!=null?(!voPersonEntry.getControlCard().isEmpty()?(voPersonEntry.getControlCard().get(0)!=null?voPersonEntry.getControlCard().get(0).getValue():""):""):"");                        
+                        voRun.setSicard(voPersonEntry.getControlCard()!=null?(!voPersonEntry.getControlCard().isEmpty()?(voPersonEntry.getControlCard().get(0)!=null?voPersonEntry.getControlCard().get(0).getValue():""):""):"");
+                        //Check whether there is an alternative SiCard
+                        voRun.setSicardAlt(voPersonEntry.getControlCard()!=null?(voPersonEntry.getControlCard().size()>1?(voPersonEntry.getControlCard().get(1)!=null?voPersonEntry.getControlCard().get(1).getValue():""):""):"");
                         //Get Club info
                         if (voPersonEntry.getOrganisation()!=null) {
                             eu.oreplay.logic.iof.Organisation voOrg = voPersonEntry.getOrganisation();
@@ -216,6 +223,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                 voRun.setClub(voTea.getClub());
                                 //SiCard
                                 voRun.setSicard(voTeamEntryPerson.getControlCard()!=null?(!voTeamEntryPerson.getControlCard().isEmpty()?(voTeamEntryPerson.getControlCard().get(0)!=null?voTeamEntryPerson.getControlCard().get(0).getValue():""):""):"");
+                                //Check whether there is an alternative SiCard
+                                voRun.setSicardAlt(voTeamEntryPerson.getControlCard()!=null?(voTeamEntryPerson.getControlCard().size()>1?(voTeamEntryPerson.getControlCard().get(1)!=null?voTeamEntryPerson.getControlCard().get(1).getValue():""):""):"");
                                 //Leg
                                 if (voTeamEntryPerson.getLeg()!=null)
                                     voRun.setLegNumber(voTeamEntryPerson.getLeg().intValue());
@@ -343,8 +352,13 @@ public class ConverterIofToModel extends ConverterToModel {
             if (poStart!=null) {
                 //Try to set the date and time of the stage from the XML
                 try {
-                    oEve.getStageList().get(0).setBaseDate(poStart.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
-                    oEve.getStageList().get(0).setBaseTime(poStart.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                    if (!isbForce()) {
+                        oEve.getStageList().get(0).setBaseDate(poStart.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
+                        oEve.getStageList().get(0).setBaseTime(poStart.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                    } else {
+                        oEve.getStageList().get(0).setBaseDate(Utils.parse(getcStageDate(), getcDateFormat()));
+                        oEve.getStageList().get(0).setBaseTime(Utils.convertGregorianDateFromXmlOrForced(poStart.getEvent().getStartTime().getTime(), isbForce(), getcStageDate(), getcDateFormat()));
+                    }
                 }catch(Exception eDateTime) {
                 }
                 //Event's data
@@ -405,6 +419,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                             voRun.setBibNumber(voPrs.getBibNumber());
                                             //SiTiming treats teams as one person with serveral SiCards. I get only the first one
                                             voRun.setSicard(voPrs.getControlCard()!=null?(!voPrs.getControlCard().isEmpty()?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):""):"");
+                                            //Check whether there is an alternative SiCard
+                                            voRun.setSicardAlt(voPrs.getControlCard()!=null?(voPrs.getControlCard().size()>1?(voPrs.getControlCard().get(1)!=null?voPrs.getControlCard().get(1).getValue():""):""):"");
                                             //Start Time is set in a first element of RunnerResult List
                                             ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
                                             eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
@@ -414,7 +430,9 @@ public class ConverterIofToModel extends ConverterToModel {
                                             //The type of result is null as it is processing only start times
                                             voRes.setResultType(null);
                                             //Transform the date value
-                                            voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                            //voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                            voRes.setStartTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getStartTime(), 
+                                                    isbForce(), getcStageDate(), getcDateFormat()));
                                             //There is only Status info at Result tag
                                             voRes.setStatusCode(Utils.STATUS_OK_ID);
                                             //Add the result to the list
@@ -504,6 +522,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 if (voPrs!=null) {
                                                     voRun.setBibNumber(voPrs.getBibNumber());
                                                     voRun.setSicard(voPrs.getControlCard()!=null?(!voPrs.getControlCard().isEmpty()?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):""):"");
+                                                    //Check whether there is an alternative SiCard
+                                                    voRun.setSicardAlt(voPrs.getControlCard()!=null?(voPrs.getControlCard().size()>1?(voPrs.getControlCard().get(1)!=null?voPrs.getControlCard().get(1).getValue():""):""):"");
                                                     //Now, the specific course of the runner
                                                     if (voPrs.getCourse()!=null) {
                                                         eu.oreplay.logic.iof.SimpleCourse voSimple = voPrs.getCourse();
@@ -533,7 +553,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     //The type of result is null as it is processing only start times
                                                     voRes.setResultType(null);
                                                     //Transform the date value
-                                                    voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                    //voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                    voRes.setStartTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getStartTime(), isbForce(), getcStageDate(), getcDateFormat()));
                                                     //There is only Status info at Result tag
                                                     voRes.setStatusCode(Utils.STATUS_OK_ID);
                                                     //Add the result to the list
@@ -671,8 +692,13 @@ public class ConverterIofToModel extends ConverterToModel {
             if (poResult!=null) {
                 //Try to set the date and time of the stage from the XML
                 try {
-                    oEve.getStageList().get(0).setBaseDate(poResult.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
-                    oEve.getStageList().get(0).setBaseTime(poResult.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                    if (!isbForce()) {
+                        oEve.getStageList().get(0).setBaseDate(poResult.getEvent().getStartTime().getDate().toGregorianCalendar().getTime());
+                        oEve.getStageList().get(0).setBaseTime(poResult.getEvent().getStartTime().getTime().toGregorianCalendar().getTime());
+                    } else {
+                        oEve.getStageList().get(0).setBaseDate(Utils.parse(getcStageDate(), getcDateFormat()));
+                        oEve.getStageList().get(0).setBaseTime(Utils.convertGregorianDateFromXmlOrForced(poResult.getEvent().getStartTime().getTime(), isbForce(), getcStageDate(), getcDateFormat()));
+                    }
                 }catch(Exception eDateTime) {
                 }
                 //Event's data
@@ -747,6 +773,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     voRun.setBibNumber(voPrs.getBibNumber());
                                                     //SiTiming treats teams as one person with serveral SiCards. I get only the first one
                                                     voRun.setSicard(voPrs.getControlCard()!=null?(!voPrs.getControlCard().isEmpty()?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):""):"");
+                                                    //Check whether there is an alternative SiCard
+                                                    voRun.setSicardAlt(voPrs.getControlCard()!=null?(voPrs.getControlCard().size()>1?(voPrs.getControlCard().get(1)!=null?voPrs.getControlCard().get(1).getValue():""):""):"");
                                                 }
                                                 //Start Time, Finish Time, are set in a first element of RunnerResult List
                                                 //In Trail-O, other RunnerResult elements for normal controls and timed groups
@@ -781,8 +809,10 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 voRes.setResultType(voResType);
                                                 //--------------------------------------------------------------------------------------------------
                                                 //Transform date values
-                                                voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
-                                                voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
+                                                //voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                //voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
+                                                voRes.setStartTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getStartTime(), isbForce(), getcStageDate(), getcDateFormat()));
+                                                voRes.setFinishTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getFinishTime(), isbForce(), getcStageDate(), getcDateFormat()));
                                                 //Get the status, from IOF enumeration to OReplay Ids
                                                 voRes.setStatusCode(Utils.convertIofStatusValue(voPrs.getStatus().value()));
                                                 //Get times and position
@@ -1030,6 +1060,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 if (voPrs!=null) {
                                                     voRun.setBibNumber(voPrs.getBibNumber());
                                                     voRun.setSicard(voPrs.getControlCard()!=null?(!voPrs.getControlCard().isEmpty()?(voPrs.getControlCard().get(0)!=null?voPrs.getControlCard().get(0).getValue():""):""):"");
+                                                    //Check whether there is an alternative SiCard
+                                                    voRun.setSicardAlt(voPrs.getControlCard()!=null?(voPrs.getControlCard().size()>1?(voPrs.getControlCard().get(1)!=null?voPrs.getControlCard().get(1).getValue():""):""):"");
                                                     //Now, the specific course of the runner
                                                     if (voPrs.getCourse()!=null) {
                                                         eu.oreplay.logic.iof.SimpleCourse voSimple = voPrs.getCourse();
@@ -1062,8 +1094,10 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     voResType.setDescription(Utils.RESULT_STAGE_DESC);
                                                     voRes.setResultType(voResType);
                                                     //Transform date values
-                                                    voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
-                                                    voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
+                                                    //voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
+                                                    //voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
+                                                    voRes.setStartTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getStartTime(), isbForce(), getcStageDate(), getcDateFormat()));
+                                                    voRes.setFinishTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getFinishTime(), isbForce(), getcStageDate(), getcDateFormat()));
                                                     //Get the status, from IOF enumeration to OReplay Ids
                                                     voRes.setStatusCode(Utils.convertIofStatusValue(voPrs.getStatus().value()));
                                                     //Get times and position

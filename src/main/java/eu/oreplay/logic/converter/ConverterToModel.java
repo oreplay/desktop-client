@@ -66,6 +66,8 @@ public abstract class ConverterToModel {
     private boolean bIncludeScore;
     private String cStageDate;
     private String cStageZeroTime;
+    private String cDateFormat;
+    private boolean bForce;
     private String cTrailoType;
     private String cTrailoAt;
     private String cTrailoNormal;
@@ -203,6 +205,21 @@ public abstract class ConverterToModel {
     public void setcStageZeroTime(String cStageZeroTime) {
         this.cStageZeroTime = cStageZeroTime;
     }
+    @JsonIgnore
+    public String getcDateFormat() {
+        return cDateFormat;
+    }
+    public void setcDateFormat(String cDateFormat) {
+        this.cDateFormat = cDateFormat;
+    }
+    @JsonProperty("force")
+    @JsonIgnore
+    public boolean isbForce() {
+        return bForce;
+    }
+    public void setbForce(boolean bForce) {
+        this.bForce = bForce;
+    }
 
     @JsonProperty("trailo_type")
     public String getcTrailoType() {
@@ -258,6 +275,7 @@ public abstract class ConverterToModel {
         bIncludeScore = false;
         cStageDate = "";
         cStageZeroTime = "";
+        bForce = false;
         cTrailoType = OTHER_VALUES;
         cTrailoAt = OTHER_VALUES;
         cTrailoNormal = "0";
@@ -282,6 +300,7 @@ public abstract class ConverterToModel {
         bIncludeScore = poSrc.isbIncludeScore();
         cStageDate = poSrc.getcStageDate();
         cStageZeroTime = poSrc.getcStageZeroTime();
+        bForce = poSrc.isbForce();
         cTrailoType = poSrc.getcTrailoType();
         cTrailoAt = poSrc.getcTrailoAt();
         cTrailoNormal = poSrc.getcTrailoNormal();

@@ -440,6 +440,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         try {
                             voConv.setcStageDate(JClientMain.getDateForTransfer());
                             voConv.setcStageZeroTime(JClientMain.getZeroTimeForTransfer());
+                            voConv.setbForce(JClientMain.isbForce());
+                            voConv.setcDateFormat(resMessages.getString("format_date"));
                         }catch(Exception eDate) {
                         }
                         HashMap<String, String> vaJson = null;

@@ -24,6 +24,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private ConnBackStatus oStatus = new ConnBackStatus();
     private static String cStageDate = "";
     private static String cStageZeroTime = "";
+    private static boolean bForce = false;
 
     /**
      * Creates new form JClientMain
@@ -61,6 +62,12 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     }
     public static void setcStageZeroTime(String cStageZeroTime) {
         JClientMain.cStageZeroTime = cStageZeroTime;
+    }
+    public static boolean isbForce() {
+        return bForce;
+    }
+    public static void setbForce(boolean bForce) {
+        JClientMain.bForce = bForce;
     }
     public ConnBackStatus getoStatus() {
         return oStatus;

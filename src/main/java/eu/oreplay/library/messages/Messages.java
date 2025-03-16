@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.4.2"},
-        {"version", "v0.4.2"},
+        {"main", "OReplay. Desktop Client 0.4.3"},
+        {"version", "v0.4.3"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -282,6 +282,8 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_current_version", "Your version is up to date"},
         {"info_connection_version", "Could not connect to check for updates."},
         {"info_date_time_needed", "Formato CSV. Es necesario escribir un valor correcto de fecha y hora de comienzo de la etapa"},
+        {"info_force_stagedate_on", "Forcing stage date enabled"},
+        {"info_force_stagedate_off", "Forcing stage date disabled"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},
         {"error_format_unknown", "Format unknown or not supported yet"},
