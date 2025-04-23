@@ -52,6 +52,8 @@ public abstract class ConverterToModel {
     public static final String TRAILO_TYPE_SPRINT = "Sprint";
     public static final String TRAILO_AT_FINISH = "Finish";
     public static final String TRAILO_AT_INTERMEDIATE = "Intermediate";
+    public static final String TOT_TIME = "TotalizationTime";
+    public static final String TOT_POINTS = "TotalizationPoints";
 
     private String cFile;
     private boolean bExists;
@@ -72,6 +74,7 @@ public abstract class ConverterToModel {
     private String cTrailoAt;
     private String cTrailoNormal;
     private String cTrailoGroup;
+    private String cTotalization;
 
     public ConverterToModel() {
         initializeValues();
@@ -249,6 +252,12 @@ public abstract class ConverterToModel {
     public void setcTrailoGroup(String cTrailoGroup) {
         this.cTrailoGroup = cTrailoGroup;
     }
+    public String getcTotalization() {
+        return cTotalization;
+    }
+    public void setcTotalization(String cTotalization) {
+        this.cTotalization = cTotalization;
+    }
     
     
     /**
@@ -280,6 +289,7 @@ public abstract class ConverterToModel {
         cTrailoAt = OTHER_VALUES;
         cTrailoNormal = "0";
         cTrailoGroup = "0";
+        cTotalization = OTHER_VALUES;
     }
     /**
      * Copy values of the properties from another object
@@ -305,6 +315,7 @@ public abstract class ConverterToModel {
         cTrailoAt = poSrc.getcTrailoAt();
         cTrailoNormal = poSrc.getcTrailoNormal();
         cTrailoGroup = poSrc.getcTrailoGroup();
+        cTotalization = poSrc.getcTotalization();
     }
     @JsonIgnore
     public boolean isCsv () {
@@ -423,6 +434,7 @@ public abstract class ConverterToModel {
                 cContents = OTHER_VALUES;
                 cResultsType = OTHER_VALUES;
                 cIofVersion = OTHER_VALUES;
+                cTotalization = OTHER_VALUES;
                 if (vcTopValues.startsWith("OE0001_V12")) {
                     cContents = CONTENTS_START;
                     cSource = SRC_OEV12;
@@ -523,6 +535,13 @@ public abstract class ConverterToModel {
                     cResultsType = RES_TOTALS;
                     cSource = SRC_OEV12;
                     bOneStage = false;
+                    cTotalization = TOT_POINTS;
+                } else if (vcTopValues.startsWith("OE0013_V12")) {
+                    cContents = CONTENTS_RESULT;
+                    cResultsType = RES_TOTALS;
+                    cSource = SRC_OEV12;
+                    bOneStage = false;
+                    cTotalization = TOT_TIME;
                 }
                 //If there is a valid cContents value, then the result is true
                 if (cContents.equals(CONTENTS_RESULT) || cContents.equals(CONTENTS_START)) {
@@ -575,6 +594,7 @@ public abstract class ConverterToModel {
                     cResultsType = OTHER_VALUES;
                     cSource = OTHER_VALUES;
                     cIofVersion = OTHER_VALUES;
+                    cTotalization = OTHER_VALUES;
                 }               
             } else if (cExtension.equals(EXT_HTML)) {
                 if (vcTopValues.contains("sitiming:eventid")) {
@@ -582,6 +602,7 @@ public abstract class ConverterToModel {
                     cContents = OTHER_VALUES;
                     cResultsType = OTHER_VALUES;
                     cIofVersion = OTHER_VALUES;
+                    cTotalization = OTHER_VALUES;
                     vbResul = true;
                 }
             }

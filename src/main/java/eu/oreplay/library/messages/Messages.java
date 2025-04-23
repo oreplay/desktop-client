@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.4.3"},
-        {"version", "v0.4.3"},
+        {"main", "OReplay. Desktop Client 0.4.4"},
+        {"version", "v0.4.4"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -164,6 +164,8 @@ public class Messages extends java.util.ListResourceBundle {
         {"finish", "Finish"},
         {"intermediate", "Intermediate"},
         {"other", "Other"},
+        {"totalizationtime", "Totalization time"},
+        {"totalizationpoints", "Totalization points"},
         {"test", "Test"},
         {"test_event", "Test Event"},
         {"test_stage", "Test Stage"},

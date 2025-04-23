@@ -112,12 +112,17 @@ public class OReplayDataTransfer {
             oConf.inspectFile(voFile);
             voFile = null;
             if (oConf.isCsv()) {
-                if (oConf.isClassic())
-                    oConf = new ConverterCsvOEToModel(oConf);
-                else if (oConf.isRelay())
-                    oConf = new ConverterCsvOSToModel(oConf);
-                else if (oConf.isScoring())
-                    oConf = new ConverterCsvOEScoreToModel(oConf);
+                if (oConf.isbOneStage()) {
+                    if (oConf.isClassic())
+                        oConf = new ConverterCsvOEToModel(oConf);
+                    else if (oConf.isRelay())
+                        oConf = new ConverterCsvOSToModel(oConf);
+                    else if (oConf.isScoring())
+                        oConf = new ConverterCsvOEScoreToModel(oConf);
+                } else {
+                    if (oConf.isClassic())
+                        oConf = new ConverterCsvOEToModelMulti(oConf);
+                }
             } else if (oConf.isXml()) {
                 oConf = new ConverterIofToModel(oConf);
             }
@@ -283,12 +288,17 @@ public class OReplayDataTransfer {
                         eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, 
                                 poConv.getcStageDate(), poConv.getcStageZeroTime());
                         //Set the specific properties for CSV
-                        if (poConv.isClassic())
-                            ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
-                        else if (poConv.isRelay())
-                            ((ConverterCsvOSToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
-                        else if (poConv.isScoring())
-                            ((ConverterCsvOEScoreToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                        if (poConv.isbOneStage()) {
+                            if (poConv.isClassic())
+                                ((ConverterCsvOEToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                            else if (poConv.isRelay())
+                                ((ConverterCsvOSToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                            else if (poConv.isScoring())
+                                ((ConverterCsvOEScoreToModel)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                        } else {
+                            if (poConv.isClassic())
+                                ((ConverterCsvOEToModelMulti)poConv).setSpecificProperties(";", vcEncoding, voSrcEve);
+                        }
                         if (poConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT)) {
                             //Parses the contents
                             voEve = poConv.convertResultList(poConv.getcFile());
