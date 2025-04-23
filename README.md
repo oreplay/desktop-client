@@ -31,33 +31,32 @@ By now, Java is being explored as the development language. A desktop applicatio
 
 Current file processing capabilities (uploading from csv files are currently disabled to avoid problems with dates in backend):
 
-| CSV             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols | Several Stages |
-|                 |                   |         |        |                    |               |  Totalization  |
-| :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: | :------------: |
-| Classic         |                   |         |        |                    |               |                |
-|                 | OE2010            |    X    | X      | X                  | X             |                |
-|                 | OEv12             |    X    | X      | X                  | X             |       X        |
-| Relays          |                   |         |        |                    |               |                |
-|                 | OS2010            |    X    | X      | X                  | X             |                |
-|                 | OSv12             |    X    | X      | X                  | X             |                |
-| Rogaine         |                   |         |        |                    |               |                |
-|                 | OEScore2010       |    X    | X      | X                  | N/A           |                |
-|                 | OEScorev12        |    X    | X      | X                  | N/A           |                |
+| CSV             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols | n-Stages Totals |
+| :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: | :-------------: |
+| Classic         |                   |         |        |                    |               |                 |
+|                 | OE2010            |    X    | X      | X                  | X             |                 |
+|                 | OEv12             |    X    | X      | X                  | X             |       X         |
+| Relays          |                   |         |        |                    |               |                 |
+|                 | OS2010            |    X    | X      | X                  | X             |                 |
+|                 | OSv12             |    X    | X      | X                  | X             |                 |
+| Rogaine         |                   |         |        |                    |               |                 |
+|                 | OEScore2010       |    X    | X      | X                  | N/A           |                 |
+|                 | OEScorev12        |    X    | X      | X                  | N/A           |                 |
 
-| XML             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols | Several Stages |
-| :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: | :------------: |
-| Classic         |                   |         |        |                    |               |                |
-|                 | OE2010            |    X    | X      | X                  | X             |                |
-|                 | OEv12             |    X    | X      | X                  | X             |                |
-| Relays          |                   |         |        |                    |               |                |
-|                 | OS2010            |    X    | X      | X                  | X             |                |
-|                 | OSv12             |    X    | X      | X                  | X             |                |
-| Rogaine         |                   |         |        |                    |               |                |
-|                 | MeOS              |    X    | X      | X                  | X             |                |
-|                 | OEScorev12        |    X    | X      | X                  | X             |                |
-|                 | SiTiming          |         | X      | X                  | X             |                |
-| Trail-O         |                   |         |        |                    |               |                |
-|                 | ControlOPrecision |         | X      | X                  | X             |                |
+| XML             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols | n-Stages Totals |
+| :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: | :-------------: |
+| Classic         |                   |         |        |                    |               |                 |
+|                 | OE2010            |    X    | X      | X                  | X             |                 |
+|                 | OEv12             |    X    | X      | X                  | X             |                 |
+| Relays          |                   |         |        |                    |               |                 |
+|                 | OS2010            |    X    | X      | X                  | X             |                 |
+|                 | OSv12             |    X    | X      | X                  | X             |                 |
+| Rogaine         |                   |         |        |                    |               |                 |
+|                 | MeOS              |    X    | X      | X                  | X             |                 |
+|                 | OEScorev12        |    X    | X      | X                  | X             |                 |
+|                 | SiTiming          |         | X      | X                  | X             |                 |
+| Trail-O         |                   |         |        |                    |               |                 |
+|                 | ControlOPrecision |         | X      | X                  | X             |                 |
 
 # For starting collaboration
 
