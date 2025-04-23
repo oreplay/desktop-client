@@ -252,6 +252,7 @@ public abstract class ConverterToModel {
     public void setcTrailoGroup(String cTrailoGroup) {
         this.cTrailoGroup = cTrailoGroup;
     }
+    @JsonProperty("totalization")
     public String getcTotalization() {
         return cTotalization;
     }
