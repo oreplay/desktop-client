@@ -49,8 +49,8 @@ Current file processing capabilities (uploading from csv files are currently dis
 |                 | OE2010            |    X    | X      | X                  | X             |                 |
 |                 | OEv12             |    X    | X      | X                  | X             |                 |
 | Relays          |                   |         |        |                    |               |                 |
-|                 | OS2010            |    X    | X      | X                  | X             |                 |
-|                 | OSv12             |    X    | X      | X                  | X             |                 |
+|                 | OS2010            |    X    | X      | N/A                | X             |                 |
+|                 | OSv12             |    X    | X      | N/A                | X             |                 |
 | Rogaine         |                   |         |        |                    |               |                 |
 |                 | MeOS              |    X    | X      | X                  | X             |                 |
 |                 | OEScorev12        |    X    | X      | X                  | X             |                 |
