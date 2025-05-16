@@ -984,6 +984,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                 //Counter of runners for the class, in order to add controls only when it is the first runner
                                 int vnContRun = 0;
                                 for (eu.oreplay.logic.iof.TeamResult voTeamResult : voClassResult.getTeamResult()) {
+                                    //Prepares the structure for the overall results of the team
+                                    List<eu.oreplay.db.TeamResult> vlTes = new ArrayList<>();
                                     //First, tries to get a good identifier for the team
                                     String vcTeaId = "";
                                     String vcTeaBib = (voTeamResult.getBibNumber()!=null?voTeamResult.getBibNumber():"");
@@ -1086,8 +1088,12 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                                     voRes.setId("");
                                                     voRes.setStageOrder(voSta.getOrderNumber());
-                                                    if (voPrs.getLeg()!=null)
-                                                        voRes.setLegNumber(voPrs.getLeg().intValue());
+                                                    //Leg number of the runner by default. It's used for runnerresult and also for teamresult
+                                                    int vnLegNumber = 1;
+                                                    if (voPrs.getLeg()!=null) {
+                                                        vnLegNumber = voPrs.getLeg().intValue();
+                                                        voRes.setLegNumber(vnLegNumber);
+                                                    }
                                                     //Compose the type of result, which is a Stage Result
                                                     eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
                                                     voResType.setId(Utils.RESULT_STAGE_ID);
@@ -1200,13 +1206,15 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voRes.setSplitList(vlSpl);
                                                     }
                                                     //Create or update the team's result from the OverallResult tag
-                                                    List<eu.oreplay.db.TeamResult> vlTes = new ArrayList<>();
+                                                    //The next sentence is moved up to create one array for several TeamResult elements (the accumulated overall of each leg)
+                                                    //List<eu.oreplay.db.TeamResult> vlTes = new ArrayList<>();
                                                     eu.oreplay.db.TeamResult voTes = new eu.oreplay.db.TeamResult();
                                                     if (voPrs.getOverallResult()!=null) {
                                                         OverallResult voOve = voPrs.getOverallResult();
                                                         voTes.setId(voRes.getId());
                                                         voTes.setStageOrder(voRes.getStageOrder());
                                                         voTes.setResultType(voRes.getResultType());
+                                                        voTes.setLegNumber(vnLegNumber);
                                                         //Get the status, from IOF enumeration to OReplay Ids
                                                         voTes.setStatusCode(Utils.convertIofStatusValue(voOve.getStatus().value()));
                                                         //Get times and position
@@ -1258,6 +1266,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voTes.setTimePenalty(BigDecimal.ZERO);
                                                         //Some XML files have the results of the runner inside the Overall tag
                                                         //So, let's write the runner values from this Overall
+                                                        //I'm going to comment this because the overall is for the team, sometimes accumulating values from leg to leg
+                                                        /*
                                                         voRes.setStatusCode(voTes.getStatusCode());
                                                         voRes.setTimeSeconds(voTes.getTimeSeconds());
                                                         voRes.setTimeBehind(voTes.getTimeBehind());
@@ -1270,6 +1280,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voRes.setTimeBonus(BigDecimal.ZERO);
                                                         voRes.setTimeNeutralization(BigDecimal.ZERO);
                                                         voRes.setTimePenalty(BigDecimal.ZERO);                                                        
+                                                        */
                                                     } else {
                                                         //If there is no Overall tag, put the value of the team as of the runner
                                                         voTes.setId(voRes.getId());
