@@ -109,6 +109,8 @@ public class TeamResult implements Serializable {
     private Integer pointsPenalty;
     @Column(name = "points_bonus")
     private Integer pointsBonus;
+    @Column(name = "leg_number")
+    private Integer legNumber;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -285,6 +287,15 @@ public class TeamResult implements Serializable {
 
     public void setPointsBonus(Integer pointsBonus) {
         this.pointsBonus = pointsBonus;
+    }
+
+    @JsonProperty("leg_number")
+    public Integer getLegNumber() {
+        return legNumber;
+    }
+
+    public void setLegNumber(Integer legNumber) {
+        this.legNumber = legNumber;
     }
 
     @JsonProperty("stage_order")
