@@ -1112,7 +1112,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     if (voPrs.getTimeBehind()!=null && !voPrs.getTimeBehind().isEmpty()) {
                                                         voRes.setTimeBehind(new java.math.BigDecimal(voPrs.getTimeBehind().get(0).getValue()));
                                                     }
-                                                    if (voPrs.getPosition()!=null && !voPrs.getPosition().isEmpty()) {
+                                                    if (voPrs.getPosition()!=null && !voPrs.getPosition().isEmpty() &&
+                                                            voPrs.getPosition().get(0).getValue()!=null) {
                                                         voRes.setPosition(voPrs.getPosition().get(0).getValue().intValue());
                                                     }
                                                     //Set remainder fields for points and times
@@ -1346,6 +1347,7 @@ public class ConverterIofToModel extends ConverterToModel {
                 voEve.setStageList(vlSta);
             }
         }catch(Exception e) {
+            //e.printStackTrace();
         }
         return voEve;
     }
