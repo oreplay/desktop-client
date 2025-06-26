@@ -295,7 +295,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                     String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
                     voRes.setStatusCode(Utils.STATUS_OK_ID);
                     if (vcNc.equals("X") || vcNc.equals("1"))
-                        voRes.setStatusCode(Utils.STATUS_NC_ID);
+                        voRun.setIsNc(Boolean.TRUE);
+                    else
+                        voRun.setIsNc(Boolean.FALSE);
                     //Add the result to the list
                     vlRes.add(voRes);
                     //Add the list to the runner data
@@ -527,9 +529,10 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         voRes.setStatusCode(vcStatus.charAt(0));
                         //Check if it's a NotCompeting Runner. If so, change the status code
                         String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
-                        voRes.setStatusCode(Utils.STATUS_OK_ID);
                         if (vcNc.equals("X") || vcNc.equals("1"))
-                            voRes.setStatusCode(Utils.STATUS_NC_ID);
+                            voRun.setIsNc(Boolean.TRUE);
+                        else
+                            voRun.setIsNc(Boolean.FALSE);
                         //Get the position
                         int vnPosition = 0;
                         try {
@@ -543,10 +546,10 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         //If it has no decimals, stores only the integer part
                         voRes.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
                         //Set remainder fields for points and times
-                        voRes.setPointsAdjusted(0);
-                        voRes.setPointsBonus(0);
-                        voRes.setPointsFinal(0);
-                        voRes.setPointsPenalty(0);
+                        voRes.setPointsAdjusted(BigDecimal.ZERO);
+                        voRes.setPointsBonus(BigDecimal.ZERO);
+                        voRes.setPointsFinal(BigDecimal.ZERO);
+                        voRes.setPointsPenalty(BigDecimal.ZERO);
                         voRes.setTimeAdjusted(BigDecimal.ZERO);
                         voRes.setTimeBonus(BigDecimal.ZERO);
                         voRes.setTimeNeutralization(BigDecimal.ZERO);
@@ -607,11 +610,21 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                                             vnTimeSeconds = new BigDecimal(vnTimeSecs + "");
                                             //If it has no decimals, stores only the integer part
                                             voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+                                            //If the order number is greater than the number of controls, then it's an additional split
+                                            if (vnSplOrder>voCla.getCourse().getControls()) {
+                                                voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
+                                            } else {
+                                                voSpl.setStatus("");
+                                            }
+                                        } else {
+                                            //If there is no time, then it's missing
+                                            voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
                                         }
                                     }catch(Exception eSplit) {
                                         voSpl.setReadingMilli(null);
                                         voSpl.setReadingTime(null);
                                         voSpl.setTimeSeconds(null);
+                                        voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
                                     }
                                     voSpl.setPosition(vnSplPos);
                                     voSpl.setBibRunner(voRun.getBibNumber());

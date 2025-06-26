@@ -9,6 +9,10 @@ import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.converter.OReplayDataTransfer;
 import eu.oreplay.utils.Utils;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -151,6 +155,10 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mnuClipboard = new javax.swing.JPopupMenu();
+        mnuCopy = new javax.swing.JMenuItem();
+        mnuPaste = new javax.swing.JMenuItem();
+        mnuCut = new javax.swing.JMenuItem();
         lblTitle = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
         lblEveId = new javax.swing.JLabel();
@@ -164,6 +172,30 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         btnWeb = new javax.swing.JButton();
         lblIdToken = new javax.swing.JLabel();
         txtIdToken = new javax.swing.JTextField();
+
+        mnuCopy.setText(resMessages.getString("copy"));
+        mnuCopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCopyActionPerformed(evt);
+            }
+        });
+        mnuClipboard.add(mnuCopy);
+
+        mnuPaste.setText(resMessages.getString("paste"));
+        mnuPaste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPasteActionPerformed(evt);
+            }
+        });
+        mnuClipboard.add(mnuPaste);
+
+        mnuCut.setText(resMessages.getString("cut"));
+        mnuCut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCutActionPerformed(evt);
+            }
+        });
+        mnuClipboard.add(mnuCut);
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(450, 200));
@@ -224,6 +256,14 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
 
         txtIdToken.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         txtIdToken.setToolTipText(resMessages.getString("tooltip_idtoken"));
+        txtIdToken.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtIdTokenMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                txtIdTokenMouseReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -305,6 +345,37 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         this.gotoWeb();
     }//GEN-LAST:event_btnWebActionPerformed
 
+    private void txtIdTokenMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtIdTokenMousePressed
+        // TODO add your handling code here:
+        if (evt.isPopupTrigger()) {
+            updateContextMenuOptions();
+            mnuClipboard.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_txtIdTokenMousePressed
+
+    private void txtIdTokenMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtIdTokenMouseReleased
+        // TODO add your handling code here:
+        if (evt.isPopupTrigger()) {
+            updateContextMenuOptions();
+            mnuClipboard.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_txtIdTokenMouseReleased
+
+    private void mnuCopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCopyActionPerformed
+        // TODO add your handling code here:
+        txtIdToken.copy();
+    }//GEN-LAST:event_mnuCopyActionPerformed
+
+    private void mnuPasteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPasteActionPerformed
+        // TODO add your handling code here:
+        txtIdToken.paste();
+    }//GEN-LAST:event_mnuPasteActionPerformed
+
+    private void mnuCutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCutActionPerformed
+        // TODO add your handling code here:
+        txtIdToken.cut();
+    }//GEN-LAST:event_mnuCutActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
@@ -316,6 +387,10 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblToken;
     private javax.swing.JList<String> lstStages;
+    private javax.swing.JPopupMenu mnuClipboard;
+    private javax.swing.JMenuItem mnuCopy;
+    private javax.swing.JMenuItem mnuCut;
+    private javax.swing.JMenuItem mnuPaste;
     private javax.swing.JScrollPane scrStages;
     private javax.swing.JTextField txtEveId;
     private javax.swing.JTextField txtIdToken;
@@ -526,6 +601,24 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             }
         } catch (Exception e) {
             JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+        }
+    }
+    /**
+     * When something happens related to the IdToken TextField and the Contextual Menu,
+     * it updates the state of the menu options an contents
+     */
+    private void updateContextMenuOptions() {
+        String vcSelectedText = txtIdToken.getSelectedText();
+        mnuCopy.setEnabled(vcSelectedText != null && !vcSelectedText.isEmpty());
+        mnuCut.setEnabled(vcSelectedText != null && !vcSelectedText.isEmpty());
+
+        try {
+            Clipboard voClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            Transferable voContents = voClipboard.getContents(null);
+            boolean vbHasText = voContents != null && voContents.isDataFlavorSupported(DataFlavor.stringFlavor);
+            mnuPaste.setEnabled(vbHasText);
+        } catch (Exception ex) {
+            mnuPaste.setEnabled(false);
         }
     }
     

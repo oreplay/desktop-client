@@ -101,6 +101,9 @@ public class Runner implements Serializable {
     private String classUuid;
     @Column(name = "leg_number")
     private Integer legNumber;
+    @Column(name = "is_nc")
+    private Boolean isNc;
+    private String eligibility;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -297,6 +300,23 @@ public class Runner implements Serializable {
 
     public void setLegNumber(Integer legNumber) {
         this.legNumber = legNumber;
+    }
+
+    @JsonProperty("is_nc")
+    public Boolean getIsNc() {
+        return isNc;
+    }
+
+    public void setIsNc(Boolean isNc) {
+        this.isNc = isNc;
+    }
+
+    public String getEligibility() {
+        return eligibility;
+    }
+
+    public void setEligibility(String eligibility) {
+        this.eligibility = eligibility;
     }
 
     @JsonProperty("class_uuid")

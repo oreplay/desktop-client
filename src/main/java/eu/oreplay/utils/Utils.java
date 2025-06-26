@@ -179,14 +179,16 @@ public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId,
             }catch (Exception eDate) {
                 voSta.setBaseDate(new Date());
             }
+            //Reconverts the date in order to add it to the base time
+            String vcReconvertedDate = Utils.format(voSta.getBaseDate(), "yyyy-MM-dd");
             try {
                 if (!pcStaZeroTime.equals("")) {
-                    voSta.setBaseTime(Utils.parse(pcStaZeroTime, "HH:mm:ss"));
+                    voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + pcStaZeroTime, "yyyy-MM-dd HH:mm:ss"));
                 } else {
-                    voSta.setBaseTime(Utils.parse("10:30:00", "HH:mm:ss"));
+                    voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + "10:30:00", "yyyy-MM-dd HH:mm:ss"));
                 }
             }catch(Exception eTime) {
-                voSta.setBaseTime(Utils.parse("10:30:00", "HH:mm:ss"));
+                voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + "10:30:00", "yyyy-MM-dd HH:mm:ss"));
             }
             voSta.setStageDiscipline(new StageDiscipline());
             voSta.setStageType(new StageType());

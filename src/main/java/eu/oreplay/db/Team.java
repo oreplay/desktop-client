@@ -71,6 +71,9 @@ public class Team implements Serializable {
     @Column(name = "class_uuid")
     private String classUuid;
     private Integer legs;
+    @Column(name = "is_nc")
+    private Boolean isNc;
+    private String eligibility;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -177,6 +180,23 @@ public class Team implements Serializable {
 
     public void setLegs(Integer legs) {
         this.legs = legs;
+    }
+
+    @JsonProperty("is_nc")
+    public Boolean getIsNc() {
+        return isNc;
+    }
+
+    public void setIsNc(Boolean isNc) {
+        this.isNc = isNc;
+    }
+
+    public String getEligibility() {
+        return eligibility;
+    }
+
+    public void setEligibility(String eligibility) {
+        this.eligibility = eligibility;
     }
 
     @JsonProperty("class_uuid")

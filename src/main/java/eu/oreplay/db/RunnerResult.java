@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.oreplay.logic.converter.IsoTimestampSerializer;
+import eu.oreplay.utils.Utils;
 import java.math.BigDecimal;
 
 /**
@@ -103,15 +104,18 @@ public class RunnerResult implements Serializable {
     @Column(name = "time_bonus")
     private BigDecimal timeBonus;
     @Column(name = "points_final")
-    private Integer pointsFinal;
+    private BigDecimal pointsFinal;
     @Column(name = "points_adjusted")
-    private Integer pointsAdjusted;
+    private BigDecimal pointsAdjusted;
     @Column(name = "points_penalty")
-    private Integer pointsPenalty;
+    private BigDecimal pointsPenalty;
     @Column(name = "points_bonus")
-    private Integer pointsBonus;
+    private BigDecimal pointsBonus;
     @Column(name = "leg_number")
     private Integer legNumber;
+    @Basic(optional = true)
+    @Column(name = "is_best")
+    private boolean isBest;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -257,38 +261,38 @@ public class RunnerResult implements Serializable {
     }
 
     @JsonProperty("points_final")
-    public Integer getPointsFinal() {
+    public BigDecimal getPointsFinal() {
         return pointsFinal;
     }
 
-    public void setPointsFinal(Integer pointsFinal) {
+    public void setPointsFinal(BigDecimal pointsFinal) {
         this.pointsFinal = pointsFinal;
     }
 
     @JsonProperty("points_adjusted")
-    public Integer getPointsAdjusted() {
+    public BigDecimal getPointsAdjusted() {
         return pointsAdjusted;
     }
 
-    public void setPointsAdjusted(Integer pointsAdjusted) {
+    public void setPointsAdjusted(BigDecimal pointsAdjusted) {
         this.pointsAdjusted = pointsAdjusted;
     }
 
     @JsonProperty("points_penalty")
-    public Integer getPointsPenalty() {
+    public BigDecimal getPointsPenalty() {
         return pointsPenalty;
     }
 
-    public void setPointsPenalty(Integer pointsPenalty) {
+    public void setPointsPenalty(BigDecimal pointsPenalty) {
         this.pointsPenalty = pointsPenalty;
     }
 
     @JsonProperty("points_bonus")
-    public Integer getPointsBonus() {
+    public BigDecimal getPointsBonus() {
         return pointsBonus;
     }
 
-    public void setPointsBonus(Integer pointsBonus) {
+    public void setPointsBonus(BigDecimal pointsBonus) {
         this.pointsBonus = pointsBonus;
     }
 
@@ -299,6 +303,15 @@ public class RunnerResult implements Serializable {
 
     public void setLegNumber(Integer legNumber) {
         this.legNumber = legNumber;
+    }
+
+    @JsonProperty("is_best")
+    public boolean getIsBest() {
+        return isBest;
+    }
+
+    public void setIsBest(boolean isBest) {
+        this.isBest = isBest;
     }
 
     @JsonProperty("stage_order")
@@ -420,6 +433,37 @@ public class RunnerResult implements Serializable {
         this.deleted = deleted;
     }
 
+    /**
+     * Sets the value of the status code from the NotCompeting status and the 
+     * value of certain fields; this is used when results come from XML
+     * @param pcStatusValue String The status value of the runner
+     * @param pbIsNc Boolean Flag that indicates whether the runner is competing or not
+     */
+    public void setStatusCodeFromNc (String pcStatusValue, Boolean pbIsNc) {
+        //Value of Status depending on NC and other rules
+        if (pbIsNc) {
+            //If there is a position, then the Status is OK
+            if (getPosition()!=null && getPosition().intValue()>0) {
+                setStatusCode(Utils.STATUS_OK_ID);
+            } else {
+                //If not, there is no chance to exactly know the status
+                //If there are StartTime and FinishTime, let's assume MissingPunch
+                if (getStartTime()!=null && getFinishTime()!=null) {
+                    setStatusCode(Utils.STATUS_MISSING_ID);
+                //If there is no StartTime and no FinishTime, let's assume DidNotStart
+                } else if (getStartTime()==null && getFinishTime()==null) {
+                    setStatusCode(Utils.STATUS_DNS_ID);
+                //If there is StartTime and no FinishTime, let's assume DidNotFinish
+                } else if (getStartTime()!=null && getFinishTime()==null) {
+                    setStatusCode(Utils.STATUS_DNF_ID);
+                }
+            }
+        } else {
+            //If the runner is competing, get the status from IOF enumeration to OReplay Ids
+            setStatusCode(Utils.convertIofStatusValue(pcStatusValue));
+        }
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

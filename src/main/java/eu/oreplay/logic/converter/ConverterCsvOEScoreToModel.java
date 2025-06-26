@@ -303,12 +303,14 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                     String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
                     voRes.setStatusCode(Utils.STATUS_OK_ID);
                     if (vcNc.equals("X") || vcNc.equals("1"))
-                        voRes.setStatusCode(Utils.STATUS_NC_ID);
+                        voRun.setIsNc(Boolean.TRUE);
+                    else
+                        voRun.setIsNc(Boolean.FALSE);
                     //Set value for points, penalty and bonus
-                    voRes.setPointsFinal(0);
-                    voRes.setPointsPenalty(0);
-                    voRes.setPointsAdjusted(0);
-                    voRes.setPointsBonus(0);
+                    voRes.setPointsFinal(BigDecimal.ZERO);
+                    voRes.setPointsPenalty(BigDecimal.ZERO);
+                    voRes.setPointsAdjusted(BigDecimal.ZERO);
+                    voRes.setPointsBonus(BigDecimal.ZERO);
                     voRes.setTimeAdjusted(BigDecimal.ZERO);
                     voRes.setTimeBonus(BigDecimal.ZERO);
                     voRes.setTimeNeutralization(BigDecimal.ZERO);
@@ -544,9 +546,10 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                         voRes.setStatusCode(vcStatus.charAt(0));
                         //Check if it's a NotCompeting Runner. If so, change the status code
                         String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
-                        voRes.setStatusCode(Utils.STATUS_OK_ID);
                         if (vcNc.equals("X") || vcNc.equals("1"))
-                            voRes.setStatusCode(Utils.STATUS_NC_ID);
+                            voRun.setIsNc(Boolean.TRUE);
+                        else
+                            voRun.setIsNc(Boolean.FALSE);
                         //Get the position
                         int vnPosition = 0;
                         try {
@@ -560,26 +563,26 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                         //If it has no decimals, stores only the integer part
                         voRes.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
                         //Set remainder fields for points and times
-                        voRes.setPointsAdjusted(0);
+                        voRes.setPointsAdjusted(BigDecimal.ZERO);
                         int vnPoints = 0;
                         try {
                             vnPoints = Integer.parseInt(COL_FINALPOINTS[vnColIndex]>=0?vaRecord[COL_FINALPOINTS[vnColIndex]].trim().replaceAll("\"", ""):"0");
                         }catch(Exception ePoints1) {
                             vnPoints = 0;
                         }
-                        voRes.setPointsFinal(vnPoints);
+                        voRes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                         try {
                             vnPoints = Integer.parseInt(COL_BONUS[vnColIndex]>=0?vaRecord[COL_BONUS[vnColIndex]].trim().replaceAll("\"", ""):"0");
                         }catch(Exception ePoints1) {
                             vnPoints = 0;
                         }
-                        voRes.setPointsBonus(vnPoints);
+                        voRes.setPointsBonus(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                         try {
                             vnPoints = Integer.parseInt(COL_PENALTY[vnColIndex]>=0?vaRecord[COL_PENALTY[vnColIndex]].trim().replaceAll("\"", ""):"0");
                         }catch(Exception ePoints1) {
                             vnPoints = 0;
                         }
-                        voRes.setPointsPenalty(vnPoints);
+                        voRes.setPointsPenalty(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                         voRes.setTimeAdjusted(BigDecimal.ZERO);
                         voRes.setTimeBonus(BigDecimal.ZERO);
                         voRes.setTimeNeutralization(BigDecimal.ZERO);
@@ -653,12 +656,24 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                                             vnTimeSeconds = new BigDecimal(vnTimeSecs + "");
                                             //If it has no decimals, stores only the integer part
                                             voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+                                            //-----------------------------------------------------------------------------------------------------
+                                            //Same code as in OE. I'm not going to apply it because OEScore exports all of the punched controls ordered by time; it doesn't write non-course controls at the end
+                                            //If the order number is greater than the number of controls, then it's an additional split
+                                            //if (vnSplOrder>voCla.getCourse().getControls()) {
+                                            //    voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
+                                            //} else {
+                                                voSpl.setStatus("");
+                                            //}
+                                        } else {
+                                            //If there is no time, then it's missing
+                                            //voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
                                         }
                                     }catch(Exception eSplit) {
                                         voSpl.setReadingMilli(null);
                                         voSpl.setReadingTime(null);
                                         voSpl.setTimeSeconds(null);
                                         voSpl.setPoints(0);
+                                        //voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
                                     }
                                     voSpl.setPosition(vnSplPos);
                                     voSpl.setBibRunner(voRun.getBibNumber());

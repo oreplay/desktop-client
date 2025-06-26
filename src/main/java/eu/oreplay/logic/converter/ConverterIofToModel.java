@@ -813,8 +813,6 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 //voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
                                                 voRes.setStartTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getStartTime(), isbForce(), getcStageDate(), getcDateFormat()));
                                                 voRes.setFinishTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getFinishTime(), isbForce(), getcStageDate(), getcDateFormat()));
-                                                //Get the status, from IOF enumeration to OReplay Ids
-                                                voRes.setStatusCode(Utils.convertIofStatusValue(voPrs.getStatus().value()));
                                                 //Get times and position
                                                 if (voPrs.getTime()!=null)
                                                     voRes.setTimeSeconds(new java.math.BigDecimal(voPrs.getTime()));
@@ -822,6 +820,15 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     voRes.setTimeBehind(new java.math.BigDecimal(voPrs.getTimeBehind()));
                                                 if (voPrs.getPosition()!=null)
                                                     voRes.setPosition(voPrs.getPosition().intValue());
+
+
+                                                //The value of NotCompeting comes in Status
+                                                String vcStatusValue = (voPrs.getStatus()!=null?(voPrs.getStatus().value()!=null?voPrs.getStatus().value():""):"");
+                                                voRun.setIsNc(Boolean.FALSE);
+                                                if (vcStatusValue.toLowerCase().equals(Utils.STATUS_NC_DESC.toLowerCase())) {                                                    
+                                                    voRun.setIsNc(Boolean.TRUE);                                                    
+                                                }
+                                                voRes.setStatusCodeFromNc(vcStatusValue, voRun.getIsNc());
                                                 //Set remainder fields for points and times
                                                 voRes.setTimeAdjusted(BigDecimal.ZERO);
                                                 voRes.setTimeBonus(BigDecimal.ZERO);
@@ -832,37 +839,37 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     for (eu.oreplay.logic.iof.Score voSco : voPrs.getScore()) {
                                                         if (voSco!=null) {
                                                             try {
-                                                                int vnPoints = (int)voSco.getValue();
+                                                                double vnPoints = voSco.getValue();
                                                                 switch (voSco.getType()) {
                                                                     case "Score":
-                                                                        voRes.setPointsFinal(vnPoints);
+                                                                        voRes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "FinalScore":
-                                                                        voRes.setPointsFinal(vnPoints);
+                                                                        voRes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "Penalty":
-                                                                        voRes.setPointsPenalty(vnPoints*vnPenFactor);
+                                                                        voRes.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "PenaltyScore":
-                                                                        voRes.setPointsPenalty(vnPoints*vnPenFactor);
+                                                                        voRes.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "ScorePenalty":
-                                                                        voRes.setPointsPenalty(vnPoints*vnPenFactor);
+                                                                        voRes.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "ManualScoreAdjust":
-                                                                        voRes.setPointsAdjusted(vnPoints);
+                                                                        voRes.setPointsAdjusted(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "XtraPoints":
-                                                                        voRes.setPointsBonus(vnPoints);
+                                                                        voRes.setPointsBonus(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "ScoreBonus":
-                                                                        voRes.setPointsBonus(vnPoints);
+                                                                        voRes.setPointsBonus(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "Time":
-                                                                        voRes.setTimeSeconds(new java.math.BigDecimal(voSco.getValue()));
+                                                                        voRes.setTimeSeconds(new java.math.BigDecimal(voSco.getValue()).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     case "TimePenalty":
-                                                                        voRes.setTimePenalty(new java.math.BigDecimal(voSco.getValue()));
+                                                                        voRes.setTimePenalty(new java.math.BigDecimal(voSco.getValue()).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                         break;
                                                                     default:
                                                                         break;
@@ -888,6 +895,12 @@ public class ConverterIofToModel extends ConverterToModel {
                                                                 BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
                                                                 //If it has no decimals, stores only the integer part
                                                                 voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+                                                                //Status empty means Ok; for additional values, set Additional
+                                                                if (voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_ADDITIONAL)) {
+                                                                    voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
+                                                                } else {
+                                                                    voSpl.setStatus("");
+                                                                }
                                                             }catch (Exception eMilli) {
                                                                 voSpl.setReadingMilli(null);
                                                                 voSpl.setTimeSeconds(null);
@@ -895,6 +908,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         } else {
                                                             voSpl.setReadingMilli(null);
                                                             voSpl.setTimeSeconds(null);
+                                                            voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
                                                         }
                                                         voSpl.setBibRunner(voRun.getBibNumber());
                                                         voSpl.setOrderNumber(vnSplOrder);
@@ -1104,8 +1118,6 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     //voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
                                                     voRes.setStartTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getStartTime(), isbForce(), getcStageDate(), getcDateFormat()));
                                                     voRes.setFinishTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getFinishTime(), isbForce(), getcStageDate(), getcDateFormat()));
-                                                    //Get the status, from IOF enumeration to OReplay Ids
-                                                    voRes.setStatusCode(Utils.convertIofStatusValue(voPrs.getStatus().value()));
                                                     //Get times and position
                                                     if (voPrs.getTime()!=null)
                                                         voRes.setTimeSeconds(new java.math.BigDecimal(voPrs.getTime()));
@@ -1116,31 +1128,38 @@ public class ConverterIofToModel extends ConverterToModel {
                                                             voPrs.getPosition().get(0).getValue()!=null) {
                                                         voRes.setPosition(voPrs.getPosition().get(0).getValue().intValue());
                                                     }
+                                                    //The value of NotCompeting comes in Status
+                                                    String vcStatusValue = (voPrs.getStatus()!=null?(voPrs.getStatus().value()!=null?voPrs.getStatus().value():""):"");
+                                                    voRun.setIsNc(Boolean.FALSE);
+                                                    if (vcStatusValue.toLowerCase().equals(Utils.STATUS_NC_DESC.toLowerCase())) {                                                    
+                                                        voRun.setIsNc(Boolean.TRUE);                                                    
+                                                    }
+                                                    voRes.setStatusCodeFromNc(vcStatusValue, voRun.getIsNc());
                                                     //Set remainder fields for points and times
                                                     //Process the Score tags
                                                     if (voPrs.getScore()!=null) {
                                                         for (eu.oreplay.logic.iof.Score voSco : voPrs.getScore()) {
                                                             if (voSco!=null) {
                                                                 try {
-                                                                    int vnPoints = (int)voSco.getValue();
+                                                                    double vnPoints = voSco.getValue();
                                                                     switch (voSco.getType()) {
                                                                         case "Score":
-                                                                            voRes.setPointsFinal(vnPoints);
+                                                                            voRes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                             break;
                                                                         case "FinalScore":
-                                                                            voRes.setPointsFinal(vnPoints);
+                                                                            voRes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                             break;
                                                                         case "Penalty":
-                                                                            voRes.setPointsPenalty(vnPoints*vnPenFactor);
+                                                                            voRes.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                             break;
                                                                         case "PenaltyScore":
-                                                                            voRes.setPointsPenalty(vnPoints*vnPenFactor);
+                                                                            voRes.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                             break;
                                                                         case "ManualScoreAdjust":
-                                                                            voRes.setPointsAdjusted(vnPoints);
+                                                                            voRes.setPointsAdjusted(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                             break;
                                                                         case "XtraPoints":
-                                                                            voRes.setPointsBonus(vnPoints);
+                                                                            voRes.setPointsBonus(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                             break;
                                                                         default:
                                                                             break;
@@ -1170,13 +1189,20 @@ public class ConverterIofToModel extends ConverterToModel {
                                                                     BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
                                                                     //If it has no decimals, stores only the integer part
                                                                     voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
-                                                                }catch (Exception eMilli) {
+                                                                    //Status empty means Ok; for additional values, set Additional
+                                                                    if (voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_ADDITIONAL)) {
+                                                                        voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
+                                                                    } else {
+                                                                        voSpl.setStatus("");
+                                                                    }
+                                                            }catch (Exception eMilli) {
                                                                     voSpl.setReadingMilli(null);
                                                                     voSpl.setTimeSeconds(null);
                                                                 }
                                                             } else {
                                                                 voSpl.setReadingMilli(null);
                                                                 voSpl.setTimeSeconds(null);
+                                                                voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
                                                             }
                                                             voSpl.setBibRunner(voRun.getBibNumber());
                                                             voSpl.setOrderNumber(vnSplOrder);
@@ -1233,25 +1259,25 @@ public class ConverterIofToModel extends ConverterToModel {
                                                             for (eu.oreplay.logic.iof.Score voSco : voOve.getScore()) {
                                                                 if (voSco!=null) {
                                                                     try {
-                                                                        int vnPoints = (int)voSco.getValue();
+                                                                        double vnPoints = voSco.getValue();
                                                                         switch (voSco.getType()) {
                                                                             case "Score":
-                                                                                voTes.setPointsFinal(vnPoints);
+                                                                                voTes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                                 break;
                                                                             case "FinalScore":
-                                                                                voTes.setPointsFinal(vnPoints);
+                                                                                voTes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                                 break;
                                                                             case "Penalty":
-                                                                                voTes.setPointsPenalty(vnPoints*vnPenFactor);
+                                                                                voTes.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                                 break;
                                                                             case "PenaltyScore":
-                                                                                voTes.setPointsPenalty(vnPoints*vnPenFactor);
+                                                                                voTes.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                                 break;
                                                                             case "ManualScoreAdjust":
-                                                                                voTes.setPointsAdjusted(vnPoints);
+                                                                                voTes.setPointsAdjusted(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                                 break;
                                                                             case "XtraPoints":
-                                                                                voTes.setPointsBonus(vnPoints);
+                                                                                voTes.setPointsBonus(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                                                                                 break;
                                                                             default:
                                                                                 break;
