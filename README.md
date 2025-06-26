@@ -34,7 +34,7 @@ Current file processing capabilities (uploading from csv files are currently dis
 | CSV             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols | n-Stages Totals |
 | :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: | :-------------: |
 | Classic         |                   |         |        |                    |               |                 |
-|                 | OE2010            |    X    | X      | X                  | X             |                 |
+|                 | OE2010            |    X    | X      | X                  | X             |       X         |
 |                 | OEv12             |    X    | X      | X                  | X             |       X         |
 | Relays          |                   |         |        |                    |               |                 |
 |                 | OS2010            |    X    | X      | X                  | X             |                 |
