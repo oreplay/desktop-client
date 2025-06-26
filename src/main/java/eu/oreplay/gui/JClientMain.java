@@ -32,6 +32,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     public JClientMain() {
         initComponents();
         this.getContentPane().setBackground(new java.awt.Color(255, 255, 255));
+        //Hide UTC Offset
+        lblOffset.setVisible(false);
+        txtOffset.setVisible(false);
     }
     public static String getcPathApp() {
         return cPathApp;
@@ -341,6 +344,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (bFirstOpen) {
+            //Check for new version. Only show a message if there is a new version
+            this.checkForNewVersion(false);
+            //Set Log
             oLog.info(resMessages.getString("info_enter_app"));
             Utils.setoLog(oLog);  //Sets log file in the Utils static class for using it during the app execution
             //Get data from XML files
@@ -382,7 +388,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     }//GEN-LAST:event_mnuManualActionPerformed
 
     private void mnuCheckUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCheckUpdateActionPerformed
-        this.checkForNewVersion();
+        //Flag to show a message always
+        this.checkForNewVersion(true);
     }//GEN-LAST:event_mnuCheckUpdateActionPerformed
 
     /**
@@ -696,8 +703,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
 
     /**
      * Checks for a version change; If so, show a message to recommend an update
+     * @param pbFlagAll boolean Flag to say whether show message under any circumstance or only if new version exists
      */
-    private void checkForNewVersion() {
+    private void checkForNewVersion(boolean pbFlagAll) {
         int vnChanged = 0;
         String vcMessage = resMessages.getString("info_current_version");
         try {
@@ -707,10 +715,12 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             } else if (vnChanged<0) {
                 vcMessage = resMessages.getString("info_connection_version");
             }
-            JOptionPane.showMessageDialog(JClientMain.this, 
-                    vcMessage,
-                    resMessages.getString("info"), 
-                    JOptionPane.INFORMATION_MESSAGE);
+            if (pbFlagAll || vnChanged>0) {
+                JOptionPane.showMessageDialog(JClientMain.this, 
+                        vcMessage,
+                        resMessages.getString("info"), 
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
         }catch(Exception e) {
             oLog.error(resMessages.getString("error_exception"), e);
         }

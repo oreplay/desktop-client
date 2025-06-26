@@ -28,49 +28,49 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
     private String cEncoding = Utils.ENCODING_UTF_8;
     private eu.oreplay.db.Event oEve = null; //Event/Stage basic information to perform the calculations (UUID, base date, base time, description, etc)
     private final String[] FILE = {"OE0013", "OE0013a", "OE0013_V12", "OE0013a_V12"};
-    private final int[] COL_STAGE_INC = {-1, -1, 6, 6};
-    private final int[] COL_BIB = {-1, -1, 2, 2};
-    private final int[] COL_BIBALT = {-1, -1, 3, 3};
-    private final int[] COL_STAGE_SICARD = {-1, -1, 4, 4};
+    private final int[] COL_STAGE_INC = {6, 6, 6, 6};
+    private final int[] COL_BIB = {1, 1, 2, 2};
+    private final int[] COL_BIBALT = {2, 2, 3, 3};
+    private final int[] COL_STAGE_SICARD = {3, 3, 4, 4};
     private final int[] COL_SICARDALT = {-1, -1, -1, -1};
-    private final int[] COL_DBID = {-1, -1, 10, 10};
+    private final int[] COL_DBID = {9, 9, 10, 10};
     private final int[] COL_IOFID = {-1, -1, 11, 11};
     private final int[] COL_IOFID_FEDO = {-1, -1, 91, 91};
-    private final int[] COL_LASTNAME = {-1, -1, 12, 12};
-    private final int[] COL_FIRSTNAME = {-1, -1, 13, 13};
-    private final int[] COL_BIRTH = {-1, -1, 14, 14};
+    private final int[] COL_LASTNAME = {10, 10, 12, 12};
+    private final int[] COL_FIRSTNAME = {11, 11, 13, 13};
+    private final int[] COL_BIRTH = {12, 12, 14, 14};
     private final int[] COL_BIRTH_FEDO = {-1, -1, -1, -1};
-    private final int[] COL_SEX = {-1, -1, 16, 16};
-    private final int[] COL_STAGE_TOOKPART = {-1, -1, 23, 23};
-    private final int[] COL_TIMES_INC = {-1, -1, 8, 8};
-    private final int[] COL_STAGE_NC = {-1, -1, 29, 29};
-    private final int[] COL_STAGE_START = {-1, -1, 30, 30};
-    private final int[] COL_STAGE_FINISH = {-1, -1, 31, 31};
-    private final int[] COL_STAGE_TIME = {-1, -1, 32, 32};
-    private final int[] COL_STAGE_STATUS = {-1, -1, 33, 33};
-    private final int[] COL_STAGE_BONUS = {-1, -1, 34, 34};
-    private final int[] COL_STAGE_PENALTY = {-1, -1, 35, 35};
-    private final int[] COL_CLU_ID = {-1, -1, 77, 77};
-    private final int[] COL_CLU_CITY = {-1, -1, 78, 78};
-    private final int[] COL_CLU_SHORT = {-1, -1, 79, 79};
+    private final int[] COL_SEX = {13, 13, 16, 16};
+    private final int[] COL_STAGE_TOOKPART = {20, 20, 23, 23};
+    private final int[] COL_TIMES_INC = {8, 8, 8, 8};
+    private final int[] COL_STAGE_NC = {26, 26, 29, 29};
+    private final int[] COL_STAGE_START = {27, 27, 30, 30};
+    private final int[] COL_STAGE_FINISH = {28, 28, 31, 31};
+    private final int[] COL_STAGE_TIME = {29, 29, 32, 32};
+    private final int[] COL_STAGE_STATUS = {30, 30, 33, 33};
+    private final int[] COL_STAGE_BONUS = {31, 31, 34, 34};
+    private final int[] COL_STAGE_PENALTY = {32, 32, 35, 35};
+    private final int[] COL_CLU_ID = {74, 74, 77, 77};
+    private final int[] COL_CLU_CITY = {75, 75, 78, 78};
+    private final int[] COL_CLU_SHORT = {76, 76, 79, 79};
     private final int[] COL_CLU_LONG = {-1, -1, -1, -1};
-    private final int[] COL_CAT_ID = {-1, -1, 83, 83};
-    private final int[] COL_CAT_SHORT = {-1, -1, 84, 84};
-    private final int[] COL_CAT_LONG = {-1, -1, 85, 85};
-    private final int[] COL_LIC_FEDO = {-1, -1, 91, 91};
-    private final int[] COL_DNI_FEDO = {-1, -1, 94, 94};
-    private final int[] COL_TEL1 = {-1, -1, 103, 103};
-    private final int[] COL_TEL2 = {-1, -1, 104, 104};
-    private final int[] COL_MAIL = {-1, -1, 106, 106};
-    private final int[] COL_TEA_ID = {-1, -1, 110, 110};
+    private final int[] COL_CAT_ID = {80, 80, 83, 83};
+    private final int[] COL_CAT_SHORT = {81, 81, 84, 84};
+    private final int[] COL_CAT_LONG = {82, 82, 85, 85};
+    private final int[] COL_LIC_FEDO = {88, 88, 91, 91};
+    private final int[] COL_DNI_FEDO = {91, 91, 94, 94};
+    private final int[] COL_TEL1 = {100, 100, 103, 103};
+    private final int[] COL_TEL2 = {101, 101, 104, 104};
+    private final int[] COL_MAIL = {103, 103, 106, 106};
+    private final int[] COL_TEA_ID = {107, 107, 110, 110};
     private final int[] COL_TEA_SHORT = {-1, -1, 111, 111};
-    private final int[] COL_STAGE_POSITION = {-1, -1, 113, 113};
-    private final int[] COL_TOTAL_TIME = {-1, -1, 119, 119};
-    private final int[] COL_TOTAL_POSITION = {-1, -1, 120, 120};
-    private final int[] COL_POINTS_INC = {-1, -1, -1, 2};
-    private final int[] COL_POINTS = {-1, -1, -1, 121};
-    private final int[] COL_OK = {-1, -1, -1, 122};
-    private final int[] COL_TOTAL_POINTS = {-1, -1, -1, 133};
+    private final int[] COL_STAGE_POSITION = {108, 108, 113, 113};
+    private final int[] COL_TOTAL_TIME = {114, 114, 119, 119};
+    private final int[] COL_TOTAL_POSITION = {115, 115, 120, 120};
+    private final int[] COL_POINTS_INC = {-1, 2, -1, 2};
+    private final int[] COL_POINTS = {-1, 116, -1, 121};
+    private final int[] COL_OK = {-1, 117, -1, 122};
+    private final int[] COL_TOTAL_POINTS = {-1, 128, -1, 133};
     
 
     public ConverterCsvOEToModelMulti() {
@@ -321,22 +321,22 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                         //voRes.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
                         //-------------------------------------------------------------------
                         //Set remainder fields for points and times
-                        voRes.setPointsAdjusted(0);
-                        voRes.setPointsBonus(0);
+                        voRes.setPointsAdjusted(BigDecimal.ZERO);
+                        voRes.setPointsBonus(BigDecimal.ZERO);
                         //If it's a results file that makes a points totalization
                         if (getcTotalization().equals(ConverterToModel.TOT_POINTS)) {
                             //Get the total points
-                            int vnPoints = 0;
+                            double vnPoints = 0.0;
                             try {
-                                vnPoints = Integer.parseInt(COL_TOTAL_POINTS[vnColIndex]>=0?vaRecord[COL_TOTAL_POINTS[vnColIndex]].trim().replaceAll("\"", ""):"0");
+                                vnPoints = Double.parseDouble(COL_TOTAL_POINTS[vnColIndex]>=0?vaRecord[COL_TOTAL_POINTS[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"0.0");
                             }catch (Exception ePoints){
                                 //Nothing to do
                             };
-                            voRes.setPointsFinal(vnPoints);                            
+                            voRes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
                         } else {
-                            voRes.setPointsFinal(0);
+                            voRes.setPointsFinal(BigDecimal.ZERO);
                         }
-                        voRes.setPointsPenalty(0);
+                        voRes.setPointsPenalty(BigDecimal.ZERO);
                         voRes.setTimeAdjusted(BigDecimal.ZERO);
                         voRes.setTimeBonus(BigDecimal.ZERO);
                         voRes.setTimeNeutralization(BigDecimal.ZERO);
@@ -363,10 +363,10 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                             voRes.setTimeSeconds(null);
                             voRes.setTimeBehind(null);
                             //Set remainder fields for points and times
-                            voRes.setPointsFinal(0);
-                            voRes.setPointsAdjusted(0);
-                            voRes.setPointsBonus(0);
-                            voRes.setPointsPenalty(0);
+                            voRes.setPointsFinal(BigDecimal.ZERO);
+                            voRes.setPointsAdjusted(BigDecimal.ZERO);
+                            voRes.setPointsBonus(BigDecimal.ZERO);
+                            voRes.setPointsPenalty(BigDecimal.ZERO);
                             voRes.setTimeAdjusted(BigDecimal.ZERO);
                             voRes.setTimeBonus(BigDecimal.ZERO);
                             voRes.setTimeNeutralization(BigDecimal.ZERO);
@@ -406,9 +406,10 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                                 if (vnColNc>0) {
                                     //Check if it's a NotCompeting Runner. If so, change the status code
                                     String vcNc = vaRecord[vnColNc].trim().replaceAll("\"", "").toUpperCase();
-                                    voRes.setStatusCode(Utils.STATUS_OK_ID);
                                     if (vcNc.equals("X") || vcNc.equals("1"))
-                                        voRes.setStatusCode(Utils.STATUS_NC_ID);
+                                        voRun.setIsNc(Boolean.TRUE);
+                                    else
+                                        voRun.setIsNc(Boolean.FALSE);
                                 }
                                 //The index of the column for the position on the stage
                                 int vnColPos = COL_STAGE_POSITION[vnColIndex] + j;
@@ -424,16 +425,25 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                                 }
                                 //The index of the column for the position on the stage
                                 int vnColPoints = COL_POINTS[vnColIndex] + (COL_POINTS_INC[vnColIndex]*j);
+                                int vnColOk = COL_OK[vnColIndex] + (COL_POINTS_INC[vnColIndex]*j);
                                 //If it's a results file that makes a points totalization
                                 if (getcTotalization().equals(ConverterToModel.TOT_POINTS) && vnColPoints>0) {
                                     //Get the total points
-                                    int vnPoints = 0;
+                                    double vnPoints = 0.0;
                                     try {
-                                        vnPoints = Integer.parseInt(vaRecord[vnColPoints].trim().replaceAll("\"", ""));
+                                        vnPoints = Double.parseDouble(vaRecord[vnColPoints].trim().replaceAll("\"", "").replaceAll(",", "."));
                                     }catch (Exception ePoints){
                                         //Nothing to do
                                     };
-                                    voRes.setPointsFinal(vnPoints);                            
+                                    voRes.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
+                                    //Sometimes only some of the best stages are taken into account 
+                                    String vcOneOfBest = vaRecord[vnColOk].trim().replaceAll("\"", "").toLowerCase();
+                                    //If the field is checked
+                                    if (vcOneOfBest.equals("x") || vcOneOfBest.equals("1")) {
+                                        voRes.setIsBest(true);
+                                    } else {
+                                        voRes.setIsBest(false);
+                                    }
                                 }
                             }
                             //Add the result to the list
@@ -631,7 +641,7 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                 for (int i=1; i<plResult.size(); i++) {
                     vcLine = plResult.get(i);
                     String[] vaRecord = vcLine.split(cSeparator);
-                    if (vaRecord.length>=121) {
+                    if (vaRecord.length>=(vnTookPart+vnMaxStages)) {
                         //Loop to look at the participation of the runner
                         for (int j=0; j<vnMaxStages; j++) {
                             String vcTookPart = vaRecord[vnTookPart+j].trim().replaceAll("\"", "").toLowerCase();

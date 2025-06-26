@@ -92,6 +92,7 @@ public class Split implements Serializable {
     private Date batteryTime;
     @Column(name = "raw_value")
     private String rawValue;
+    private String status;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -273,6 +274,14 @@ public class Split implements Serializable {
 
     public void setRawValue(String rawValue) {
         this.rawValue = rawValue;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @JsonProperty("event")

@@ -543,6 +543,18 @@ public abstract class ConverterToModel {
                     cSource = SRC_OEV12;
                     bOneStage = false;
                     cTotalization = TOT_TIME;
+                } else if (vcTopValues.startsWith("OE0013a")) {
+                    cContents = CONTENTS_RESULT;
+                    cResultsType = RES_TOTALS;
+                    cSource = SRC_OE2010;
+                    bOneStage = false;
+                    cTotalization = TOT_POINTS;
+                } else if (vcTopValues.startsWith("OE0013")) {
+                    cContents = CONTENTS_RESULT;
+                    cResultsType = RES_TOTALS;
+                    cSource = SRC_OE2010;
+                    bOneStage = false;
+                    cTotalization = TOT_TIME;
                 }
                 //If there is a valid cContents value, then the result is true
                 if (cContents.equals(CONTENTS_RESULT) || cContents.equals(CONTENTS_START)) {

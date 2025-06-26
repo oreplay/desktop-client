@@ -102,15 +102,18 @@ public class TeamResult implements Serializable {
     @Column(name = "time_bonus")
     private BigDecimal timeBonus;
     @Column(name = "points_final")
-    private Integer pointsFinal;
+    private BigDecimal pointsFinal;
     @Column(name = "points_adjusted")
-    private Integer pointsAdjusted;
+    private BigDecimal pointsAdjusted;
     @Column(name = "points_penalty")
-    private Integer pointsPenalty;
+    private BigDecimal pointsPenalty;
     @Column(name = "points_bonus")
-    private Integer pointsBonus;
+    private BigDecimal pointsBonus;
     @Column(name = "leg_number")
     private Integer legNumber;
+    @Basic(optional = true)
+    @Column(name = "is_best")
+    private boolean isBest;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -254,38 +257,38 @@ public class TeamResult implements Serializable {
     }
 
     @JsonProperty("points_final")
-    public Integer getPointsFinal() {
+    public BigDecimal getPointsFinal() {
         return pointsFinal;
     }
 
-    public void setPointsFinal(Integer pointsFinal) {
+    public void setPointsFinal(BigDecimal pointsFinal) {
         this.pointsFinal = pointsFinal;
     }
 
     @JsonProperty("points_adjusted")
-    public Integer getPointsAdjusted() {
+    public BigDecimal getPointsAdjusted() {
         return pointsAdjusted;
     }
 
-    public void setPointsAdjusted(Integer pointsAdjusted) {
+    public void setPointsAdjusted(BigDecimal pointsAdjusted) {
         this.pointsAdjusted = pointsAdjusted;
     }
 
     @JsonProperty("points_penalty")
-    public Integer getPointsPenalty() {
+    public BigDecimal getPointsPenalty() {
         return pointsPenalty;
     }
 
-    public void setPointsPenalty(Integer pointsPenalty) {
+    public void setPointsPenalty(BigDecimal pointsPenalty) {
         this.pointsPenalty = pointsPenalty;
     }
 
     @JsonProperty("points_bonus")
-    public Integer getPointsBonus() {
+    public BigDecimal getPointsBonus() {
         return pointsBonus;
     }
 
-    public void setPointsBonus(Integer pointsBonus) {
+    public void setPointsBonus(BigDecimal pointsBonus) {
         this.pointsBonus = pointsBonus;
     }
 
@@ -296,6 +299,15 @@ public class TeamResult implements Serializable {
 
     public void setLegNumber(Integer legNumber) {
         this.legNumber = legNumber;
+    }
+
+    @JsonProperty("is_best")
+    public boolean getIsBest() {
+        return isBest;
+    }
+
+    public void setIsBest(boolean isBest) {
+        this.isBest = isBest;
     }
 
     @JsonProperty("stage_order")
