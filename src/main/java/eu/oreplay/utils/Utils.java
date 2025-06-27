@@ -167,32 +167,30 @@ public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId,
         eu.oreplay.db.Stage voSta = new eu.oreplay.db.Stage();
         voSta.setId(pcStaId.equals("")?Utils.DUMMY_STAGE_ID:pcStaId);
         voSta.setDescription(pcStaDesc.equals("")?Utils.DUMMY_STAGE_DESC:pcStaDesc);
-        if (pcStaId.equals("")) {
-            voSta.setOrderNumber(1);
-            //Try to set the stage date and zero time from the parameters passed to the method
-            try {
-                if (!pcStaDate.equals("")) {
-                    voSta.setBaseDate(Utils.parse(pcStaDate, "yyyy-MM-dd"));
-                } else {
-                    voSta.setBaseDate(new Date());
-                }
-            }catch (Exception eDate) {
+        voSta.setOrderNumber(1);
+        //Try to set the stage date and zero time from the parameters passed to the method
+        try {
+            if (!pcStaDate.equals("") && !pcStaDate.equals("2001-01-01")) {
+                voSta.setBaseDate(Utils.parse(pcStaDate, "yyyy-MM-dd"));
+            } else {
                 voSta.setBaseDate(new Date());
             }
-            //Reconverts the date in order to add it to the base time
-            String vcReconvertedDate = Utils.format(voSta.getBaseDate(), "yyyy-MM-dd");
-            try {
-                if (!pcStaZeroTime.equals("")) {
-                    voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + pcStaZeroTime, "yyyy-MM-dd HH:mm:ss"));
-                } else {
-                    voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + "10:30:00", "yyyy-MM-dd HH:mm:ss"));
-                }
-            }catch(Exception eTime) {
+        }catch (Exception eDate) {
+            voSta.setBaseDate(new Date());
+        }
+        //Reconverts the date in order to add it to the base time
+        String vcReconvertedDate = Utils.format(voSta.getBaseDate(), "yyyy-MM-dd");
+        try {
+            if (!pcStaZeroTime.equals("")) {
+                voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + pcStaZeroTime, "yyyy-MM-dd HH:mm:ss"));
+            } else {
                 voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + "10:30:00", "yyyy-MM-dd HH:mm:ss"));
             }
-            voSta.setStageDiscipline(new StageDiscipline());
-            voSta.setStageType(new StageType());
+        }catch(Exception eTime) {
+            voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + "10:30:00", "yyyy-MM-dd HH:mm:ss"));
         }
+        voSta.setStageDiscipline(new StageDiscipline());
+        voSta.setStageType(new StageType());
         voSta.setCreated(new java.util.Date());
         //Add the stage to the event
         ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<eu.oreplay.db.Stage>();
