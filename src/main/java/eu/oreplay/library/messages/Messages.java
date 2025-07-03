@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.5.0"},
-        {"version", "v0.5.0"},
+        {"main", "OReplay. Desktop Client 0.5.1"},
+        {"version", "v0.5.1"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -242,6 +242,8 @@ public class Messages extends java.util.ListResourceBundle {
         {"tooltip_extensions", "List of supported formats. Select one"},
         {"tooltip_split_cat", "Only for large files that give an upload error. Allows you to divide uploads by categories"},
         {"tooltip_start_stop", "Start or Stop the process of searching for files and automatically uploading data"},
+        {"tooltip_base_date", "Enter a valid date. If left blank, the current date will be used"},
+        {"tooltip_zero_time", "Enter a valid time. If left blank, 10:30:00 is assumed."},
 
         {"question_export_data", "Do you want to export data?"},
         {"question_sure_action_undone", "Are you sure? This action can not be undone"},
