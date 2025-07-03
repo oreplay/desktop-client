@@ -166,7 +166,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         lblStageDate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblStageDate.setText(resMessages.getString("csv_file_date"));
 
-        txtStageDate.setToolTipText(resMessages.getString("format_date"));
+        txtStageDate.setToolTipText("(" + resMessages.getString("format_date") + ") " + resMessages.getString("tooltip_base_date"));
         txtStageDate.setMaximumSize(new java.awt.Dimension(64, 22));
         txtStageDate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -177,7 +177,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         lblStageZeroTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblStageZeroTime.setText(resMessages.getString("csv_file_zerotime"));
 
-        txtStageZeroTime.setToolTipText(resMessages.getString("format_time"));
+        txtStageZeroTime.setToolTipText("(" + resMessages.getString("format_time") + ") " + resMessages.getString("tooltip_zero_time"));
         txtStageZeroTime.setMaximumSize(new java.awt.Dimension(64, 22));
         txtStageZeroTime.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -530,9 +530,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             cStageDate = Utils.format(Utils.parse(txtStageDate.getText(), vcOldDate), resMessages.getString("format_date"));
             cStageZeroTime = Utils.format(Utils.parse(txtStageZeroTime.getText(), vcOldTime), resMessages.getString("format_time"));
             txtStageDate.setText(cStageDate);
-            txtStageDate.setToolTipText(resMessages.getString("format_date"));
+            txtStageDate.setToolTipText("(" + resMessages.getString("format_date") + ") " + resMessages.getString("tooltip_base_date"));
             txtStageZeroTime.setText(cStageZeroTime);
-            txtStageZeroTime.setToolTipText(resMessages.getString("format_time"));
+            txtStageZeroTime.setToolTipText("(" + resMessages.getString("format_time") + ") " + resMessages.getString("tooltip_zero_time"));
             //Force the panels to do the same
             pnlCheck.changeLanguage(pcLocale);
             pnlLogin.changeLanguage(pcLocale);

@@ -417,7 +417,7 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                 for (int i=1; i<plResult.size(); i++) {
                     vcLine = plResult.get(i);
                     String[] vaRecord = vcLine.split(cSeparator);
-                    if (vaRecord.length>=61) {
+                    if (vaRecord.length>=57) {
                         String vcClaId = (COL_CAT_ID[vnColIndex]>=0?vaRecord[COL_CAT_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
                         String vcClaShort = (COL_CAT_SHORT[vnColIndex]>=0?vaRecord[COL_CAT_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
                         String vcClaLong = (COL_CAT_LONG[vnColIndex]>=0?vaRecord[COL_CAT_LONG[vnColIndex]].trim().replaceAll("\"", ""):"");
