@@ -96,7 +96,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             cEveDesc = poParam.getcEveDesc();
             cStaDesc = poParam.getcStaDesc();
         }catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }
     }
     public void saveFormParameters() {
@@ -119,7 +120,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             //Calls the method in the main form to receive and to store the parameters
             JClientMain.updateFormsParameters("ConnBackLoginPanel", voParam);
         } catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }                
     }
     public void initialize (ConnBackStatus poStatus) {
@@ -470,6 +472,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 pcMessage,
                 resMessages.getString("info"), 
                 JOptionPane.INFORMATION_MESSAGE);
+        if (JClientMain.getoLog()!=null)
+            JClientMain.getoLog().warn(pcMessage);
         //And fires the event to notify it
         this.fireEvent();
     }
@@ -539,6 +543,10 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                     oStatus.setcEveDesc(cEveDesc);
                     oStatus.setcToken(cToken);
                     oStatus.setcIdToken(cIdToken);
+                    if (JClientMain.getoLog()!=null) {
+                        JClientMain.getoLog().info(resMessages.getString("info_login_ok"));
+                        JClientMain.getoLog().info(resMessages.getString("event") + " " + cEveId + " " + cEveDesc);
+                    }
                     //If there are several stages, status is only login ok
                     //But, if only one, select it inmediatly
                     if (!vbOneStage) {
@@ -547,6 +555,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                         oStatus.setcStaId(cStaId);
                         oStatus.setcStaDesc(cStaDesc);
                         oStatus.setnStatus(ConnBackStatus.STAGE_SELECTED);
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info(resMessages.getString("stage") + " " + cStaId + " " + cStaDesc);
                     }
                     this.fireEvent();
                 }catch(Exception eJson) {
@@ -573,6 +583,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             cIdToken = txtIdToken.getText();
             cStaId = lStages.get(vnRow).getId();
             cStaDesc = lStages.get(vnRow).getDescription();
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().info(resMessages.getString("stage") + " " + cStaId + " " + cStaDesc);
             oStatus.setcEveId(cEveId);
             oStatus.setcStaId(cStaId);
             oStatus.setcEveDesc(cEveDesc);
@@ -600,7 +612,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 Utils.openUrlInExplorer(vcUrl, 0);
             }
         } catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }
     }
     /**
@@ -656,7 +669,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 }
 
             } catch (BadLocationException e1) {
-                JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e1);
+                if (JClientMain.getoLog()!=null)
+                    JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e1);
             }
         }
         @Override

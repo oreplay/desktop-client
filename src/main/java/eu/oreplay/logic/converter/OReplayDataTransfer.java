@@ -126,6 +126,13 @@ public class OReplayDataTransfer {
             } else if (oConf.isXml()) {
                 oConf = new ConverterIofToModel(oConf);
             }
+            if (oLog!=null)
+                oLog.info("Extension: " + oConf.getcExtension() + "\n" + 
+                    "Source: " + oConf.getcSource() +  "\n" +
+                    (oConf.isXml()?"IOF XML Version: " + oConf.getcIofVersion() + "\n":"") +
+                    "Contents: " + oConf.getcContents() +  "\n" +
+                    "Results Type: " + oConf.getcResultsType() +  "\n" +
+                    (!oConf.isbOneStage()?"Totalization " + oConf.getcTotalization():""));
         }catch(Exception e) {
             oConf = null;
             if (oLog!=null)
@@ -264,7 +271,8 @@ public class OReplayDataTransfer {
                     if (poConv.getcExtension().equals(ConverterToModel.EXT_XML) && 
                             poConv.getcIofVersion().equals(ConverterToModel.IOF_VERSION_3)) {
                         //Creates a dummy event with one stage
-                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, (poConv.isbForce()?poConv.getcStageDate():""), 
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, 
+                                pcStaId, pcStaDesc, (poConv.isbForce()?poConv.getcStageDate():""), 
                                 (poConv.isbForce()?poConv.getcStageZeroTime():""));
                         //Set the specific properties for XML
                         ((ConverterIofToModel)poConv).setSpecificProperties(voSrcEve);
@@ -285,7 +293,8 @@ public class OReplayDataTransfer {
                         //Gets an encoding for the text file depending on the UTF mark
                         String vcEncoding = (poConv.isbUtf()?Utils.ENCODING_UTF_8:Utils.ENCODING_ISO_8859_1);
                         //Creates a dummy event with one stage
-                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, pcStaId, pcStaDesc, 
+                        eu.oreplay.db.Event voSrcEve = Utils.createDummyEventOneStage(pcEveId, pcEveDesc, 
+                                pcStaId, pcStaDesc, 
                                 poConv.getcStageDate(), poConv.getcStageZeroTime());
                         //Set the specific properties for CSV
                         if (poConv.isbOneStage()) {

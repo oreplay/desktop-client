@@ -164,6 +164,8 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                 voBr.close();
                 voEve = convertStartListSingleStageOEScore (plStart);
             } catch (Exception e) {
+                if (oLog!=null)
+                    oLog.error("Exception reading start list lines", e);
                 voEve = null;
             }        
         }
@@ -338,6 +340,9 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                     //Remove the previous contents of the class from the HashMap and insert it again
                     vlCla.remove(vcClaId);
                     vlCla.put(vcClaId, voCla);
+                } else {
+                    if (oLog!=null)
+                        oLog.warn("CSV File with not enough fields to process it ?");
                 }
             }
             //Add the lis of classes to the stage
@@ -347,6 +352,9 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
             ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
             vlSta.add(voSta);
             voEve.setStageList(vlSta);
+        } else {
+            if (oLog!=null)
+                oLog.warn("File with no lines to process");
         }
         return voEve;
     }
@@ -374,6 +382,8 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                 voBr.close();
                 voEve = convertResultListSingleStageOEScore (plResult);
             } catch (Exception e) {
+                if (oLog!=null)
+                    oLog.error("Exception reading result list lines", e);
                 voEve = null;
             }        
         }
@@ -726,6 +736,9 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                         //Remove the previous contents of the class from the HashMap and insert it again
                         vlCla.remove(vcClaId);
                         vlCla.put(vcClaId, voCla);
+                    } else {
+                        if (oLog!=null)
+                            oLog.warn("CSV File with not enough fields to process it ?");
                     }
                 }
                 //Add the lis of classes to the stage
@@ -739,9 +752,13 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                 ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
                 vlSta.add(voSta);
                 voEve.setStageList(vlSta);
+            } else {
+                if (oLog!=null)
+                    oLog.warn("File with no lines to process");
             }
         }catch (Exception e) {
-            //Nothing to do
+            if (oLog!=null)
+                oLog.error("Exception converting results", e);
         }
         return voEve;
     }

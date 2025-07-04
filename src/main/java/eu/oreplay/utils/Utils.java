@@ -173,9 +173,13 @@ public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId,
             if (!pcStaDate.equals("") && !pcStaDate.equals("2001-01-01")) {
                 voSta.setBaseDate(Utils.parse(pcStaDate, "yyyy-MM-dd"));
             } else {
+                if (oLog!=null)
+                    oLog.info("No base date provided. Using current system date (only if CSV file or forcing XML dates and times)");
                 voSta.setBaseDate(new Date());
             }
         }catch (Exception eDate) {
+            if (oLog!=null)
+                oLog.info("No valid date provided. Using current system date (only if CSV file or forcing XML dates and times)");
             voSta.setBaseDate(new Date());
         }
         //Reconverts the date in order to add it to the base time
@@ -184,9 +188,13 @@ public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId,
             if (!pcStaZeroTime.equals("")) {
                 voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + pcStaZeroTime, "yyyy-MM-dd HH:mm:ss"));
             } else {
+                if (oLog!=null)
+                    oLog.info("No zero time provided. Using 10:30:00 as zero time (only if CSV file or forcing XML dates and times)");
                 voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + "10:30:00", "yyyy-MM-dd HH:mm:ss"));
             }
         }catch(Exception eTime) {
+            if (oLog!=null)
+                oLog.info("No valid time provided. Using 10:30:00 as zero time (only if CSV file or forcing XML dates and times)");
             voSta.setBaseTime(Utils.parse(vcReconvertedDate + " " + "10:30:00", "yyyy-MM-dd HH:mm:ss"));
         }
         voSta.setStageDiscipline(new StageDiscipline());
@@ -205,24 +213,34 @@ public static eu.oreplay.db.Event createDummyEventOneStage (String pcEveId,
 }
 public static eu.oreplay.db.Event copyBasicEventData (eu.oreplay.db.Event poEve) {
     eu.oreplay.db.Event voEve = null;
-    if (poEve!=null) {
-        voEve = new eu.oreplay.db.Event();
-        voEve.setId(poEve.getId());
-        voEve.setDescription(poEve.getDescription());
+    try {
+        if (poEve!=null) {
+            voEve = new eu.oreplay.db.Event();
+            voEve.setId(poEve.getId());
+            voEve.setDescription(poEve.getDescription());
+        }
+    }catch(Exception e) {
+        if (oLog!=null)
+            oLog.error("Error while copying basic event data", e);
     }
     return voEve;
 }
 public static eu.oreplay.db.Stage copyBasicOneStageData (eu.oreplay.db.Event poEve) {
     eu.oreplay.db.Stage voSta = null;
-    if (poEve!=null) {
-        voSta = new eu.oreplay.db.Stage();
-        if (poEve.getStageList()!=null && !poEve.getStageList().isEmpty()) {
-            voSta.setId(poEve.getStageList().get(0).getId());
-            voSta.setOrderNumber(poEve.getStageList().get(0).getOrderNumber());
-            voSta.setDescription(poEve.getStageList().get(0).getDescription());
-            voSta.setBaseDate(poEve.getStageList().get(0).getBaseDate());
-            voSta.setBaseTime(poEve.getStageList().get(0).getBaseTime());
+    try {
+        if (poEve!=null) {
+            voSta = new eu.oreplay.db.Stage();
+            if (poEve.getStageList()!=null && !poEve.getStageList().isEmpty()) {
+                voSta.setId(poEve.getStageList().get(0).getId());
+                voSta.setOrderNumber(poEve.getStageList().get(0).getOrderNumber());
+                voSta.setDescription(poEve.getStageList().get(0).getDescription());
+                voSta.setBaseDate(poEve.getStageList().get(0).getBaseDate());
+                voSta.setBaseTime(poEve.getStageList().get(0).getBaseTime());
+            }
         }
+    }catch(Exception e) {
+        if (oLog!=null)
+            oLog.error("Error while copying basic one stage data", e);
     }
     return voSta;
 }
@@ -303,6 +321,8 @@ public static eu.oreplay.db.Event copyExtendedEventData (eu.oreplay.db.Event poE
             }
         }
     }catch(Exception e) {
+        if (oLog!=null)
+            oLog.error("Error while copying extended event data", e);
         voEve = null;
     }
     return voEve;
@@ -334,6 +354,8 @@ public static Character convertIofStatusValue (String pcValue) {
             vcResul = Utils.STATUS_NC_ID;
         }
     }catch(Exception e) {
+        if (oLog!=null)
+            oLog.error("Error converting IOF status value", e);
     }
     return vcResul;
 }
@@ -359,7 +381,8 @@ public static Date convertGregorianDateFromXmlOrForced (XMLGregorianCalendar poT
             voResul = Utils.parse(pcBaseDate + " " + vcTime, pcFormat + " HH:mm:ss.SSS");
         }
     }catch (Exception e) {
-        //Nothing to do
+        if (oLog!=null)
+            oLog.error("Error while converting Gregorian Date", e);
     }
     return voResul;
 }
@@ -440,16 +463,22 @@ public static String byteArrayToBase64(byte[] paRaw) {
  * @param dateMax String. Text of the second date using the format in the first parameter
  */
 public static boolean compareDate(String format, String dateMin, String dateMax) throws Exception{
-    if (dateMin == null || dateMax == null || dateMin.equals("") || dateMax.equals(""))
-        return true;
-    else {
-        String voFormatAux = "yyyyMMddHHmm";
-        long firstDate = Long.parseLong(transform(dateMin, format, voFormatAux).toString());
-        long secondDate = Long.parseLong(transform(dateMax, format, voFormatAux).toString());
-        if (firstDate > secondDate)
-            return false;
-        else
+    try {
+        if (dateMin == null || dateMax == null || dateMin.equals("") || dateMax.equals(""))
             return true;
+        else {
+            String voFormatAux = "yyyyMMddHHmm";
+            long firstDate = Long.parseLong(transform(dateMin, format, voFormatAux).toString());
+            long secondDate = Long.parseLong(transform(dateMax, format, voFormatAux).toString());
+            if (firstDate > secondDate)
+                return false;
+            else
+                return true;
+        }
+    }catch (Exception e) {
+        if (oLog!=null)
+            oLog.error("Error while comparing two dates", e);
+        return false;
     }
 }
 
@@ -493,17 +522,23 @@ public static int GetDaysMonth(int year,int month){
  * @param dateMax java.util.Date. upper bound of the interval
  */
 public static boolean dateInInterval(Date date, Date dateMin, Date dateMax) throws Exception{
-    if (date == null || dateMin == null || dateMax == null || dateMin.equals("") || dateMax.equals("") || dateMin.equals(""))
-        throw new Exception("Some empty date");
-    else {
-        String voFormatAux = "yyyyMMdd";
-        int nDate = Integer.parseInt(format(date, voFormatAux).toString());
-        int firstDate = Integer.parseInt(format(dateMin, voFormatAux).toString());
-        int secondDate = Integer.parseInt(format(dateMax, voFormatAux).toString());
-        if (nDate >= firstDate && nDate <= secondDate)
-            return true;
-        else
-            return false;
+    try {
+        if (date == null || dateMin == null || dateMax == null || dateMin.equals("") || dateMax.equals("") || dateMin.equals(""))
+            throw new Exception("Some empty date");
+        else {
+            String voFormatAux = "yyyyMMdd";
+            int nDate = Integer.parseInt(format(date, voFormatAux).toString());
+            int firstDate = Integer.parseInt(format(dateMin, voFormatAux).toString());
+            int secondDate = Integer.parseInt(format(dateMax, voFormatAux).toString());
+            if (nDate >= firstDate && nDate <= secondDate)
+                return true;
+            else
+                return false;
+        }
+    }catch (Exception e) {
+        if (oLog!=null)
+            oLog.error("Error while comparing dates interval", e);
+        return false;
     }
 }
 /**
@@ -1018,6 +1053,7 @@ public static boolean fileExists (String pcFile) {
             vbResul = true;
     } 
     catch(Exception ex) {
+        //Nothing to do
     }
     return vbResul;
 }
@@ -1034,6 +1070,7 @@ public static boolean folderExists (String pcFolder) {
             vbResul = true;
     } 
     catch(Exception ex) {
+        //Nothing to do
     }
     return vbResul;
 }
@@ -1114,6 +1151,8 @@ public static void openUrlInExplorer (String pcUrl, int pnOption) {
                 voDesk.browse(new URI(pcUrl));
             }
         } catch (Exception e) {
+            if (oLog!=null)
+                oLog.error("Error while trying to open a browser", e);
         }
     } else {
         //Second option, using OS commands depending on OS
@@ -1137,6 +1176,8 @@ public static void openUrlInExplorer (String pcUrl, int pnOption) {
                 voRt.exec(new String[] { "sh", "-c", vcCmd.toString() });
             }
         }catch (Exception e){
+            if (oLog!=null)
+                oLog.error("Error while trying to open a browser", e);
         }
     }
 }
@@ -1193,7 +1234,8 @@ public static int checkForNewVersion(String pcCurrent) {
             }
         }
     }catch(Exception e) {
-        oLog.error(Utils.EXCEPTION_1, e);
+        if (oLog!=null)
+            oLog.error(Utils.EXCEPTION_1, e);
         vnResul = -1;
     }
     return vnResul;
@@ -1216,7 +1258,8 @@ public static boolean versionGreaterThan (String pcProperty, String pcCurrent) {
             vbResul = true;
         }
     }catch (Exception e) {
-        oLog.error(Utils.EXCEPTION_1, e);
+        if (oLog!=null)
+            oLog.error(Utils.EXCEPTION_1, e);
         vbResul = false;
     }
     return vbResul;
@@ -1234,7 +1277,8 @@ public static long getVersionNumberFromText (String pcCurrent) {
         String[] vaCurrent = vcCurrent.split("\\.");
         vnResul = Long.parseLong(vaCurrent[0])*10000 + Long.parseLong(vaCurrent[1])*100 + Long.parseLong(vaCurrent[2]);
     }catch (Exception e) {
-        oLog.error(Utils.EXCEPTION_1, e);
+        if (oLog!=null)
+            oLog.error(Utils.EXCEPTION_1, e);
         vnResul = 301;
     }
     return vnResul;

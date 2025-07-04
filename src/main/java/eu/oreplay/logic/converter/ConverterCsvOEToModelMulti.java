@@ -169,6 +169,8 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                 //Second loop to final values in order to calculate correct time behind values
                 voEve = recalculateTimeBehind (voEve);
             } catch (Exception e) {
+                if (oLog!=null)
+                    oLog.error("Exception reading result list lines", e);
                 voEve = null;
             }        
         }
@@ -458,6 +460,9 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                         //Remove the previous contents of the class from the HashMap and insert it again
                         vlCla.remove(vcClaId);
                         vlCla.put(vcClaId, voCla);
+                    } else {
+                        if (oLog!=null)
+                            oLog.warn("CSV File with not enough fields to process it ?");
                     }
                 }
                 //Add the lis of classes to the stage
@@ -467,9 +472,13 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                 ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
                 vlSta.add(voSta);
                 voEve.setStageList(vlSta);
+            } else {
+                if (oLog!=null)
+                    oLog.warn("File with no lines to process");
             }
         }catch (Exception e) {
-            //Nothing to do
+            if (oLog!=null)
+                oLog.error("Exception converting results", e);
         }
         return voEve;
     }

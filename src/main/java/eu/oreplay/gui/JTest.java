@@ -496,7 +496,8 @@ public class JTest extends javax.swing.JDialog {
             }
             lblStatus.setText("");
         } catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -510,6 +511,7 @@ public class JTest extends javax.swing.JDialog {
         this.setMetadataEditable(false);
         //Opens and tries to parse the source file
         OReplayDataTransfer voTransf = new OReplayDataTransfer();
+        voTransf.setoLog(JClientMain.getoLog());
         oConv = voTransf.preProcessFile(pcFile);
         //Show the results
         chkExists.setSelected(oConv.isbExists());
@@ -552,19 +554,25 @@ public class JTest extends javax.swing.JDialog {
                     voWriter.close();
                     //Write a text in the status label
                     lblStatus.setText(resMessages.getString("info_process_finished"));
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().info(resMessages.getString("info_process_finished"));
                 } else {
                     if (!vcJson.toLowerCase().startsWith("error_exception")) {
                         lblStatus.setText(resMessages.getString(vcJson));
                     } else {
-                        lblStatus.setText(resMessages.getString("error_exception"));
-                        JClientMain.getoLog().error(vcJson);
+                        lblStatus.setText(resMessages.getString("error_exception"));                        
                     }
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().warn(vcJson);
                 }
             } else {
                 lblStatus.setText(resMessages.getString("error_nothing_to_do"));
+                if (JClientMain.getoLog()!=null)
+                    JClientMain.getoLog().warn(resMessages.getString("error_nothing_to_do"));
             }
         } catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
 }

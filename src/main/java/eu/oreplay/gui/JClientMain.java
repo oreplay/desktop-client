@@ -96,7 +96,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 }
             }                        
         } catch (Exception e) {
-            oLog.error(resMessages.getString("error_exception"), e);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
         }
     }
 
@@ -344,11 +345,11 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         if (bFirstOpen) {
+            //Set Log
+            oLog.info(resMessages.getString("info_enter_app"));           
+            Utils.setoLog(oLog);  //Sets log file in the Utils static class for using it during the app execution
             //Check for new version. Only show a message if there is a new version
             this.checkForNewVersion(false);
-            //Set Log
-            oLog.info(resMessages.getString("info_enter_app"));
-            Utils.setoLog(oLog);  //Sets log file in the Utils static class for using it during the app execution
             //Get data from XML files
             getXmlData();
             //Get Timezone offset from computer
@@ -440,7 +441,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                     cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resMessages.getString("format_date_dash")), resMessages.getString("format_date"));
                     cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resMessages.getString("format_time")), resMessages.getString("format_time"));
                 }catch (Exception e) {
-                    oLog.error(resMessages.getString("error_exception"), e);
+                    if (oLog!=null)
+                        oLog.error(resMessages.getString("error_exception"), e);
                 }
                 voPrincipal.setVisible(true);
             }
@@ -491,7 +493,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             pnlUpload.removeEventListener(this);
         }
         this.saveFormsParameters();
-        oLog.info(resMessages.getString("info_exit_app"));        
+        if (oLog!=null)
+            oLog.info(resMessages.getString("info_exit_app"));        
     }
     public void exitApp() {
         this.stopListenersBeforeExit();
@@ -538,7 +541,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             pnlLogin.changeLanguage(pcLocale);
             pnlUpload.changeLanguage(pcLocale);
         }catch(Exception e) {
-            oLog.error(resMessages.getString("error_exception"), e);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -564,7 +568,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 oForms = new FormsParameters();
             }
         } catch (Exception e) {
-            oLog.error(resMessages.getString("error_exception"), e);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -594,7 +599,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 FormsParametersXMLHandler.writeXmlData(oForms, vcFile);
             }
         } catch (Exception eLocal) {
-            oLog.error(resMessages.getString("error_exception"), eLocal);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), eLocal);
         }
     }
     /**
@@ -604,8 +610,11 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private void getTimezoneOffset() {
         try {
             txtOffset.setText(Utils.getTimezoneOffset());
+            if (oLog!=null)
+                oLog.info(resMessages.getString("utc_offset") + " " + txtOffset.getText());
         }catch(Exception e) {
-            oLog.error(resMessages.getString("error_exception"), e);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -679,7 +688,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             viForm.setModal(true);
             viForm.setVisible(true);
         } catch (Exception e) {
-            oLog.error(resMessages.getString("error_exception"), e);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -697,7 +707,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             viForm.setModal(true);
             viForm.setVisible(true);
         } catch (Exception e) {
-            oLog.error(resMessages.getString("error_exception"), e);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
         }
     }
 
@@ -721,8 +732,11 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                         resMessages.getString("info"), 
                         JOptionPane.INFORMATION_MESSAGE);
             }
+            if (oLog!=null)
+                oLog.info(vcMessage);
         }catch(Exception e) {
-            oLog.error(resMessages.getString("error_exception"), e);
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
         }
     }    
     /**
@@ -736,6 +750,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             String vcStageZeroTime = txtStageZeroTime.getText();
             cStageZeroTime = Utils.format(Utils.parse(vcStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time"));
         }catch(Exception e) {
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
             cStageDate = "";
             cStageZeroTime = "";
         }
@@ -750,6 +766,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             //Tries to save the values of date and zero time
             vcResul = Utils.format(Utils.parse(cStageDate, resMessages.getString("format_date")), resMessages.getString("format_date_dash"));
         }catch(Exception e) {
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
             vcResul = "";
         }
         return vcResul;
@@ -764,6 +782,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             //Tries to save the values of date and zero time
             vcResul = Utils.format(Utils.parse(cStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time"));
         }catch(Exception e) {
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
             vcResul = "";
         }
         return vcResul;

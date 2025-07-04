@@ -91,7 +91,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 oStatus.setnStatus(ConnBackStatus.EXT_XML);
             fireEvent();
         }catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     public void saveFormParameters() {
@@ -111,7 +112,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             //Calls the method in the main form to receive and to store the parameters
             JClientMain.updateFormsParameters("ConnBackUploadPanel", voParam);
         } catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }                
     }
     public void initialize (ConnBackStatus poStatus) {
@@ -343,6 +345,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_start.png"))); // NOI18N
                 btnUpload.setText(resMessages.getString("run"));
                 txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_stopped"), "#000000") + cEnd);
+                if (JClientMain.getoLog()!=null)
+                    JClientMain.getoLog().info(resMessages.getString("info_upload_stopped"));
                 bRun = !bRun;
                 //Fire the event to notify starting the upload
                 oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
@@ -355,6 +359,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_stop.png"))); // NOI18N
                         btnUpload.setText(resMessages.getString("stop"));
                         txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_started"), "#000000") + cEnd);
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info(resMessages.getString("info_upload_started"));
                         //Fire the event to notify starting the upload
                         oStatus.setnStatus(ConnBackStatus.UPLOAD_ON);
                         fireEvent();
@@ -362,13 +368,16 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         bRun = !bRun;
                         //Starts the upload process in a separated thread using a SwingWorker
                         this.uploadThread();
+                    } else {
+                        txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_notready"), "#000000") + cEnd);
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info(resMessages.getString("info_upload_notready"));
                     }
-                } else {
-                    
                 }
             }
         }catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -384,7 +393,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 txtFolder.setText("");
             }
         } catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
     }
     /**
@@ -432,6 +442,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         voStart = new Date();
                         vcNow = Utils.format(voStart, resMessages.getString("format_datetime_milli_dash"));
                         publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_started") + " - " + vcNow);
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info("File: " + vcFile + "\n" +
+                                "Eve Id: " + oStatus.getcEveId() +  "\n" +
+                                "Eve Desc: " + oStatus.getcEveDesc() + "\n" +
+                                "Sta Id: " + oStatus.getcStaId() +  "\n" +
+                                "Sta Desc: " + oStatus.getcStaDesc());
                         //Second, parse the contents to generate a JSON
                         OReplayDataTransfer voTransf = new OReplayDataTransfer();
                         voTransf.setoLog(JClientMain.getoLog());
@@ -452,13 +468,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             vaJson = new HashMap<>();
                             vaJson.put("ALL", vcJson);
                         }
-                        JClientMain.getoLog().info("Time: " + vcNow + 
-                                "; File: " + vcFile + 
-                                "; Eve Id: " + oStatus.getcEveId() + 
-                                "; Eve Desc: " + oStatus.getcEveDesc() +
-                                "; Sta Id: " + oStatus.getcStaId() + 
-                                "; Sta Desc: " + oStatus.getcStaDesc() + 
-                                "; JSON parts: " + vaJson.size());
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info("JSON parts: " + vaJson.size());
                         try {
                             //Iterate over keys of the Hashmap
                             for (String vcClass : vaJson.keySet()) {
@@ -515,7 +526,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                 vbFound = true;
                                             }
                                         }catch (Exception eParseResp) {
-                                            JClientMain.getoLog().error(resMessages.getString("error_exception"), eParseResp);
+                                            if (JClientMain.getoLog()!=null)
+                                                JClientMain.getoLog().error(resMessages.getString("error_exception"), eParseResp);
                                             vbFound = false;
                                         }
                                         if (!vbFound) {
@@ -523,7 +535,6 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
                                             //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                             publish("#000000<JARUTAG>" + resMessages.getString("info_data_saved_error") + " - " + vcNow);
-                                            JClientMain.getoLog().error(resMessages.getString("info_data_saved_error") + " - " + vcNow);
                                         } else {
                                             //Get a Timestamp when stopping process
                                             voFinish = new java.util.Date();
@@ -532,15 +543,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                             long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
                                             publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_finished") + " - " + vcNow + 
                                                     " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
-                                            JClientMain.getoLog().info(resMessages.getString("info_classprocess_finished") + " - " + vcNow + 
-                                                    " - " + vnDiffSec + " " + resMessages.getString("second_mid") + "\n");
                                         }
                                     } else {
                                         voFinish = new java.util.Date();
                                         vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
                                         //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                         publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + voResp.statusCode() + " - " + vcNow);
-                                        JClientMain.getoLog().error(resMessages.getString("info_connection_nook") + " - " + voResp.statusCode() + " - " + vcNow);
                                     }
                                 } else {
                                     voFinish = new java.util.Date();
@@ -548,10 +556,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                     //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                     if (vcJson.startsWith("error_exception")) {
                                         publish("#FF0000<JARUTAG>" + vcJson + " - " + vcNow);
-                                        JClientMain.getoLog().error(vcJson + " - " + vcNow);
                                     } else {
                                         publish("#FF0000<JARUTAG>" + resMessages.getString(vcJson) + " - " + vcNow);
-                                        JClientMain.getoLog().error(resMessages.getString(vcJson) + " - " + vcNow);
                                     }
                                 }
                             }
@@ -562,30 +568,28 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
                             publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
                                     " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
-                            JClientMain.getoLog().info(resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
-                                    " - " + vnDiffSec + " " + resMessages.getString("second_mid") + "\n");
                         } catch (java.net.http.HttpConnectTimeoutException eTimeout) {
                             //If any of the connections fails, set the flag not to delete the file
                             vbDeleteFile = false;
                             voFinish = new java.util.Date();
                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                            JClientMain.getoLog().error(resMessages.getString("info_connection_timeout") + " - " + vcNow);
-                            JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eTimeout);
+                            if (JClientMain.getoLog()!=null)
+                                JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eTimeout);
                             //This calls the method "process" in the SwingWorker, to set a status text in the panel
                             publish("#000000<JARUTAG>" + resMessages.getString("info_connection_timeout") + " - " + vcNow);
                         } catch (java.io.IOException | java.lang.InterruptedException eInterrupt) {
                             //Don't change the flag to delete the file, assuming that the server is processing the file but aborted the connection due to a load balanced server
                             voFinish = new java.util.Date();
                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                            JClientMain.getoLog().error(resMessages.getString("info_connection_break") + " - " + vcNow);
-                            JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eInterrupt);
+                            if (JClientMain.getoLog()!=null)
+                                JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eInterrupt);
                             //This calls the method "process" in the SwingWorker, to set a status text in the panel
                             publish("#000000<JARUTAG>" + resMessages.getString("info_connection_break") + " - " + vcNow);
                         } catch (Exception eNet) {
                             voFinish = new java.util.Date();
                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                            JClientMain.getoLog().error(resMessages.getString("info_connection_nook") + " - " + vcNow);
-                            JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eNet);
+                            if (JClientMain.getoLog()!=null)
+                                JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eNet);
                             //This calls the method "process" in the SwingWorker, to set a status text in the panel
                             publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + vcNow);
                         }
@@ -614,6 +618,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             vcValue = vaValues[0];
                         }
                         txtStatus.setText(cStart + appendString(vcValue, vcColor) + cEnd);
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info(vcValue);
                     }
                 }
             }   
@@ -630,10 +636,12 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                     }
                 } 
                 catch (InterruptedException e) { 
-                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
                 } 
                 catch (ExecutionException e) { 
-                    JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
                 } 
             } 
         }; 
@@ -654,7 +662,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             vcLine = "<span style=\"color:" + pcColor + "\">" + pcLine + "</span><br>";
         }catch(Exception e) {
             vcLine = "";
-            JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString("error_exception"), e);
         }
         vcResul = oSB.append(vcLine).toString() + "\n";
         return vcResul;
@@ -677,6 +686,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             resMessages.getString("info_date_time_needed"), 
                             resMessages.getString("info"),
                             JOptionPane.ERROR_MESSAGE);
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().warn(resMessages.getString("info_date_time_needed"));
                     vbResul = false;
                 }
             }
