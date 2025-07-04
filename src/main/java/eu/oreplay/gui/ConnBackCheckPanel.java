@@ -57,7 +57,8 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
             */
             lServers = poParam.getlServers();
         }catch (Exception e) {
-            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }
     }
     public void saveFormParameters() {
@@ -75,7 +76,8 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
             //Calls the method in the main form to receive and to store the parameters
             JClientMain.updateFormsParameters("ConnBackCheckPanel", voParam);
         } catch(Exception e) {
-            JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
         }                
     }
     public void initialize (ConnBackStatus poStatus) {
@@ -241,6 +243,9 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                         }
                         i++;
                     }
+                } else {
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().warn(resMessages.getString("info_empty_server_list"));
                 }
                 if (vbFound)
                     vcResul = vcServer;
@@ -252,6 +257,8 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                 String vcValue = (String)plChunks.get(plChunks.size() - 1); 
                 txtStatus.insert(vcValue, 0);
                 txtStatus.setCaretPosition(0);
+                if (JClientMain.getoLog()!=null)
+                    JClientMain.getoLog().info(vcValue);
             }   
             // Method called when doInBackground finishes
             @Override protected void done() 
@@ -260,6 +267,9 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                     //Get the message from doInBackground. In this case, it`s a String with the name of the server that responded to the request
                     String vcServer = (String)get(); 
                     if (!vcServer.equals("")) {
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info(resMessages.getString("info_process_finished") + ". " + 
+                                    resMessages.getString("info_connection_ok") + ". " + vcServer);
                         //Fire the event
                         oStatus.setcServer(vcServer);
                         oStatus.setnStatus(ConnBackStatus.CONNECTION_OK);
@@ -268,13 +278,18 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
                         txtStatus.insert(resMessages.getString("info_process_finished") + ". " + 
                                 resMessages.getString("info_connection_nook") + "\n", 0);
                         txtStatus.setCaretPosition(0);
+                        if (JClientMain.getoLog()!=null)
+                            JClientMain.getoLog().info(resMessages.getString("info_process_finished") + ". " + 
+                                    resMessages.getString("info_connection_nook"));
                     }
                 } 
                 catch (InterruptedException e) { 
-                    JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
                 } 
                 catch (ExecutionException e) { 
-                    JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
                 } 
             } 
         }; 

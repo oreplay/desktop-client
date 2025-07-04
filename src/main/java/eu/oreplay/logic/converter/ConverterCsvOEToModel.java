@@ -156,6 +156,8 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                 voBr.close();
                 voEve = convertStartListSingleStageClassicOE (plStart);
             } catch (Exception e) {
+                if (oLog!=null)
+                    oLog.error("Exception reading start list lines", e);
                 voEve = null;
             }        
         }
@@ -176,160 +178,173 @@ public class ConverterCsvOEToModel extends ConverterToModel{
         int vnColIndex = this.getIndexFromContentsAndSource();       
         //HashMap to store Classes. For each class its runners. Runners shoulb be ordered by class in the CSV but, what if not?...
         HashMap<String, eu.oreplay.db.Clazz> vlCla = new HashMap<>();
-        if (plStart!=null) {
-            //Event's data
-            voEve = Utils.copyBasicEventData(oEve);
-            //Stage's data
-            eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
-            //First line contains the name of the columns
-            String vcLine = "";
-            //Loop starts at second line
-            for (int i=1; i<plStart.size(); i++) {
-                vcLine = plStart.get(i);
-                String[] vaRecord = vcLine.split(cSeparator);
-                if (vaRecord.length>=57) {
-                    String vcClaId = (COL_CAT_ID[vnColIndex]>=0?vaRecord[COL_CAT_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    String vcClaShort = (COL_CAT_SHORT[vnColIndex]>=0?vaRecord[COL_CAT_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    String vcClaLong = (COL_CAT_LONG[vnColIndex]>=0?vaRecord[COL_CAT_LONG[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    //Search for the class in the HashMap
-                    eu.oreplay.db.Clazz voCla = new eu.oreplay.db.Clazz();
-                    if (vlCla.containsKey(vcClaId)) {
-                        voCla = vlCla.get(vcClaId);
-                    } else {
-                        voCla.setId("");
-                        voCla.setUuid("");
-                        voCla.setOeKey(vcClaId);
-                        voCla.setShortName(vcClaShort);
-                        voCla.setLongName(vcClaLong);
-                    }
-                    //Now, the course of the class
-                    if (voCla.getCourse()==null && !vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", "").equals("")) {
-                        eu.oreplay.db.Course voCou = new eu.oreplay.db.Course();
-                        voCou.setId("");
-                        voCou.setUuid("");
-                        voCou.setOeKey(COL_COU_ID[vnColIndex]>=0?vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voCou.setShortName(COL_COU_SHORT[vnColIndex]>=0?vaRecord[COL_COU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voCou.setDistance(COL_COU_DIST[vnColIndex]>=0?vaRecord[COL_COU_DIST[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voCou.setClimb(COL_COU_CLIMB[vnColIndex]>=0?vaRecord[COL_COU_CLIMB[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        int vnControls = 0;
-                        try {
-                            vnControls = Integer.parseInt(COL_COU_CONTROLS[vnColIndex]>=0?vaRecord[COL_COU_CONTROLS[vnColIndex]].trim().replaceAll("\"", ""):"0");
-                        }catch (Exception eNumCon){
-                            //Nothing to do
-                        };
-                        voCou.setControls(vnControls);
-                        //Add the course to the class
-                        voCla.setCourse(voCou);
-                    }
-                    //Process the runner and put it on the class
-                    List<eu.oreplay.db.Runner> vlRun = voCla.getRunnerList();
-                    if (vlRun==null)
-                        vlRun = new ArrayList<>();
-                    eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
-                    voRun.setId("");
-                    voRun.setUuid("");
-                    voRun.setBibNumber(COL_BIB[vnColIndex]>=0?vaRecord[COL_BIB[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setBibAlt(COL_BIBALT[vnColIndex]>=0?vaRecord[COL_BIBALT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setSicard(COL_SICARD[vnColIndex]>=0?vaRecord[COL_SICARD[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setSicardAlt(COL_SICARDALT[vnColIndex]>=0?vaRecord[COL_SICARDALT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setDbId(COL_DBID[vnColIndex]>=0?vaRecord[COL_DBID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setIofId(COL_IOFID[vnColIndex]>=0?vaRecord[COL_IOFID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    try {
-                        String vcBirth = (COL_BIRTH[vnColIndex]>=0?vaRecord[COL_BIRTH[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
-                        if (vdBirth==null) {
-                            vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
+        try {
+            if (plStart!=null) {
+                //Event's data
+                voEve = Utils.copyBasicEventData(oEve);
+                //Stage's data
+                eu.oreplay.db.Stage voSta = Utils.copyBasicOneStageData(oEve);
+                //First line contains the name of the columns
+                String vcLine = "";
+                //Loop starts at second line
+                for (int i=1; i<plStart.size(); i++) {
+                    vcLine = plStart.get(i);
+                    String[] vaRecord = vcLine.split(cSeparator);
+                    if (vaRecord.length>=57) {
+                        String vcClaId = (COL_CAT_ID[vnColIndex]>=0?vaRecord[COL_CAT_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        String vcClaShort = (COL_CAT_SHORT[vnColIndex]>=0?vaRecord[COL_CAT_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        String vcClaLong = (COL_CAT_LONG[vnColIndex]>=0?vaRecord[COL_CAT_LONG[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        //Search for the class in the HashMap
+                        eu.oreplay.db.Clazz voCla = new eu.oreplay.db.Clazz();
+                        if (vlCla.containsKey(vcClaId)) {
+                            voCla = vlCla.get(vcClaId);
+                        } else {
+                            voCla.setId("");
+                            voCla.setUuid("");
+                            voCla.setOeKey(vcClaId);
+                            voCla.setShortName(vcClaShort);
+                            voCla.setLongName(vcClaLong);
                         }
-                        voRun.setBirthDate(vdBirth);
-                    }catch(Exception eDate) {
-                        //Nothing to do
-                    }
-                    //If the event belongs to FEDO, some fields come in Num or Text columns
-                    if (oEve.getFederation()!=null) {
-                        if (oEve.getFederation().getId().equals("FEDO")) {
-                            //IOF ID
-                            voRun.setIofId(COL_IOFID_FEDO[vnColIndex]>=0?vaRecord[COL_IOFID_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            //Birthdate
+                        //Now, the course of the class
+                        if (voCla.getCourse()==null && !vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", "").equals("")) {
+                            eu.oreplay.db.Course voCou = new eu.oreplay.db.Course();
+                            voCou.setId("");
+                            voCou.setUuid("");
+                            voCou.setOeKey(COL_COU_ID[vnColIndex]>=0?vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            voCou.setShortName(COL_COU_SHORT[vnColIndex]>=0?vaRecord[COL_COU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            voCou.setDistance(COL_COU_DIST[vnColIndex]>=0?vaRecord[COL_COU_DIST[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            voCou.setClimb(COL_COU_CLIMB[vnColIndex]>=0?vaRecord[COL_COU_CLIMB[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            int vnControls = 0;
                             try {
-                                String vcBirth = (COL_BIRTH_FEDO[vnColIndex]>=0?vaRecord[COL_BIRTH_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                                java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
-                                if (vdBirth==null) {
-                                    vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
-                                }
-                                voRun.setBirthDate(vdBirth);
-                            }catch(Exception eDate) {
+                                vnControls = Integer.parseInt(COL_COU_CONTROLS[vnColIndex]>=0?vaRecord[COL_COU_CONTROLS[vnColIndex]].trim().replaceAll("\"", ""):"0");
+                            }catch (Exception eNumCon){
                                 //Nothing to do
-                            }
-                            //License
-                            voRun.setLicense(COL_LIC_FEDO[vnColIndex]>=0?vaRecord[COL_LIC_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            //DNI
-                            voRun.setNationalId(COL_DNI_FEDO[vnColIndex]>=0?vaRecord[COL_DNI_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            };
+                            voCou.setControls(vnControls);
+                            //Add the course to the class
+                            voCla.setCourse(voCou);
                         }
+                        //Process the runner and put it on the class
+                        List<eu.oreplay.db.Runner> vlRun = voCla.getRunnerList();
+                        if (vlRun==null)
+                            vlRun = new ArrayList<>();
+                        eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
+                        voRun.setId("");
+                        voRun.setUuid("");
+                        voRun.setBibNumber(COL_BIB[vnColIndex]>=0?vaRecord[COL_BIB[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setBibAlt(COL_BIBALT[vnColIndex]>=0?vaRecord[COL_BIBALT[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setSicard(COL_SICARD[vnColIndex]>=0?vaRecord[COL_SICARD[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setSicardAlt(COL_SICARDALT[vnColIndex]>=0?vaRecord[COL_SICARDALT[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setDbId(COL_DBID[vnColIndex]>=0?vaRecord[COL_DBID[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setIofId(COL_IOFID[vnColIndex]>=0?vaRecord[COL_IOFID[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        try {
+                            String vcBirth = (COL_BIRTH[vnColIndex]>=0?vaRecord[COL_BIRTH[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
+                            if (vdBirth==null) {
+                                vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
+                            }
+                            voRun.setBirthDate(vdBirth);
+                        }catch(Exception eDate) {
+                            //Nothing to do
+                        }
+                        //If the event belongs to FEDO, some fields come in Num or Text columns
+                        if (oEve.getFederation()!=null) {
+                            if (oEve.getFederation().getId().equals("FEDO")) {
+                                //IOF ID
+                                voRun.setIofId(COL_IOFID_FEDO[vnColIndex]>=0?vaRecord[COL_IOFID_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
+                                //Birthdate
+                                try {
+                                    String vcBirth = (COL_BIRTH_FEDO[vnColIndex]>=0?vaRecord[COL_BIRTH_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
+                                    java.util.Date vdBirth = Utils.parse(vcBirth, "dd/MM/yyyy");
+                                    if (vdBirth==null) {
+                                        vdBirth = Utils.parse(vcBirth, "MM/dd/yyyy");
+                                    }
+                                    voRun.setBirthDate(vdBirth);
+                                }catch(Exception eDate) {
+                                    //Nothing to do
+                                }
+                                //License
+                                voRun.setLicense(COL_LIC_FEDO[vnColIndex]>=0?vaRecord[COL_LIC_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
+                                //DNI
+                                voRun.setNationalId(COL_DNI_FEDO[vnColIndex]>=0?vaRecord[COL_DNI_FEDO[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            }
+                        }
+                        voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]].length()>0?vaRecord[COL_SEX[vnColIndex]].trim().replaceAll("\"", "").charAt(0):' '):' '));
+                        voRun.setTelephone1(COL_TEL1[vnColIndex]>=0?vaRecord[COL_TEL1[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setTelephone2(COL_TEL2[vnColIndex]>=0?vaRecord[COL_TEL2[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        voRun.setEmail(COL_MAIL[vnColIndex]>=0?vaRecord[COL_MAIL[vnColIndex]].trim().replaceAll("\"", ""):"");
+                        //Start Time is set in a first element of RunnerResult List
+                        ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
+                        eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
+                        voRes.setId("");
+                        voRes.setStageOrder(voSta.getOrderNumber());
+                        voRes.setLegNumber(1);
+                        //Compose the type of result, which is a Stage Result
+                        eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
+                        voResType.setId(Utils.RESULT_STAGE_ID);
+                        voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                        voRes.setResultType(voResType);
+                        //Transform the start time value
+                        try {
+                            String vcTime = COL_START[vnColIndex]>=0?vaRecord[COL_START[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"";
+                            java.util.Date vdTime = Utils.formatRelativeTimeFromBase(vcTime, 
+                                    voSta.getBaseDate(), voSta.getBaseTime());
+                            voRes.setStartTime(vdTime);
+                        }catch(Exception eStart) {
+                            //Nothing to do
+                        }
+                        String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
+                        voRes.setStatusCode(Utils.STATUS_OK_ID);
+                        if (vcNc.equals("X") || vcNc.equals("1"))
+                            voRun.setIsNc(Boolean.TRUE);
+                        else
+                            voRun.setIsNc(Boolean.FALSE);
+                        //Add the result to the list
+                        vlRes.add(voRes);
+                        //Add the list to the runner data
+                        voRun.setRunnerResultList(vlRes);
+                        //Now, the club of the runner
+                        if (!(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"").equals("")) {
+                            eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
+                            voClu.setId("");
+                            voClu.setUuid("");
+                            voClu.setOeKey(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            voClu.setCity(COL_CLU_CITY[vnColIndex]>=0?vaRecord[COL_CLU_CITY[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            voClu.setShortName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            voClu.setLongName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
+                            //Add the club to the runner
+                            voRun.setClub(voClu);
+                        }
+                        //Add the runner to the list of runners
+                        vlRun.add(voRun);
+                        //Set the list of runners to the class again
+                        voCla.setRunnerList(vlRun);
+                        //Remove the previous contents of the class from the HashMap and insert it again
+                        vlCla.remove(vcClaId);
+                        vlCla.put(vcClaId, voCla);
+                    } else {
+                        if (oLog!=null)
+                            oLog.warn("CSV File with not enough fields to process it ?");
                     }
-                    voRun.setLastName(COL_LASTNAME[vnColIndex]>=0?vaRecord[COL_LASTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setFirstName(COL_FIRSTNAME[vnColIndex]>=0?vaRecord[COL_FIRSTNAME[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setSex((COL_SEX[vnColIndex]>=0?(vaRecord[COL_SEX[vnColIndex]].length()>0?vaRecord[COL_SEX[vnColIndex]].trim().replaceAll("\"", "").charAt(0):' '):' '));
-                    voRun.setTelephone1(COL_TEL1[vnColIndex]>=0?vaRecord[COL_TEL1[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setTelephone2(COL_TEL2[vnColIndex]>=0?vaRecord[COL_TEL2[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    voRun.setEmail(COL_MAIL[vnColIndex]>=0?vaRecord[COL_MAIL[vnColIndex]].trim().replaceAll("\"", ""):"");
-                    //Start Time is set in a first element of RunnerResult List
-                    ArrayList<eu.oreplay.db.RunnerResult> vlRes = new ArrayList<>();
-                    eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
-                    voRes.setId("");
-                    voRes.setStageOrder(voSta.getOrderNumber());
-                    voRes.setLegNumber(1);
-                    //Compose the type of result, which is a Stage Result
-                    eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
-                    voResType.setId(Utils.RESULT_STAGE_ID);
-                    voResType.setDescription(Utils.RESULT_STAGE_DESC);
-                    voRes.setResultType(voResType);
-                    //Transform the start time value
-                    try {
-                        String vcTime = COL_START[vnColIndex]>=0?vaRecord[COL_START[vnColIndex]].trim().replaceAll("\"", "").replaceAll(",", "."):"";
-                        java.util.Date vdTime = Utils.formatRelativeTimeFromBase(vcTime, 
-                                voSta.getBaseDate(), voSta.getBaseTime());
-                        voRes.setStartTime(vdTime);
-                    }catch(Exception eStart) {
-                        //Nothing to do
-                    }
-                    String vcNc = (COL_NC[vnColIndex]>=0?vaRecord[COL_NC[vnColIndex]].trim().replaceAll("\"", "").toUpperCase():"");
-                    voRes.setStatusCode(Utils.STATUS_OK_ID);
-                    if (vcNc.equals("X") || vcNc.equals("1"))
-                        voRun.setIsNc(Boolean.TRUE);
-                    else
-                        voRun.setIsNc(Boolean.FALSE);
-                    //Add the result to the list
-                    vlRes.add(voRes);
-                    //Add the list to the runner data
-                    voRun.setRunnerResultList(vlRes);
-                    //Now, the club of the runner
-                    if (!(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"").equals("")) {
-                        eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
-                        voClu.setId("");
-                        voClu.setUuid("");
-                        voClu.setOeKey(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voClu.setCity(COL_CLU_CITY[vnColIndex]>=0?vaRecord[COL_CLU_CITY[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voClu.setShortName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        voClu.setLongName(COL_CLU_SHORT[vnColIndex]>=0?vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                        //Add the club to the runner
-                        voRun.setClub(voClu);
-                    }
-                    //Add the runner to the list of runners
-                    vlRun.add(voRun);
-                    //Set the list of runners to the class again
-                    voCla.setRunnerList(vlRun);
-                    //Remove the previous contents of the class from the HashMap and insert it again
-                    vlCla.remove(vcClaId);
-                    vlCla.put(vcClaId, voCla);
                 }
+                if (oLog!=null)
+                    oLog.info("Number of processed lines: " + plStart.size());
+                //Add the lis of classes to the stage
+                List<eu.oreplay.db.Clazz> vlClaNew = new ArrayList<>(vlCla.values());
+                voSta.setClazzList(vlClaNew);
+                //Add the stage to the event
+                ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
+                vlSta.add(voSta);
+                voEve.setStageList(vlSta);
+            } else {
+                if (oLog!=null)
+                    oLog.warn("File with no lines to process");
             }
-            //Add the lis of classes to the stage
-            List<eu.oreplay.db.Clazz> vlClaNew = new ArrayList<>(vlCla.values());
-            voSta.setClazzList(vlClaNew);
-            //Add the stage to the event
-            ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
-            vlSta.add(voSta);
-            voEve.setStageList(vlSta);
+        }catch (Exception e) {
+            if (oLog!=null)
+                oLog.error("Exception converting start list", e);
         }
         return voEve;
     }
@@ -357,6 +372,8 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                 voBr.close();
                 voEve = convertResultListSingleStageClassicOE (plResult);
             } catch (Exception e) {
+                if (oLog!=null)
+                    oLog.error("Exception reading result list lines", e);
                 voEve = null;
             }        
         }
@@ -678,6 +695,9 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         //Remove the previous contents of the class from the HashMap and insert it again
                         vlCla.remove(vcClaId);
                         vlCla.put(vcClaId, voCla);
+                    } else {
+                        if (oLog!=null)
+                            oLog.warn("CSV File with not enough fields to process it ?");
                     }
                 }
                 //Add the lis of classes to the stage
@@ -691,9 +711,13 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                 ArrayList<eu.oreplay.db.Stage> vlSta = new ArrayList<>();
                 vlSta.add(voSta);
                 voEve.setStageList(vlSta);
+            } else {
+                if (oLog!=null)
+                    oLog.warn("File with no lines to process");
             }
         }catch (Exception e) {
-            //Nothing to do
+            if (oLog!=null)
+                oLog.error("Exception converting results", e);
         }
         return voEve;
     }

@@ -16,8 +16,8 @@ package eu.oreplay.library.messages;
 public class Messages extends java.util.ListResourceBundle {
     static final Object[][] contents = {
         {"oreplay", "OReplay"},
-        {"main", "OReplay. Desktop Client 0.5.1"},
-        {"version", "v0.5.1"},
+        {"main", "OReplay. Desktop Client 0.5.2"},
+        {"version", "v0.5.2"},
         {"about_description", "OReplay is a free web service that aims to provide a modern, user-friendly and open source hub to all orienteering events.<BR>Live and final results can be uploaded to be displayed during and after the event."},
         {"about_github", "<a href='https://github.com/oreplay' target='_blank'>https://github.com/oreplay</a>"},
         {"about_development", "OReplay Development Team"},
@@ -279,6 +279,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_data_novalid", "No valid data"},
         {"info_upload_started", "Upload process started"},
         {"info_upload_stopped", "Upload process stopped"},
+        {"info_upload_notready", "Not ready to start upload process (no login or no folder or no file extension selected)"},
         {"info_fileprocess_started", "File process started"},
         {"info_fileprocess_stopped", "File process stopped"},
         {"info_fileprocess_finished", "File process finished"},
@@ -291,6 +292,7 @@ public class Messages extends java.util.ListResourceBundle {
         {"info_date_time_needed", "Formato CSV. Es necesario escribir un valor correcto de fecha y hora de comienzo de la etapa"},
         {"info_force_stagedate_on", "Forcing stage date enabled"},
         {"info_force_stagedate_off", "Forcing stage date disabled"},
+        {"info_empty_server_list", "Empty list of servers"},
 
         {"error_exception", "Something went wrong and the program entered an exception block"},
         {"error_format_unknown", "Format unknown or not supported yet"},
