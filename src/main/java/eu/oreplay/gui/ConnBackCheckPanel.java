@@ -20,7 +20,7 @@ import javax.swing.SwingWorker;
  * @author javier.arufe
  */
 public class ConnBackCheckPanel extends javax.swing.JPanel {
-    private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
     private ConnBackStatus oStatus = new ConnBackStatus();
     private java.util.List lListeners = new java.util.ArrayList();
     private java.util.List<String> lServers = new java.util.ArrayList<String>();
@@ -41,7 +41,7 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
         java.util.Locale voLocale = new java.util.Locale(pcLocale);
         java.util.Locale.setDefault(voLocale);
         java.util.ResourceBundle.clearCache();
-        resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages", voLocale);
+        resMessages = java.util.ResourceBundle.getBundle("messages.Messages", voLocale);
         //Change the texts
         lblTitle.setText("1. " + resMessages.getString("check_connection"));
         btnProcess.setText(resMessages.getString("btn_check"));

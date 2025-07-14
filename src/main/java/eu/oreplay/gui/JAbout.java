@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * @author javier.arufe
  */
 public class JAbout extends javax.swing.JDialog {
-    private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
+    private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
     
     /**
      * Creates new form JAbout

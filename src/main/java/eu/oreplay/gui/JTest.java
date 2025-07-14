@@ -17,7 +17,7 @@ import java.io.FileWriter;
  * @author javier.arufe
  */
 public class JTest extends javax.swing.JDialog {
-    private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
+    private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
     private ConverterToModel oConv = null;
     private String cPath = "." + java.io.File.separator;
     
