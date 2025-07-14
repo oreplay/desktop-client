@@ -16,7 +16,7 @@ import org.apache.logging.log4j.*;
  * @author javier.arufe
  */
 public class JClientMain extends javax.swing.JFrame implements ConnBackListener {
-    private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages", java.util.Locale.getDefault()); //$NON-NLS-1$;
     private boolean bFirstOpen = true;
     private static String cPathApp = "." + java.io.File.separator;
     private static FormsParameters oForms = null;
@@ -512,7 +512,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             java.util.Locale voLocale = new java.util.Locale(pcLocale);
             java.util.Locale.setDefault(voLocale);
             java.util.ResourceBundle.clearCache();
-            resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages", voLocale);
+            resMessages = java.util.ResourceBundle.getBundle("messages.Messages", voLocale);
             //Set the texts again
             setTitle(resMessages.getString("oreplay"));
             mnuFile.setText(resMessages.getString("file"));
@@ -521,6 +521,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             mnuHelp.setText(resMessages.getString("help"));
             mnuAbout.setText(resMessages.getString("about"));
             mnuManual.setText(resMessages.getString("online_manual"));
+            mnuCheckUpdate.setText(resMessages.getString("check_updates"));
             mnuLanguage.setText(resMessages.getString("language"));
             mnuEnglish.setText(resMessages.getString("english"));
             mnuSpanish.setText(resMessages.getString("spanish"));

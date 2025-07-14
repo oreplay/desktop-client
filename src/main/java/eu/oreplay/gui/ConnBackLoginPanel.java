@@ -32,7 +32,7 @@ import javax.swing.text.Document;
  * @author javier.arufe
  */
 public class ConnBackLoginPanel extends javax.swing.JPanel {
-    private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
     private ConnBackStatus oStatus = new ConnBackStatus();
     private java.util.List lListeners = new java.util.ArrayList();
     private String cEveId = "";
@@ -61,7 +61,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         java.util.Locale voLocale = new java.util.Locale(pcLocale);
         java.util.Locale.setDefault(voLocale);
         java.util.ResourceBundle.clearCache();
-        resMessages = java.util.ResourceBundle.getBundle("eu.oreplay.library.messages.Messages", voLocale);
+        resMessages = java.util.ResourceBundle.getBundle("messages.Messages", voLocale);
         //Change the texts
         lblTitle.setText("2. " + resMessages.getString("login_event"));
         btnLogin.setText(resMessages.getString("login"));
