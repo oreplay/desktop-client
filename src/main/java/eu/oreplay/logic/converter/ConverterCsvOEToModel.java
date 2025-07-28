@@ -571,6 +571,8 @@ public class ConverterCsvOEToModel extends ConverterToModel{
                         voRes.setTimeBonus(BigDecimal.ZERO);
                         voRes.setTimeNeutralization(BigDecimal.ZERO);
                         voRes.setTimePenalty(BigDecimal.ZERO);
+                        //Sets contributory to true by default but this is only for several days totalization
+                        voRes.setContributory(true);
                         //Now, the club of the runner
                         if (!(COL_CLU_ID[vnColIndex]>=0?vaRecord[COL_CLU_ID[vnColIndex]].trim().replaceAll("\"", ""):"").equals("")) {
                             eu.oreplay.db.Club voClu = new eu.oreplay.db.Club();
