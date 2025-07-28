@@ -442,9 +442,9 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                                     String vcOneOfBest = vaRecord[vnColOk].trim().replaceAll("\"", "").toLowerCase();
                                     //If the field is checked
                                     if (vcOneOfBest.equals("x") || vcOneOfBest.equals("1")) {
-                                        voRes.setIsBest(true);
+                                        voRes.setContributory(true);
                                     } else {
-                                        voRes.setIsBest(false);
+                                        voRes.setContributory(false);
                                     }
                                 }
                             }
