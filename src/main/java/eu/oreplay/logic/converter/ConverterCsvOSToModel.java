@@ -592,6 +592,8 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                                 voRes.setTimeBonus(BigDecimal.ZERO);
                                 voRes.setTimeNeutralization(BigDecimal.ZERO);
                                 voRes.setTimePenalty(BigDecimal.ZERO);
+                                //Sets contributory to true by default but this is only for several days totalization
+                                voRes.setContributory(true);
                                 //Add the result to the list
                                 vlRes.add(voRes);
                                 //Add the list to the runner data
@@ -876,6 +878,8 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         voRes.setTimeBonus(BigDecimal.ZERO);
                         voRes.setTimeNeutralization(BigDecimal.ZERO);
                         voRes.setTimePenalty(BigDecimal.ZERO);
+                        //Sets contributory to true by default but this is only for several days totalization
+                        voRes.setContributory(true);
                         //Now, process Splits or radiocontrols, if present
                         if ((vbSplit && COL_SPLIT_STATION[vnColIndex]>=0) ||
                                 (vbRadio && COL_RADIO_NUM[vnColIndex]>=0)) {
