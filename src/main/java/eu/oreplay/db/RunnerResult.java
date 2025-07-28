@@ -114,8 +114,7 @@ public class RunnerResult implements Serializable {
     @Column(name = "leg_number")
     private Integer legNumber;
     @Basic(optional = true)
-    @Column(name = "is_best")
-    private boolean isBest;
+    private boolean contributory;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -305,13 +304,12 @@ public class RunnerResult implements Serializable {
         this.legNumber = legNumber;
     }
 
-    @JsonProperty("is_best")
-    public boolean getIsBest() {
-        return isBest;
+    public boolean getContributory() {
+        return contributory;
     }
 
-    public void setIsBest(boolean isBest) {
-        this.isBest = isBest;
+    public void setContributory(boolean contributory) {
+        this.contributory = contributory;
     }
 
     @JsonProperty("stage_order")
