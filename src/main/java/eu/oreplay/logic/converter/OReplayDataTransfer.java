@@ -262,6 +262,7 @@ public class OReplayDataTransfer {
         HashMap<String, String> vaResul = new HashMap<>();
         String vcClass = "ERROR";
         String vcResul = "";
+        boolean vbCorrect = true;
         eu.oreplay.db.Event voEve = null;
         try {
             //If a source file has been inspected, process it
@@ -287,6 +288,7 @@ public class OReplayDataTransfer {
                             voEve = poConv.convertEntryList(poConv.getcFile());
                         } else {
                             vcResul = "error_not_supported_xml_contents";
+                            vbCorrect = false;
                         }
                     //If CSV, parse contents
                     } else if (poConv.getcExtension().equals(ConverterToModel.EXT_CSV)) {
@@ -316,9 +318,11 @@ public class OReplayDataTransfer {
                             voEve = poConv.convertStartList(poConv.getcFile());
                         } else {
                             vcResul = "error_not_supported_csv_contents";
+                            vbCorrect = false;
                         }
                     } else {
                         vcResul = "error_not_supported_filetype";
+                        vbCorrect = false;
                     }
                     //Creates the output in JSON by merging metadata and event
                     if (voEve!=null) {
@@ -352,16 +356,26 @@ public class OReplayDataTransfer {
                             }
                         }
                     } else {
-                        vcResul = "error_nothing_to_do_noevent";
+                        if (vcResul.equals("")) {
+                            vcResul = "error_nothing_to_do_noevent";
+                        }
+                        vbCorrect = false;
                     }
                 } else {
                     vcResul = "error_nothing_to_do_nofile";
+                    vbCorrect = false;
                 }
             } else {
                 vcResul = "error_nothing_to_do_noconf";
+                vbCorrect = false;
             }
         } catch(Exception e) {
             vcResul = "error_exception" + ". " + e.getMessage();
+            vbCorrect = false;
+        }
+        if (!vbCorrect) {
+            vcClass = "ERROR";
+            vaResul.put(vcClass, vcResul);
         }
         return vaResul;
     }
