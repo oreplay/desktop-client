@@ -574,6 +574,7 @@ public abstract class ConverterToModel {
                         cResultsType = OTHER_VALUES;
                     }
                     //Source
+                    cSource = OTHER_VALUES;
                     if (vcTopValues.contains("SportSoftware OE2010")) {
                         cSource = SRC_OE2010;
                     } else if (vcTopValues.contains("SportSoftware OE12")) {

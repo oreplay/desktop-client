@@ -84,6 +84,8 @@ public class ConverterIofToModel extends ConverterToModel {
                     getcSource().equals(ConverterToModel.SRC_OESCORE2010) ||
                     getcSource().equals(ConverterToModel.SRC_SITIMING)) {
                 voEve = convertEntryListSingleStageRogaine (voEntry);
+            } else if (getcSource().equals(ConverterToModel.OTHER_VALUES)) {
+                voEve = convertEntryListSingleStageClassic (voEntry);
             }
         }catch(Exception e) { 
             voEve = null;
@@ -333,6 +335,8 @@ public class ConverterIofToModel extends ConverterToModel {
                     getcSource().equals(ConverterToModel.SRC_OESCORE2010) ||
                     getcSource().equals(ConverterToModel.SRC_SITIMING)) {
                 voEve = convertStartListSingleStageRogaine (voStart);
+            } else if (getcSource().equals(ConverterToModel.OTHER_VALUES)) {
+                voEve = convertStartListSingleStageClassic (voStart);
             }
         }catch(Exception e) { 
             voEve = null;
@@ -666,6 +670,8 @@ public class ConverterIofToModel extends ConverterToModel {
                     getcSource().equals(ConverterToModel.SRC_SITIMING)) &&
                     isScoring()) {
                 voEve = convertResultListSingleStageRogaine (voResult);
+            } else if (getcSource().equals(ConverterToModel.OTHER_VALUES)) {
+                voEve = convertResultListSingleStageClassic (voResult);
             }
         }catch(Exception e) {            
             voEve = null;
