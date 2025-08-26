@@ -129,11 +129,17 @@ public class ConverterIofToModel extends ConverterToModel {
                         eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
                         voRun.setId("");
                         voRun.setUuid("");
+                        //First, try to get db_id from the PersonEntry tag
+                        try {
+                            voRun.setDbId(voPersonEntry.getId().getValue());
+                        }catch(Exception eEntryId1) {
+                        }
                         eu.oreplay.logic.iof.Person voPerson = voPersonEntry.getPerson();
                         if (voPerson!=null) {
+                            //Next, try to rewrite the db_id with the first Id tag from Person
                             try {
                                 voRun.setDbId(voPerson.getId().get(0).getValue());
-                            }catch(Exception eEntryId) {
+                            }catch(Exception eEntryId2) {
                             }
                             voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
                             voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
@@ -220,6 +226,11 @@ public class ConverterIofToModel extends ConverterToModel {
                                     voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
                                     Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
                                     voRun.setSex(vcSex);
+                                    //Next, try to rewrite the db_id with the first Id tag from Person
+                                    try {
+                                        voRun.setDbId(voPerson.getId().get(0).getValue());
+                                    }catch(Exception eEntryId2) {
+                                    }
                                 }
                                 //Add the club to the runner, copying the same of the team
                                 voRun.setClub(voTea.getClub());
@@ -409,12 +420,22 @@ public class ConverterIofToModel extends ConverterToModel {
                                     eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
                                     voRun.setId("");
                                     voRun.setUuid("");
+                                    //First, try to get db_id from the PersonStart tag
+                                    try {
+                                        voRun.setDbId(voPersonStart.getEntryId().getValue());
+                                    }catch(Exception eEntryId1) {
+                                    }
                                     eu.oreplay.logic.iof.Person voPerson = voPersonStart.getPerson();
                                     if (voPerson!=null) {
                                         voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
                                         voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
                                         Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
                                         voRun.setSex(vcSex);
+                                        //Next, try to rewrite the db_id with the first Id tag from Person
+                                        try {
+                                            voRun.setDbId(voPerson.getId().get(0).getValue());
+                                        }catch(Exception eEntryId2) {
+                                        }
                                     }
                                     //Start Time, Bib# and SiCard are in another place
                                     if (voPersonStart.getStart()!=null && !voPersonStart.getStart().isEmpty()) {
@@ -495,12 +516,22 @@ public class ConverterIofToModel extends ConverterToModel {
                                             eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
                                             voRun.setId("");
                                             voRun.setUuid("");
+                                            //First, try to get db_id from the TeamMemberStart tag
+                                            try {
+                                                voRun.setDbId(voTeamStart.getEntryId().getValue());
+                                            }catch(Exception eEntryId1) {
+                                            }
                                             eu.oreplay.logic.iof.Person voPerson = voTeamMemberStart.getPerson();
                                             if (voPerson!=null) {
                                                 voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
                                                 voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
                                                 Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
                                                 voRun.setSex(vcSex);
+                                                //Next, try to rewrite the db_id with the first Id tag from Person
+                                                try {
+                                                    voRun.setDbId(voPerson.getId().get(0).getValue());
+                                                }catch(Exception eEntryId2) {
+                                                }
                                             }
                                             //Get Club info
                                             if (voTeamMemberStart.getOrganisation()!=null) {
@@ -569,6 +600,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     if (vlRun.isEmpty()) {
                                                         ArrayList<eu.oreplay.db.TeamResult> vlTes = new ArrayList<>();
                                                         eu.oreplay.db.TeamResult voTes = new eu.oreplay.db.TeamResult();
+                                                        //Ids
                                                         voTes.setId(voRes.getId());
                                                         voTes.setStageOrder(voRes.getStageOrder());
                                                         voTes.setResultType(voRes.getResultType());
@@ -754,9 +786,10 @@ public class ConverterIofToModel extends ConverterToModel {
                                     eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
                                     voRun.setId("");
                                     voRun.setUuid("");
+                                    //First, try to get db_id from the PersonResult tag
                                     try {
                                         voRun.setDbId(voPersonResult.getEntryId().getValue());
-                                    }catch(Exception eEntryId) {
+                                    }catch(Exception eEntryId1) {
                                     }
                                     eu.oreplay.logic.iof.Person voPerson = voPersonResult.getPerson();
                                     if (voPerson!=null) {
@@ -764,6 +797,11 @@ public class ConverterIofToModel extends ConverterToModel {
                                         voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
                                         Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
                                         voRun.setSex(vcSex);
+                                        //Next, try to rewrite the db_id with the first Id tag from Person
+                                        try {
+                                            voRun.setDbId(voPerson.getId().get(0).getValue());
+                                        }catch(Exception eEntryId2) {
+                                        }
                                     }
                                     //Start Time, Bib#, SiCard and results are in another place
                                     if (voPersonResult.getResult()!=null && !voPersonResult.getResult().isEmpty()) {
@@ -1051,12 +1089,22 @@ public class ConverterIofToModel extends ConverterToModel {
                                             eu.oreplay.db.Runner voRun = new eu.oreplay.db.Runner();
                                             voRun.setId("");
                                             voRun.setUuid("");
+                                            //First, try to get db_id from the TeamMemberResult tag
+                                            try {
+                                                voRun.setDbId(voTeamMemberResult.getEntryId().getValue());
+                                            }catch(Exception eEntryId1) {
+                                            }
                                             eu.oreplay.logic.iof.Person voPerson = voTeamMemberResult.getPerson();
                                             if (voPerson!=null) {
                                                 voRun.setFirstName((voPerson.getName()!=null?voPerson.getName().getGiven():""));
                                                 voRun.setLastName((voPerson.getName()!=null?voPerson.getName().getFamily():""));
                                                 Character vcSex = (voPerson.getSex()!=null?(voPerson.getSex().length()>0?voPerson.getSex().charAt(0):'M'):'M');
                                                 voRun.setSex(vcSex);
+                                                //Next, try to rewrite the db_id with the first Id tag from Person
+                                                try {
+                                                    voRun.setDbId(voPerson.getId().get(0).getValue());
+                                                }catch(Exception eEntryId2) {
+                                                }
                                             }
                                             //Get Club info
                                             if (voTeamMemberResult.getOrganisation()!=null) {
