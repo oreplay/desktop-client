@@ -518,7 +518,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                             voRun.setUuid("");
                                             //First, try to get db_id from the TeamMemberStart tag
                                             try {
-                                                voRun.setDbId(voTeamStart.getEntryId().getValue());
+                                                voRun.setDbId(voTeamMemberStart.getEntryId().getValue());
                                             }catch(Exception eEntryId1) {
                                             }
                                             eu.oreplay.logic.iof.Person voPerson = voTeamMemberStart.getPerson();
