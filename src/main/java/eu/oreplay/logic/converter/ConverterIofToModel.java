@@ -451,6 +451,9 @@ public class ConverterIofToModel extends ConverterToModel {
                                             eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                             voRes.setId("");
                                             voRes.setStageOrder(voSta.getOrderNumber());
+                                            if (voPrs.getRaceNumber()!=null) {
+                                                voRes.setStageOrder(voPrs.getRaceNumber().intValue());
+                                            }
                                             voRes.setLegNumber(1);
                                             //The type of result is null as it is processing only start times
                                             voRes.setResultType(null);
@@ -583,12 +586,14 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                                     voRes.setId("");
                                                     voRes.setStageOrder(voSta.getOrderNumber());
+                                                    if (voPrs.getRaceNumber()!=null) {
+                                                        voRes.setStageOrder(voPrs.getRaceNumber().intValue());
+                                                    }
                                                     if (voPrs.getLeg()!=null)
                                                         voRes.setLegNumber(voPrs.getLeg().intValue());
                                                     //The type of result is null as it is processing only start times
                                                     voRes.setResultType(null);
                                                     //Transform the date value
-                                                    //voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
                                                     voRes.setStartTime(Utils.convertGregorianDateFromXmlOrForced(voPrs.getStartTime(), isbForce(), getcStageDate(), getcDateFormat()));
                                                     //There is only Status info at Result tag
                                                     voRes.setStatusCode(Utils.STATUS_OK_ID);
@@ -683,7 +688,7 @@ public class ConverterIofToModel extends ConverterToModel {
                 voIs = new BOMInputStream(new FileInputStream(poFile));
             else
                 voIs = new FileInputStream(poFile);
-            voContext = JAXBContext.newInstance(StartList.class);
+            voContext = JAXBContext.newInstance(ResultList.class);
             voResult = (ResultList) voContext.createUnmarshaller()
                     .unmarshal(voIs);
             voIs.close();
@@ -692,7 +697,7 @@ public class ConverterIofToModel extends ConverterToModel {
             } else if (getcSource().equals(ConverterToModel.SRC_OE2010) ||
                     getcSource().equals(ConverterToModel.SRC_OEV12) ||
                     getcSource().equals(ConverterToModel.SRC_GENERICXML) || 
-                    (getcSource().equals(ConverterToModel.SRC_MEOS) && !isScoring())) {
+                    (getcSource().equals(ConverterToModel.SRC_MEOS) && (!isScoring() || !isbOneStage()))) {
                 voEve = convertResultListSingleStageClassic (voResult);
             } else if (getcSource().equals(ConverterToModel.SRC_OS2010) ||
                     getcSource().equals(ConverterToModel.SRC_OSV12)) {
@@ -825,6 +830,9 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                                 voRes.setId("");
                                                 voRes.setStageOrder(voSta.getOrderNumber());
+                                                if (voPrs.getRaceNumber()!=null) {
+                                                    voRes.setStageOrder(voPrs.getRaceNumber().intValue());
+                                                }
                                                 voRes.setLegNumber(1);
                                                 //--------------------------------------------------------------------------------------------------
                                                 //Compose the type of result, which is a Stage Result for normal competitions, or others for Trail-O
@@ -860,8 +868,11 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 //Get times and position
                                                 if (voPrs.getTime()!=null)
                                                     voRes.setTimeSeconds(new java.math.BigDecimal(voPrs.getTime()));
-                                                if (voPrs.getTimeBehind()!=null)
+                                                if (voPrs.getTimeBehind()!=null) {
                                                     voRes.setTimeBehind(new java.math.BigDecimal(voPrs.getTimeBehind()));
+                                                    //When OE calculates TimeBehind is because the time is going to be taken in account in totalizations
+                                                    voRes.setContributory(true);
+                                                }
                                                 if (voPrs.getPosition()!=null)
                                                     voRes.setPosition(voPrs.getPosition().intValue());
 
@@ -1001,6 +1012,71 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 }
                                                 //Add the result to the list
                                                 vlRes.add(voRes);
+                                                //Now, check if there is a totalization file for several stages and there is a Overall
+                                                if (!isbOneStage() && voPrs.getOverallResult()!=null) {
+                                                    eu.oreplay.db.RunnerResult voResCum = new eu.oreplay.db.RunnerResult();
+                                                    OverallResult voOve = voPrs.getOverallResult();
+                                                    voResCum.setId(voRes.getId());
+                                                    voResCum.setStageOrder(voRes.getStageOrder());
+                                                    //Compose the type of result, which is an Overall Result
+                                                    eu.oreplay.db.ResultType voResCumType = new eu.oreplay.db.ResultType();
+                                                    voResCumType.setId(Utils.RESULT_OVERALL_ID);
+                                                    voResCumType.setDescription(Utils.RESULT_OVERALL_DESC);
+                                                    voResCum.setResultType(voResCumType);
+                                                    voResCum.setLegNumber(voRes.getLegNumber());
+                                                    voResCum.setContributory(true);
+                                                    //Get the status, from IOF enumeration to OReplay Ids
+                                                    voResCum.setStatusCode(Utils.convertIofStatusValue(voOve.getStatus().value()));
+                                                    //Get times and position
+                                                    if (voOve.getTime()!=null)
+                                                        voResCum.setTimeSeconds(new java.math.BigDecimal(voOve.getTime()));
+                                                    if (voOve.getTimeBehind()!=null) {
+                                                        voResCum.setTimeBehind(new java.math.BigDecimal(voOve.getTimeBehind()));
+                                                    }
+                                                    if (voOve.getPosition()!=null) {
+                                                        voResCum.setPosition(voOve.getPosition().intValue());
+                                                    }                                                        
+                                                    //Set remainder fields for points and times
+                                                    //Process the Score tags
+                                                    if (voOve.getScore()!=null) {
+                                                        for (eu.oreplay.logic.iof.Score voSco : voOve.getScore()) {
+                                                            if (voSco!=null) {
+                                                                try {
+                                                                    double vnPoints = voSco.getValue();
+                                                                    switch (voSco.getType()) {
+                                                                        case "Score":
+                                                                            voResCum.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
+                                                                            break;
+                                                                        case "FinalScore":
+                                                                            voResCum.setPointsFinal(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
+                                                                            break;
+                                                                        case "Penalty":
+                                                                            voResCum.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
+                                                                            break;
+                                                                        case "PenaltyScore":
+                                                                            voResCum.setPointsPenalty(new java.math.BigDecimal(vnPoints*vnPenFactor).setScale(2, java.math.RoundingMode.HALF_UP));
+                                                                            break;
+                                                                        case "ManualScoreAdjust":
+                                                                            voResCum.setPointsAdjusted(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
+                                                                            break;
+                                                                        case "XtraPoints":
+                                                                            voResCum.setPointsBonus(new java.math.BigDecimal(vnPoints).setScale(2, java.math.RoundingMode.HALF_UP));
+                                                                            break;
+                                                                        default:
+                                                                            break;
+                                                                    }
+                                                                }catch(Exception eConvScore) {
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    voResCum.setTimeAdjusted(BigDecimal.ZERO);
+                                                    voResCum.setTimeBonus(BigDecimal.ZERO);
+                                                    voResCum.setTimeNeutralization(BigDecimal.ZERO);
+                                                    voResCum.setTimePenalty(BigDecimal.ZERO);
+                                                    //Add the result to the list
+                                                    vlRes.add(voResCum);
+                                                }
                                                 //Increase the counter of RaceResult for the same runner
                                                 vnIndResult++;
                                             }
@@ -1156,6 +1232,9 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     eu.oreplay.db.RunnerResult voRes = new eu.oreplay.db.RunnerResult();
                                                     voRes.setId("");
                                                     voRes.setStageOrder(voSta.getOrderNumber());
+                                                    if (voPrs.getRaceNumber()!=null) {
+                                                        voRes.setStageOrder(voPrs.getRaceNumber().intValue());
+                                                    }
                                                     //Leg number of the runner by default. It's used for runnerresult and also for teamresult
                                                     int vnLegNumber = 1;
                                                     if (voPrs.getLeg()!=null) {
@@ -1177,6 +1256,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voRes.setTimeSeconds(new java.math.BigDecimal(voPrs.getTime()));
                                                     if (voPrs.getTimeBehind()!=null && !voPrs.getTimeBehind().isEmpty()) {
                                                         voRes.setTimeBehind(new java.math.BigDecimal(voPrs.getTimeBehind().get(0).getValue()));
+                                                        //When OE calculates TimeBehind is because the time is going to be taken in account in totalizations
+                                                        voRes.setContributory(true);
                                                     }
                                                     if (voPrs.getPosition()!=null && !voPrs.getPosition().isEmpty() &&
                                                             voPrs.getPosition().get(0).getValue()!=null) {
@@ -1296,6 +1377,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voTes.setStageOrder(voRes.getStageOrder());
                                                         voTes.setResultType(voRes.getResultType());
                                                         voTes.setLegNumber(vnLegNumber);
+                                                        voTes.setContributory(true);
                                                         //Get the status, from IOF enumeration to OReplay Ids
                                                         voTes.setStatusCode(Utils.convertIofStatusValue(voOve.getStatus().value()));
                                                         //Get times and position
@@ -1366,6 +1448,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         //If there is no Overall tag, put the value of the team as of the runner
                                                         voTes.setId(voRes.getId());
                                                         voTes.setStageOrder(voRes.getStageOrder());
+                                                        voTes.setContributory(true);
                                                         voTes.setResultType(voRes.getResultType());
                                                         voTes.setStatusCode(voRes.getStatusCode());
                                                         voTes.setTimeSeconds(voRes.getTimeSeconds());

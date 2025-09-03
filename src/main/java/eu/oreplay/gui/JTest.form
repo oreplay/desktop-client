@@ -185,6 +185,8 @@
                                   <Component id="chkUtf" min="-2" pref="160" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                                   <Component id="chkKnown" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="chkOneStage" min="-2" pref="150" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="lblSource" min="-2" pref="110" max="-2" attributes="0"/>
@@ -227,6 +229,7 @@
                       <Component id="chkExists" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="chkUtf" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="chkKnown" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="chkOneStage" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -434,6 +437,16 @@
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chkOneStage">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="resMessages.getString(&quot;one_stage&quot;)" type="code"/>
             </Property>
           </Properties>
         </Component>

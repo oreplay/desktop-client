@@ -79,6 +79,7 @@ public class JTest extends javax.swing.JDialog {
         lblResults = new javax.swing.JLabel();
         txtResults = new javax.swing.JTextField();
         lblStatus = new javax.swing.JLabel();
+        chkOneStage = new javax.swing.JCheckBox();
         pnlButtons = new javax.swing.JPanel();
         btnAccept = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
@@ -212,6 +213,9 @@ public class JTest extends javax.swing.JDialog {
 
         lblStatus.setBackground(new java.awt.Color(255, 255, 255));
 
+        chkOneStage.setBackground(new java.awt.Color(255, 255, 255));
+        chkOneStage.setText(resMessages.getString("one_stage"));
+
         javax.swing.GroupLayout pnlInfoLayout = new javax.swing.GroupLayout(pnlInfo);
         pnlInfo.setLayout(pnlInfoLayout);
         pnlInfoLayout.setHorizontalGroup(
@@ -227,7 +231,9 @@ public class JTest extends javax.swing.JDialog {
                                 .addGap(29, 29, 29)
                                 .addComponent(chkUtf, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(34, 34, 34)
-                                .addComponent(chkKnown, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(chkKnown, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(chkOneStage, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pnlInfoLayout.createSequentialGroup()
                                 .addComponent(lblSource, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -259,7 +265,8 @@ public class JTest extends javax.swing.JDialog {
                 .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkExists)
                     .addComponent(chkUtf)
-                    .addComponent(chkKnown))
+                    .addComponent(chkKnown)
+                    .addComponent(chkOneStage))
                 .addGap(21, 21, 21)
                 .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtIof, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -393,6 +400,7 @@ public class JTest extends javax.swing.JDialog {
     private javax.swing.JButton btnSrcFile;
     private javax.swing.JCheckBox chkExists;
     private javax.swing.JCheckBox chkKnown;
+    private javax.swing.JCheckBox chkOneStage;
     private javax.swing.JCheckBox chkUtf;
     private javax.swing.JLabel lblContents;
     private javax.swing.JLabel lblDstFile;
@@ -421,6 +429,8 @@ public class JTest extends javax.swing.JDialog {
         chkExists.setSelected(false);
         chkKnown.setSelected(false);
         chkUtf.setSelected(false);
+        chkOneStage.setSelected(false);
+        chkOneStage.setText(resMessages.getString("one_stage"));
         txtExtension.setText("");
         txtContents.setText("");
         txtResults.setText("");
@@ -435,6 +445,7 @@ public class JTest extends javax.swing.JDialog {
         chkExists.setEnabled(pbFlag);
         chkKnown.setEnabled(pbFlag);
         chkUtf.setEnabled(pbFlag);
+        chkOneStage.setEnabled(pbFlag);
         txtExtension.setEditable(pbFlag);
         txtContents.setEditable(pbFlag);
         txtResults.setEditable(pbFlag);
@@ -517,6 +528,17 @@ public class JTest extends javax.swing.JDialog {
         chkExists.setSelected(oConv.isbExists());
         chkKnown.setSelected(oConv.isbKnownData());
         chkUtf.setSelected(oConv.isbUtf());
+        //One Stage check box. If several stages totalization, sets a different text indicating whether is sum of points or time
+        chkOneStage.setSelected(true);
+        if (oConv.isbOneStage()) {
+            chkOneStage.setText(resMessages.getString("one_stage"));
+        } else {
+            if (oConv.isbIncludeScore()) {
+                chkOneStage.setText(resMessages.getString("totalizationpoints"));
+            } else {
+                chkOneStage.setText(resMessages.getString("totalizationtime"));
+            }
+        }
         txtExtension.setText(oConv.getcExtension());
         txtContents.setText(resMessages.getString(oConv.getcContents().toLowerCase()));
         if (oConv.getcContents().equals(ConverterToModel.CONTENTS_RESULT))
