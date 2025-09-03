@@ -537,6 +537,7 @@ public abstract class ConverterToModel {
                     cSource = SRC_OEV12;
                     bOneStage = false;
                     cTotalization = TOT_POINTS;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OE0013_V12")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_TOTALS;
@@ -549,6 +550,7 @@ public abstract class ConverterToModel {
                     cSource = SRC_OE2010;
                     bOneStage = false;
                     cTotalization = TOT_POINTS;
+                    bIncludeScore = true;
                 } else if (vcTopValues.startsWith("OE0013")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_TOTALS;
@@ -638,6 +640,8 @@ public abstract class ConverterToModel {
      */
     private boolean checkForIofXmlResultsType (File poFile) {
         boolean vbResul = false;
+        //Array to check whether is a totalization of several stages (checking up to 6)
+        boolean vaStages[] = {false, false, false, false, false, false};
         try {
             //Get a BufferedReader from the source file
             InputStream voIs;
@@ -681,6 +685,12 @@ public abstract class ConverterToModel {
                         } else {
                             cResultsType = RES_TOTALS;
                         }
+                        //Check whether there is a totalization of several stages
+                        for (int vnStages=1; vnStages<=6; vnStages++) {
+                            if (vcTopValues.contains("<Result raceNumber=" + vnStages)) {
+                                vaStages[vnStages-1] = true;
+                            }
+                        }
                     } else {
                         //If it's TrailO, check at the header for the rest of parameters
                         int vnCreator = vcTopValues.indexOf("creator");
@@ -715,6 +725,22 @@ public abstract class ConverterToModel {
                 //Increase Loop counter
                 vnLoop++;
             }
+            //Complete totalization of several stages checking, by counting the number of different raceNumber values
+            int vnCountStages = 0;
+            for (int vnStages=1; vnStages<=6; vnStages++) {
+                if (vaStages[vnStages-1]) {
+                    vnCountStages++;
+                }
+            }            
+            if (vnCountStages>1) {
+                bOneStage = false;
+                if (bIncludeScore) {
+                    cTotalization = TOT_POINTS;
+                } else {
+                    cTotalization = TOT_TIME;
+                }
+            }
+            //Close de input file
             voIs.close();
         } catch (Exception e) {
             vbResul = false;
