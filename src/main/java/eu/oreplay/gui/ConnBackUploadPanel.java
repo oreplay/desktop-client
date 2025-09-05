@@ -435,8 +435,10 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 //Iterate until the thread is stopped
                 while (bRun) {
                     //First, find a file with the given extension located at the given folder
-                    vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
-                    if (vcFile!=null) {
+                    //If it's not the first time, and the last file was unsuccessful and needs to be uploaded again, don't try to find another file, keep on with the same
+                    if (!(vbDeleteFile==false && vcFile!=null && !vcFile.equals("")))
+                        vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
+                    if (vcFile!=null && !vcFile.equals("")) {
                         vbDeleteFile = true;
                         //Get a Timestamp when starting process
                         voStart = new Date();
@@ -520,6 +522,11 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                 }
                                                 for (int i=0; i<voData.getoMeta().getlHuman().size(); i++) {
                                                     String vcData = voData.getoMeta().getlHuman().get(i);
+                                                    //Check if the backend sends a message indicating that the process has been aborted due a long time
+                                                    //In this case, don't delete de file to continue uploading it again
+                                                    if (vcData.toLowerCase().contains("it is taking too long")) {
+                                                        vbDeleteFile = false;
+                                                    }
                                                     //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                                     publish(vcColor + "<JARUTAG>" + vcData);
                                                 }
@@ -578,7 +585,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             //This calls the method "process" in the SwingWorker, to set a status text in the panel
                             publish("#000000<JARUTAG>" + resMessages.getString("info_connection_timeout") + " - " + vcNow);
                         } catch (java.io.IOException | java.lang.InterruptedException eInterrupt) {
-                            //Don't change the flag to delete the file, assuming that the server is processing the file but aborted the connection due to a load balanced server
+                            vbDeleteFile = false;
                             voFinish = new java.util.Date();
                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
                             if (JClientMain.getoLog()!=null)
@@ -586,6 +593,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             //This calls the method "process" in the SwingWorker, to set a status text in the panel
                             publish("#000000<JARUTAG>" + resMessages.getString("info_connection_break") + " - " + vcNow);
                         } catch (Exception eNet) {
+                            vbDeleteFile = false;
                             voFinish = new java.util.Date();
                             vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
                             if (JClientMain.getoLog()!=null)
