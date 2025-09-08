@@ -636,23 +636,23 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 pnlUpload.setDefaultValues();
             //If it wasn't connected and now it's connected, activate second panel for login
             } else if (e.getoStatus().getnStatus()==ConnBackStatus.CONNECTION_OK) {
-                pnlLogin.setoStatus(oStatus);
+                pnlLogin.setoStatus(this.getoStatus());
                 pnlLogin.enableForLogin();
                 pnlUpload.setDefaultValues();
             //If login fails, enable for login again
             } else if (e.getoStatus().getnStatus()==ConnBackStatus.LOGIN_NOOK) {
-                pnlLogin.setoStatus(oStatus);
+                pnlLogin.setoStatus(this.getoStatus());
                 pnlLogin.enableForLogin();
                 pnlUpload.setDefaultValues();
             //If login ok, enable for stage selection
             } else if (e.getoStatus().getnStatus()==ConnBackStatus.LOGIN_OK) {
-                pnlLogin.setoStatus(oStatus);
+                pnlLogin.setoStatus(this.getoStatus());
                 pnlLogin.enableForStage();
                 pnlUpload.setDefaultValues();
             //If a stage is selected, enable for upload
             } else if (e.getoStatus().getnStatus()==ConnBackStatus.STAGE_SELECTED) {
                 pnlLogin.enableForStage();
-                pnlUpload.setoStatus(oStatus);
+                pnlUpload.setoStatus(this.getoStatus());
                 pnlUpload.enableForUpload();
             //If a text is pasted into EventId or Token, split the contents
             } else if (e.getoStatus().getnStatus()==ConnBackStatus.PASTE_IDTOKEN) {
@@ -668,7 +668,19 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 lblStageZeroTime.setVisible(vbCsv);
                 txtStageDate.setVisible(vbCsv);
                 txtStageZeroTime.setVisible(vbCsv);
-                pnlUpload.setoStatus(oStatus);
+                //Set the status to the previous state again
+                if (this.getoStatus().getnStatusOld()!=ConnBackStatus.NO_STATUS)
+                    this.getoStatus().setnStatus(this.getoStatus().getnStatusOld());
+                pnlCheck.setoStatus(this.getoStatus());
+                pnlLogin.setoStatus(this.getoStatus());
+                pnlUpload.setoStatus(this.getoStatus());
+            } else if (e.getoStatus().getnStatus()==ConnBackStatus.UPLOAD_OFF ||
+                    e.getoStatus().getnStatus()==ConnBackStatus.UPLOAD_ON ||
+                    e.getoStatus().getnStatus()==ConnBackStatus.UPLOADING) {
+                //Send the status to the rest of panels
+                pnlCheck.setoStatus(this.getoStatus());
+                pnlLogin.setoStatus(this.getoStatus());
+                pnlUpload.setoStatus(this.getoStatus());
             }
 
         }
