@@ -13,6 +13,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 /**
@@ -49,12 +50,6 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
     }
     public void initFormParameters(FormsParameters.ParConnBackCheckPanel poParam) {
         try {
-            /*
-            this.setBounds(poParam.getoPos().getnPosX(), 
-                poParam.getoPos().getnPosY(), 
-                poParam.getoPos().getnSizeX(),
-                poParam.getoPos().getnSizeY());
-            */
             lServers = poParam.getlServers();
         }catch (Exception e) {
             if (JClientMain.getoLog()!=null)
@@ -66,12 +61,6 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
             //Read the parameters to store
             FormsParameters voPadre = new FormsParameters();
             FormsParameters.ParConnBackCheckPanel voParam = voPadre.new ParConnBackCheckPanel();
-            /*
-            voParam.getoPos().setnPosX(this.getX());
-            voParam.getoPos().setnPosY(this.getY());
-            voParam.getoPos().setnSizeX(this.getWidth());
-            voParam.getoPos().setnSizeY(this.getHeight());
-            */
             voParam.setlServers(lServers);
             //Calls the method in the main form to receive and to store the parameters
             JClientMain.updateFormsParameters("ConnBackCheckPanel", voParam);
@@ -170,7 +159,14 @@ public class ConnBackCheckPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
-        this.checkConnectionThread();
+        if (oStatus.getnStatus()!=ConnBackStatus.UPLOADING) {
+            this.checkConnectionThread();
+        } else {
+            JOptionPane.showMessageDialog(this , 
+                    resMessages.getString("info_upload_inprogress"), 
+                    resMessages.getString("warning"),
+                    JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_btnProcessActionPerformed
 
 

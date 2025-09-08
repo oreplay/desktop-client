@@ -1015,6 +1015,7 @@ public static boolean isFileContainsBOM(File poFile) throws IOException {
             if ("efbbbf".equalsIgnoreCase(vcFirstBytes)) {
                 vbResul = true;
             }
+            voIs.close();
         }
     }
     return vbResul;

@@ -20,6 +20,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -44,6 +45,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private java.util.HashMap<Integer, eu.oreplay.db.Stage> lStages = new java.util.HashMap<>();
     private transient DocumentListenerIdToken oDoc = new DocumentListenerIdToken();
     private static final String MESSAGE_ERROR_1 = "error_exception";    
+    private int nPrevListIndex = -1;
     
     /**
      * Creates new form ConnBackLoginPanel
@@ -79,12 +81,6 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     }
     public void initFormParameters(FormsParameters.ParConnBackLoginPanel poParam) {
         try {
-            /*
-            this.setBounds(poParam.getoPos().getnPosX(), 
-                poParam.getoPos().getnPosY(), 
-                poParam.getoPos().getnSizeX(),
-                poParam.getoPos().getnSizeY());
-            */
             cEveId = poParam.getcEveId();
             cToken = poParam.getcToken();
             cIdToken = poParam.getcIdToken();
@@ -105,12 +101,6 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             //Read the parameters to store
             FormsParameters voPadre = new FormsParameters();
             FormsParameters.ParConnBackLoginPanel voParam = voPadre.new ParConnBackLoginPanel();
-            /*
-            voParam.getoPos().setnPosX(this.getX());
-            voParam.getoPos().setnPosY(this.getY());
-            voParam.getoPos().setnSizeX(this.getWidth());
-            voParam.getoPos().setnSizeY(this.getHeight());
-            */
             voParam.setcEveId(cEveId);
             voParam.setcToken(cToken);
             voParam.setcIdToken(cIdToken);
@@ -333,14 +323,36 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if (!txtEveId.getText().equals("") && !txtToken.getText().equals("")) {
-            this.login();
+        if (oStatus.getnStatus()!=ConnBackStatus.UPLOADING) {
+            if (!txtEveId.getText().equals("") && !txtToken.getText().equals("")) {
+                this.login();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this , 
+                    resMessages.getString("info_upload_inprogress"), 
+                    resMessages.getString("warning"),
+                    JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void lstStagesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstStagesValueChanged
-        if (!evt.getValueIsAdjusting())
-            this.stageSelected();
+        if (!evt.getValueIsAdjusting()) {
+            JList<?> voList = (JList<?>) evt.getSource();
+            int vnNewListIndex = voList.getSelectedIndex();
+            if (oStatus.getnStatus()!=ConnBackStatus.UPLOADING) {
+                //If changing the selection is possible, saves the selected index for future use
+                nPrevListIndex = vnNewListIndex;
+                this.stageSelected();            
+            } else {
+                //If changing is not possible, shows a message and selects the previous index again
+                JOptionPane.showMessageDialog(this , 
+                        resMessages.getString("info_upload_inprogress"), 
+                        resMessages.getString("warning"),
+                        JOptionPane.WARNING_MESSAGE);
+                if (nPrevListIndex>=0)
+                    voList.setSelectedIndex(nPrevListIndex);
+            }
+        }
     }//GEN-LAST:event_lstStagesValueChanged
 
     private void btnWebActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWebActionPerformed

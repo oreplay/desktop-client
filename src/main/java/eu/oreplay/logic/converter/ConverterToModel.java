@@ -623,6 +623,7 @@ public abstract class ConverterToModel {
                 }
             }
             voIs.close();
+            voIs = null;
         } catch (Exception e) {
             vbResul = false;
             if (oLog!=null)
@@ -742,6 +743,7 @@ public abstract class ConverterToModel {
             }
             //Close de input file
             voIs.close();
+            voIs = null;
         } catch (Exception e) {
             vbResul = false;
             if (oLog!=null)

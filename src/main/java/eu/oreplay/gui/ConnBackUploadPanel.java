@@ -75,12 +75,6 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     }
     public void initFormParameters(FormsParameters.ParConnBackUploadPanel poParam) {
         try {
-            /*
-            this.setBounds(poParam.getoPos().getnPosX(), 
-                poParam.getoPos().getnPosY(), 
-                poParam.getoPos().getnSizeX(),
-                poParam.getoPos().getnSizeY());
-            */
             cFolder = poParam.getcFolder();
             cExtension = poParam.getcExtension();
             bSplit = poParam.isbSplit();
@@ -100,12 +94,6 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             //Read the parameters to store
             FormsParameters voPadre = new FormsParameters();
             FormsParameters.ParConnBackUploadPanel voParam = voPadre.new ParConnBackUploadPanel();
-            /*
-            voParam.getoPos().setnPosX(this.getX());
-            voParam.getoPos().setnPosY(this.getY());
-            voParam.getoPos().setnSizeX(this.getWidth());
-            voParam.getoPos().setnSizeY(this.getHeight());
-            */
             voParam.setcFolder(cFolder);
             voParam.setcExtension(cExtension);
             voParam.setbSplit(chkSplit.isSelected());
@@ -342,15 +330,28 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     private void startStopUpload() {
         try {
             if (bRun) {
-                btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_start.png"))); // NOI18N
-                btnUpload.setText(resMessages.getString("run"));
-                txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_stopped"), "#000000") + cEnd);
-                if (JClientMain.getoLog()!=null)
-                    JClientMain.getoLog().info(resMessages.getString("info_upload_stopped"));
-                bRun = !bRun;
-                //Fire the event to notify starting the upload
-                oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
-                fireEvent();
+                //If there is no file currently uploading, changes the status to stop
+                if (oStatus.getnStatus()!=ConnBackStatus.UPLOADING) {
+                    btnUpload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/btn_start.png"))); // NOI18N
+                    btnUpload.setText(resMessages.getString("run"));
+                    txtStatus.setText(cStart + appendString(resMessages.getString("info_upload_stopped"), "#000000") + cEnd);
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().info(resMessages.getString("info_upload_stopped"));
+                    bRun = !bRun;
+                    //Fire the event to notify stopping the upload
+                    oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
+                    oStatus.setnStatusOld(ConnBackStatus.NO_STATUS);
+                    oStatus.setnStatusNext(ConnBackStatus.NO_STATUS);
+                    fireEvent();
+                } else {
+                    JOptionPane.showMessageDialog(this , 
+                            resMessages.getString("info_upload_inprogress_request_stop"), 
+                            resMessages.getString("warning"),
+                            JOptionPane.WARNING_MESSAGE);
+                    //Sets the future status to stop
+                    oStatus.setnStatusNext(ConnBackStatus.UPLOAD_OFF);
+                    fireEvent();
+                }                
             } else {
                 boolean vbExtAndDate = this.checkExtensionAndDate();
                 if (vbExtAndDate) {
@@ -363,6 +364,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             JClientMain.getoLog().info(resMessages.getString("info_upload_started"));
                         //Fire the event to notify starting the upload
                         oStatus.setnStatus(ConnBackStatus.UPLOAD_ON);
+                        oStatus.setnStatusOld(ConnBackStatus.NO_STATUS);
+                        oStatus.setnStatusNext(ConnBackStatus.NO_STATUS);
                         fireEvent();
                         //Change the running flag
                         bRun = !bRun;
@@ -403,6 +406,9 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     private void extensionSelected () {
         int vnRow = lstExtensions.getSelectedIndex();
         if (vnRow>=0 && vnRow<2) {
+            //Save current status to be able to come back to it after this selection
+            oStatus.setnStatusOld(oStatus.getnStatus());
+            //Get new extension name
             cExtension = lstExtensions.getModel().getElementAt(vnRow);
             //Fire the event to notify changing the extension
             if (cExtension.toLowerCase().equals("csv"))
@@ -432,182 +438,260 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 String vcNow = "";
                 String vcFile = "";
                 boolean vbDeleteFile = true;
+                HttpClient voClient = HttpClient.newBuilder()
+                    .connectTimeout(Duration.ofSeconds(5))
+                    .build();
+
                 //Iterate until the thread is stopped
                 while (bRun) {
-                    //First, find a file with the given extension located at the given folder
-                    //If it's not the first time, and the last file was unsuccessful and needs to be uploaded again, don't try to find another file, keep on with the same
-                    if (!(vbDeleteFile==false && vcFile!=null && !vcFile.equals("")))
-                        vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
-                    if (vcFile!=null && !vcFile.equals("")) {
-                        vbDeleteFile = true;
-                        //Get a Timestamp when starting process
-                        voStart = new Date();
-                        vcNow = Utils.format(voStart, resMessages.getString("format_datetime_milli_dash"));
-                        publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_started") + " - " + vcNow);
+                    //Before checking for new contents, check if the user has requested to stop
+                    if (oStatus.getnStatusNext()==ConnBackStatus.UPLOAD_OFF) {
+                        JOptionPane.showMessageDialog(ConnBackUploadPanel.this , 
+                            resMessages.getString("info_upload_aborted"), 
+                            resMessages.getString("warning"),
+                            JOptionPane.WARNING_MESSAGE);
                         if (JClientMain.getoLog()!=null)
-                            JClientMain.getoLog().info("File: " + vcFile + "\n" +
-                                "Eve Id: " + oStatus.getcEveId() +  "\n" +
-                                "Eve Desc: " + oStatus.getcEveDesc() + "\n" +
-                                "Sta Id: " + oStatus.getcStaId() +  "\n" +
-                                "Sta Desc: " + oStatus.getcStaDesc());
-                        //Second, parse the contents to generate a JSON
-                        OReplayDataTransfer voTransf = new OReplayDataTransfer();
-                        voTransf.setoLog(JClientMain.getoLog());
-                        ConverterToModel voConv = voTransf.preProcessFile(vcFile);
-                        //Sets stage date and zero time from Main Form
-                        try {
-                            voConv.setcStageDate(JClientMain.getDateForTransfer());
-                            voConv.setcStageZeroTime(JClientMain.getZeroTimeForTransfer());
-                            voConv.setbForce(JClientMain.isbForce());
-                            voConv.setcDateFormat(resMessages.getString("format_date"));
-                        }catch(Exception eDate) {
-                        }
-                        HashMap<String, String> vaJson = null;
-                        if (chkSplit.isSelected()) {
-                            vaJson = (oStatus==null?voTransf.processFileAndSplit(voConv):voTransf.processFileAndSplit(voConv, oStatus.getcEveId(), oStatus.getcEveDesc(), oStatus.getcStaId(), oStatus.getcStaDesc()));
-                        } else {
-                            String vcJson = (oStatus==null?voTransf.processFile(voConv):voTransf.processFile(voConv, oStatus.getcEveId(), oStatus.getcEveDesc(), oStatus.getcStaId(), oStatus.getcStaDesc()));
-                            vaJson = new HashMap<>();
-                            vaJson.put("ALL", vcJson);
-                        }
-                        if (JClientMain.getoLog()!=null)
-                            JClientMain.getoLog().info("JSON parts: " + vaJson.size());
-                        try {
-                            //Iterate over keys of the Hashmap
-                            for (String vcClass : vaJson.keySet()) {
-                                //Extract the JSON of the class using the Hashmap and the key
-                                String vcJson = vaJson.get(vcClass);
-                                //Communication with backend
-                                if (!vcJson.toLowerCase().startsWith("error")) {
-                                    //Get a Timestamp when starting process for a part of the file
-                                    Date voStartPart = new Date();
-                                    vcNow = Utils.format(voStartPart, resMessages.getString("format_datetime_milli_dash"));
-                                    publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_started") + " - " + vcClass + " - " + vcNow);
-                                    //Get a version number from version resource text
-                                    long vnVersion = Utils.getVersionNumberFromText(resMessages.getString("version"));
-                                    //Next, send the contents to the backend
-                                    vbFound = false;
-                                    //Gets an HTTP Client to make a request
-                                    HttpClient voClient = HttpClient.newBuilder()
-                                        .connectTimeout(Duration.ofSeconds(5))
-                                        .build();
-                                    //Sets the request to the current server
-                                    HttpRequest voReq = HttpRequest.newBuilder()
-                                        .POST(HttpRequest.BodyPublishers.ofString(vcJson))
-                                        .uri(new URI(oStatus.getcServer() + 
-                                                "/api/v1/events/" + oStatus.getcEveId() + "/uploads?version=" + vnVersion))
-                                        .header("Authorization", "Bearer " + oStatus.getcToken())
-                                        .header("Content-Type", "application/json")
-                                        .header("Accept", "application/json")
-                                        .build();
-                                    //Sends the request an gets the response
-                                    HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());
-                                    //If there is a correct response, finish the process to fire the event
-                                    if (voResp.statusCode()==200 || voResp.statusCode() == 202) {
-                                        try {
-                                            //First, parse the response (a list of strings with data)
-                                            String vcContents = voResp.body();
-                                            //JSON file with Jackson
-                                            ObjectMapper voMapper = new ObjectMapper();
-                                            UploadResponse voData = voMapper.readValue(vcContents, UploadResponse.class);
-                                            //If there are data, get the human readable strings
-                                            if (voData!=null && voData.getoMeta()!=null && 
-                                                    voData.getoMeta().getlHuman()!=null && 
-                                                    !voData.getoMeta().getlHuman().isEmpty()) {
-                                                String vcColor = "#000000";
-                                                try {
-                                                    vcColor = voData.getoMeta().getcHumanColor();
-                                                }catch(Exception eColor) {
-                                                    vcColor = "#000000";
-                                                }
-                                                for (int i=0; i<voData.getoMeta().getlHuman().size(); i++) {
-                                                    String vcData = voData.getoMeta().getlHuman().get(i);
-                                                    //Check if the backend sends a message indicating that the process has been aborted due a long time
-                                                    //In this case, don't delete de file to continue uploading it again
-                                                    if (vcData.toLowerCase().contains("it is taking too long")) {
-                                                        vbDeleteFile = false;
-                                                    }
-                                                    //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                                                    publish(vcColor + "<JARUTAG>" + vcData);
-                                                }
-                                                vbFound = true;
-                                            }
-                                        }catch (Exception eParseResp) {
+                            JClientMain.getoLog().warn(resMessages.getString("info_upload_aborted"));
+                        //Launches the method to effectively stop
+                        oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
+                        ConnBackUploadPanel.this.startStopUpload();
+                    } else {                   
+                        //First, find a file with the given extension located at the given folder
+                        //If it's not the first time, and the last file was unsuccessful and needs to be uploaded again, don't try to find another file, keep on with the same
+                        if (!(vbDeleteFile==false && vcFile!=null && !vcFile.equals("")))
+                            vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
+                        if (vcFile!=null && !vcFile.equals("")) {
+                            //Fire the event to notify starting uploading a new found file
+                            if (oStatus.getnStatusNext()!=ConnBackStatus.UPLOAD_OFF) {
+                                oStatus.setnStatus(ConnBackStatus.UPLOADING);
+                                oStatus.setnStatusOld(ConnBackStatus.NO_STATUS);
+                                oStatus.setnStatusNext(ConnBackStatus.NO_STATUS);
+                                fireEvent();
+                            }
+                            //Sets the flag value by default
+                            vbDeleteFile = true;
+                            //Get a Timestamp when starting process
+                            voStart = new Date();
+                            vcNow = Utils.format(voStart, resMessages.getString("format_datetime_milli_dash"));
+                            publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_started") + " - " + vcNow);
+                            if (JClientMain.getoLog()!=null)
+                                JClientMain.getoLog().info("File: " + vcFile + "\n" +
+                                    "Eve Id: " + oStatus.getcEveId() +  "\n" +
+                                    "Eve Desc: " + oStatus.getcEveDesc() + "\n" +
+                                    "Sta Id: " + oStatus.getcStaId() +  "\n" +
+                                    "Sta Desc: " + oStatus.getcStaDesc());
+                            //Second, parse the contents to generate a JSON
+                            OReplayDataTransfer voTransf = new OReplayDataTransfer();
+                            voTransf.setoLog(JClientMain.getoLog());
+                            ConverterToModel voConv = voTransf.preProcessFile(vcFile);
+                            //Sets stage date and zero time from Main Form
+                            try {
+                                voConv.setcStageDate(JClientMain.getDateForTransfer());
+                                voConv.setcStageZeroTime(JClientMain.getZeroTimeForTransfer());
+                                voConv.setbForce(JClientMain.isbForce());
+                                voConv.setcDateFormat(resMessages.getString("format_date"));
+                            }catch(Exception eDate) {
+                            }
+                            HashMap<String, String> vaJson = null;
+                            if (chkSplit.isSelected()) {
+                                vaJson = (oStatus==null?voTransf.processFileAndSplit(voConv):voTransf.processFileAndSplit(voConv, oStatus.getcEveId(), oStatus.getcEveDesc(), oStatus.getcStaId(), oStatus.getcStaDesc()));
+                            } else {
+                                String vcJson = (oStatus==null?voTransf.processFile(voConv):voTransf.processFile(voConv, oStatus.getcEveId(), oStatus.getcEveDesc(), oStatus.getcStaId(), oStatus.getcStaDesc()));
+                                vaJson = new HashMap<>();
+                                vaJson.put("ALL", vcJson);
+                            }
+                            if (JClientMain.getoLog()!=null)
+                                JClientMain.getoLog().info("JSON parts: " + vaJson.size());
+                            try {
+                                //Iterate over keys of the Hashmap
+                                for (String vcClass : vaJson.keySet()) {
+                                    //Check again for bRun because it could be changed in any step
+                                    if (bRun) {
+                                        //Before sending new contents, check if the user has requested to stop
+                                        if (oStatus.getnStatusNext()==ConnBackStatus.UPLOAD_OFF) {
+                                            JOptionPane.showMessageDialog(ConnBackUploadPanel.this , 
+                                                resMessages.getString("info_upload_aborted"), 
+                                                resMessages.getString("warning"),
+                                                JOptionPane.WARNING_MESSAGE);
                                             if (JClientMain.getoLog()!=null)
-                                                JClientMain.getoLog().error(resMessages.getString("error_exception"), eParseResp);
-                                            vbFound = false;
-                                        }
-                                        if (!vbFound) {
-                                            voFinish = new java.util.Date();
-                                            vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                                            //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                                            publish("#000000<JARUTAG>" + resMessages.getString("info_data_saved_error") + " - " + vcNow);
+                                                JClientMain.getoLog().warn(resMessages.getString("info_upload_aborted"));
+                                            //Launches the method to effectively stop
+                                            oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
+                                            ConnBackUploadPanel.this.startStopUpload();
                                         } else {
-                                            //Get a Timestamp when stopping process
-                                            voFinish = new java.util.Date();
-                                            vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                                            long vnDiff = Math.abs(voFinish.getTime() - voStartPart.getTime());
-                                            long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
-                                            publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_finished") + " - " + vcNow + 
-                                                    " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
+                                            //Extract the JSON of the class using the Hashmap and the key
+                                            String vcJson = vaJson.get(vcClass);
+                                            //Communication with backend
+                                            if (!vcJson.toLowerCase().startsWith("error")) {
+                                                //Get a Timestamp when starting process for a part of the file
+                                                Date voStartPart = new Date();
+                                                vcNow = Utils.format(voStartPart, resMessages.getString("format_datetime_milli_dash"));
+                                                publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_started") + " - " + vcClass + " - " + vcNow);
+                                                //Get a version number from version resource text
+                                                long vnVersion = Utils.getVersionNumberFromText(resMessages.getString("version"));
+                                                //Next, send the contents to the backend
+                                                vbFound = false;
+                                                //Gets an HTTP Client to make a request
+                                                //HttpClient voClient = HttpClient.newBuilder()
+                                                //    .connectTimeout(Duration.ofSeconds(5))
+                                                //    .build();
+                                                //Sets the request to the current server
+                                                HttpRequest voReq = HttpRequest.newBuilder()
+                                                    .POST(HttpRequest.BodyPublishers.ofString(vcJson))
+                                                    .uri(new URI(oStatus.getcServer() + 
+                                                            "/api/v1/events/" + oStatus.getcEveId() + "/uploads?version=" + vnVersion))
+                                                    .header("Authorization", "Bearer " + oStatus.getcToken())
+                                                    .header("Content-Type", "application/json")
+                                                    .header("Accept", "application/json")
+                                                    .build();
+                                                //Sends the request an gets the response
+                                                HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());
+                                                //If there is a correct response, finish the process to fire the event
+                                                if (voResp.statusCode()==200 || voResp.statusCode() == 202) {
+                                                    try {
+                                                        //First, parse the response (a list of strings with data)
+                                                        String vcContents = voResp.body();
+                                                        //JSON file with Jackson
+                                                        ObjectMapper voMapper = new ObjectMapper();
+                                                        UploadResponse voData = voMapper.readValue(vcContents, UploadResponse.class);
+                                                        //If there are data, get the human readable strings
+                                                        if (voData!=null && voData.getoMeta()!=null && 
+                                                                voData.getoMeta().getlHuman()!=null && 
+                                                                !voData.getoMeta().getlHuman().isEmpty()) {
+                                                            String vcColor = "#000000";
+                                                            try {
+                                                                vcColor = voData.getoMeta().getcHumanColor();
+                                                            }catch(Exception eColor) {
+                                                                vcColor = "#000000";
+                                                            }
+                                                            for (int i=0; i<voData.getoMeta().getlHuman().size(); i++) {
+                                                                String vcData = voData.getoMeta().getlHuman().get(i);
+                                                                //Check if the backend sends a message indicating that the process has been aborted due a long time
+                                                                //In this case, don't delete de file to continue uploading it again
+                                                                if (vcData.toLowerCase().contains("it is taking too long")) {
+                                                                    vbDeleteFile = false;
+                                                                }
+                                                                //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                                                publish(vcColor + "<JARUTAG>" + vcData);
+                                                            }
+                                                            vbFound = true;
+                                                        }
+                                                    }catch (Exception eParseResp) {
+                                                        if (JClientMain.getoLog()!=null)
+                                                            JClientMain.getoLog().error(resMessages.getString("error_exception"), eParseResp);
+                                                        vbFound = false;
+                                                    }
+                                                    if (!vbFound) {
+                                                        voFinish = new java.util.Date();
+                                                        vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                        //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                                        publish("#000000<JARUTAG>" + resMessages.getString("info_data_saved_error") + " - " + vcNow);
+                                                    } else {
+                                                        //Get a Timestamp when stopping process
+                                                        voFinish = new java.util.Date();
+                                                        vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                        long vnDiff = Math.abs(voFinish.getTime() - voStartPart.getTime());
+                                                        long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
+                                                        publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_finished") + " - " + vcNow + 
+                                                                " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
+                                                    }
+                                                } else {
+                                                    voFinish = new java.util.Date();
+                                                    vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                    //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                                    publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + voResp.statusCode() + " - " + vcNow);
+                                                }
+                                                //Set connection objects to null
+                                                try {
+                                                    voResp = null;
+                                                    voReq = null;
+                                                    //voClient.close();
+                                                    //voClient.shutdownNow();
+                                                    //voClient = null;
+                                                }catch (Exception eCloseConn) {
+                                                    if (JClientMain.getoLog()!=null)
+                                                        JClientMain.getoLog().error(resMessages.getString("error_exception"), eCloseConn);
+                                                }
+                                            } else {
+                                                voFinish = new java.util.Date();
+                                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                                if (vcJson.startsWith("error_exception")) {
+                                                    publish("#FF0000<JARUTAG>" + vcJson + " - " + vcNow);
+                                                } else {
+                                                    publish("#FF0000<JARUTAG>" + resMessages.getString(vcJson) + " - " + vcNow);
+                                                }
+                                            }
+                                            //JSON process finished
+                                            //Garbage collection. Be carefull !!!!!
+                                            System.gc();
                                         }
-                                    } else {
-                                        voFinish = new java.util.Date();
-                                        vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                                        //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                                        publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + voResp.statusCode() + " - " + vcNow);
-                                    }
-                                } else {
-                                    voFinish = new java.util.Date();
-                                    vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                                    //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                                    if (vcJson.startsWith("error_exception")) {
-                                        publish("#FF0000<JARUTAG>" + vcJson + " - " + vcNow);
-                                    } else {
-                                        publish("#FF0000<JARUTAG>" + resMessages.getString(vcJson) + " - " + vcNow);
                                     }
                                 }
+                                //Get a Timestamp when stopping process
+                                voFinish = new java.util.Date();
+                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                long vnDiff = Math.abs(voFinish.getTime() - voStart.getTime());
+                                long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
+                                publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
+                                        " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
+                            } catch (java.net.http.HttpConnectTimeoutException eTimeout) {
+                                //If any of the connections fails, set the flag not to delete the file
+                                vbDeleteFile = false;
+                                voFinish = new java.util.Date();
+                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                if (JClientMain.getoLog()!=null)
+                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eTimeout);
+                                //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                publish("#000000<JARUTAG>" + resMessages.getString("info_connection_timeout") + " - " + vcNow);
+                            } catch (java.io.IOException | java.lang.InterruptedException eInterrupt) {
+                                vbDeleteFile = false;
+                                voFinish = new java.util.Date();
+                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                if (JClientMain.getoLog()!=null)
+                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eInterrupt);
+                                //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                publish("#000000<JARUTAG>" + resMessages.getString("info_connection_break") + " - " + vcNow);
+                            } catch (Exception eNet) {
+                                vbDeleteFile = false;
+                                voFinish = new java.util.Date();
+                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                if (JClientMain.getoLog()!=null)
+                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eNet);
+                                //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + vcNow);
                             }
-                            //Get a Timestamp when stopping process
-                            voFinish = new java.util.Date();
-                            vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                            long vnDiff = Math.abs(voFinish.getTime() - voStart.getTime());
-                            long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
-                            publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
-                                    " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
-                        } catch (java.net.http.HttpConnectTimeoutException eTimeout) {
-                            //If any of the connections fails, set the flag not to delete the file
-                            vbDeleteFile = false;
-                            voFinish = new java.util.Date();
-                            vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                            if (JClientMain.getoLog()!=null)
-                                JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eTimeout);
-                            //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                            publish("#000000<JARUTAG>" + resMessages.getString("info_connection_timeout") + " - " + vcNow);
-                        } catch (java.io.IOException | java.lang.InterruptedException eInterrupt) {
-                            vbDeleteFile = false;
-                            voFinish = new java.util.Date();
-                            vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                            if (JClientMain.getoLog()!=null)
-                                JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eInterrupt);
-                            //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                            publish("#000000<JARUTAG>" + resMessages.getString("info_connection_break") + " - " + vcNow);
-                        } catch (Exception eNet) {
-                            vbDeleteFile = false;
-                            voFinish = new java.util.Date();
-                            vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
-                            if (JClientMain.getoLog()!=null)
-                                JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eNet);
-                            //This calls the method "process" in the SwingWorker, to set a status text in the panel
-                            publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + vcNow);
-                        }
-                        //Delete the file if the flag didn't change to false due to connection timeouts
-                        if (vbDeleteFile) {
-                            Utils.deleteFile(vcFile);
+                            //Set Objects to null
+                            try {
+                                voConv = null;
+                                voTransf = null;
+                                vaJson.clear();
+                                vaJson = null;
+                            }catch(Exception eNull) {
+                                if (JClientMain.getoLog()!=null)
+                                    JClientMain.getoLog().error(resMessages.getString("error_exception"), eNull);
+                            }
+                            //Delete the file if the flag didn't change to false due to connection timeouts
+                            if (vbDeleteFile) {
+                                Utils.deleteFile(vcFile);
+                            }
+                            //Update the status to inform that is ready to upload again
+                            if (oStatus.getnStatusNext()!=ConnBackStatus.UPLOAD_OFF) {
+                                oStatus.setnStatus(ConnBackStatus.UPLOAD_ON);
+                                fireEvent();                        
+                            }
                         }
                     }
                     //Waits 0.5 seconds to let the system breathe
                     Thread.sleep(Duration.ofMillis(500));
+                }
+                try {
+                    voClient.close();
+                    voClient.shutdownNow();
+                    voClient = null;
+                }catch (Exception eCloseConn) {
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().error(resMessages.getString("error_exception"), eCloseConn);
                 }
                 return "done"; 
             } 

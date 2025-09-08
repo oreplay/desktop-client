@@ -9,6 +9,7 @@ package eu.oreplay.gui.events;
  * @author javier.arufe
  */
 public class ConnBackStatus implements java.io.Serializable {
+    public static final int NO_STATUS = -999;
     public static final int LOGIN_NOOK = -2;
     public static final int CONNECTION_NOOK = -1;
     public static final int DISCONNECTED = 0;
@@ -20,8 +21,11 @@ public class ConnBackStatus implements java.io.Serializable {
     public static final int EXT_CSV = 6;
     public static final int EXT_XML = 7;
     public static final int PASTE_IDTOKEN = 8;
+    public static final int UPLOADING = 9;    
     
-    private int nStatus = DISCONNECTED;
+    private int nStatus = DISCONNECTED; //Current status
+    private int nStatusOld = NO_STATUS; //Stores previous status before changing some things
+    private int nStatusNext = NO_STATUS;//Stores next requested status if something is still performing which prevents status to change
     private String cServer = "";
     private String cEveId = "";
     private String cStaId = "";
@@ -32,6 +36,8 @@ public class ConnBackStatus implements java.io.Serializable {
 
     public ConnBackStatus() {
         nStatus = DISCONNECTED;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cServer = "";
         cEveId = "";
         cStaId = "";
@@ -42,6 +48,8 @@ public class ConnBackStatus implements java.io.Serializable {
     }
     public ConnBackStatus(int pnStatus) {
         nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cEveId = "";
         cStaId = "";
         cEveDesc = "";
@@ -51,6 +59,8 @@ public class ConnBackStatus implements java.io.Serializable {
     }
     public ConnBackStatus(int pnStatus, String pcServer) {
         nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cServer = pcServer;
         cEveId = "";
         cStaId = "";
@@ -61,6 +71,8 @@ public class ConnBackStatus implements java.io.Serializable {
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, String pcStaId) {
         nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cServer = pcServer;
         cEveId = pcEveId;
         cStaId = pcStaId;
@@ -71,6 +83,8 @@ public class ConnBackStatus implements java.io.Serializable {
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, String pcStaId, String pcToken) {
         nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cServer = pcServer;
         cEveId = pcEveId;
         cStaId = pcStaId;
@@ -82,6 +96,8 @@ public class ConnBackStatus implements java.io.Serializable {
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
             String pcStaId, String pcEveDesc, String pcStaDesc) {
         nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cServer = pcServer;
         cEveId = pcEveId;
         cStaId = pcStaId;
@@ -93,6 +109,8 @@ public class ConnBackStatus implements java.io.Serializable {
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
             String pcStaId, String pcEveDesc, String pcStaDesc, String pcToken) {
         nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cServer = pcServer;
         cEveId = pcEveId;
         cStaId = pcStaId;
@@ -105,6 +123,8 @@ public class ConnBackStatus implements java.io.Serializable {
             String pcStaId, String pcEveDesc, String pcStaDesc, String pcToken,
             String pcIdToken) {
         nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
         cServer = pcServer;
         cEveId = pcEveId;
         cStaId = pcStaId;
@@ -121,6 +141,22 @@ public class ConnBackStatus implements java.io.Serializable {
 
     public void setnStatus(int nStatus) {
         this.nStatus = nStatus;
+    }
+
+    public int getnStatusOld() {
+        return nStatusOld;
+    }
+
+    public void setnStatusOld(int nStatusOld) {
+        this.nStatusOld = nStatusOld;
+    }
+
+    public int getnStatusNext() {
+        return nStatusNext;
+    }
+
+    public void setnStatusNext(int nStatusNext) {
+        this.nStatusNext = nStatusNext;
     }
 
     public String getcServer() {
