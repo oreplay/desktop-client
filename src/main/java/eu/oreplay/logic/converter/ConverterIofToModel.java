@@ -970,6 +970,9 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voSpl.setPoints(0);
                                                         voSpl.setSicard(voRun.getSicard());
                                                         voSpl.setStageOrder(voSta.getOrderNumber());
+                                                        if (voPrs.getRaceNumber()!=null) {
+                                                            voSpl.setStageOrder(voPrs.getRaceNumber().intValue());
+                                                        }
                                                         //Add the object to the list
                                                         vlSpl.add(voSpl);
                                                         //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
@@ -1348,6 +1351,9 @@ public class ConverterIofToModel extends ConverterToModel {
                                                                 voSpl.setPoints(0);
                                                                 voSpl.setSicard(voRun.getSicard());
                                                                 voSpl.setStageOrder(voSta.getOrderNumber());
+                                                                if (voPrs.getRaceNumber()!=null) {
+                                                                    voSpl.setStageOrder(voPrs.getRaceNumber().intValue());
+                                                                }
                                                                 //Add the object to the list
                                                                 vlSpl.add(voSpl);
                                                                 //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
