@@ -431,6 +431,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
             @Override
             protected String doInBackground() 
                 throws Exception { 
+                boolean vbSearchNew = false;
                 boolean vbFound = false;
                 Date voStart = new Date();
                 Date voFinish = new Date();
@@ -458,9 +459,16 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                     } else {                   
                         //First, find a file with the given extension located at the given folder
                         //If it's not the first time, and the last file was unsuccessful and needs to be uploaded again, don't try to find another file, keep on with the same
-                        if (!(vbDeleteFile==false && vcFile!=null && !vcFile.equals("")))
+                        if (!(vbDeleteFile==false && vcFile!=null && !vcFile.equals(""))) {
                             vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
+                            vbSearchNew = true;
+                        } else {
+                            vbSearchNew = false;
+                        }
                         if (vcFile!=null && !vcFile.equals("")) {
+                            //Clean the status list (for performance testing)
+                            if (vbSearchNew)
+                                oSB = new StringBuilder();
                             //Fire the event to notify starting uploading a new found file
                             if (oStatus.getnStatusNext()!=ConnBackStatus.UPLOAD_OFF) {
                                 oStatus.setnStatus(ConnBackStatus.UPLOADING);
@@ -531,10 +539,6 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                 long vnVersion = Utils.getVersionNumberFromText(resMessages.getString("version"));
                                                 //Next, send the contents to the backend
                                                 vbFound = false;
-                                                //Gets an HTTP Client to make a request
-                                                //HttpClient voClient = HttpClient.newBuilder()
-                                                //    .connectTimeout(Duration.ofSeconds(5))
-                                                //    .build();
                                                 //Sets the request to the current server
                                                 HttpRequest voReq = HttpRequest.newBuilder()
                                                     .POST(HttpRequest.BodyPublishers.ofString(vcJson))
@@ -600,14 +604,17 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                     vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
                                                     //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                                     publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + voResp.statusCode() + " - " + vcNow);
+                                                    //Temporal, for testing when big files returning connection errors. Set split check to true
+                                                    if ((voResp.statusCode()==500 || voResp.statusCode() == 502) &&
+                                                            vaJson.size()==1 && !chkSplit.isSelected()) {
+                                                        vbDeleteFile = false;
+                                                        chkSplit.setSelected(true);
+                                                    }
                                                 }
                                                 //Set connection objects to null
                                                 try {
                                                     voResp = null;
                                                     voReq = null;
-                                                    //voClient.close();
-                                                    //voClient.shutdownNow();
-                                                    //voClient = null;
                                                 }catch (Exception eCloseConn) {
                                                     if (JClientMain.getoLog()!=null)
                                                         JClientMain.getoLog().error(resMessages.getString("error_exception"), eCloseConn);
