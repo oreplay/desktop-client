@@ -62,11 +62,11 @@ Current file processing capabilities (uploading from csv files are currently dis
 
 Cloning GitHub Netbeans project
 
-Although sometimes is better to spend long time with stable versions of products, in this case a migration to the last versions has been done, thinking that it could help the new collaborators. Initially, OReplay desktop-client was created using Netbeans 11.3 and Java JDK 1.8. Now, the project has been migrated to **Netbeans 21**, **Java OpenJDK 21** and **Maven**
+Although sometimes is better to spend long time with stable versions of products, in this case a migration to the last versions has been done, thinking that it could help the new collaborators. Initially, OReplay desktop-client was created using Netbeans 11.3 and Java JDK 1.8. Now, the project has been migrated to **Netbeans 21**, **Java OpenJDK 24** and **Maven**
 
-- Install Netbeans (tested with Netbeans 24)
+- Install Netbeans (tested with Netbeans 21)
   - [NetBeans](https://netbeans.apache.org/front/main/index.html)
-  - Ensure you've got a proper Java JDK (tested in version 21) installed or Install it (Netbeans will use it)
+  - Ensure you've got a proper Java JDK (tested in OpenJDK version 24) installed or Install it (Netbeans will use it)
     - In Netbeans go to: Tools -> Java Platform in order to check and download the JDK
     - [OpenJDK](https://openjdk.org)
 - Clone the GitHub project in Netbeans
