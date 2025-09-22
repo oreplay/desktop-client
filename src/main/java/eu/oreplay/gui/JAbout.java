@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class JAbout extends javax.swing.JDialog {
     private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
+    private java.util.ResourceBundle resGlobal = java.util.ResourceBundle.getBundle("messages.Global"); //$NON-NLS-1$;
     
     /**
      * Creates new form JAbout
@@ -95,12 +96,12 @@ public class JAbout extends javax.swing.JDialog {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         lblVersion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblVersion.setText(resMessages.getString("main"));
+        lblVersion.setText(resMessages.getString("main") + " " + resGlobal.getString("version"));
 
         txtDescription.setEditable(false);
         txtDescription.setBackground(new java.awt.Color(255, 255, 255));
         txtDescription.setContentType("text/html"); // NOI18N
-        txtDescription.setText(resMessages.getString("about_description") + "<BR>" + resMessages.getString("about_github"));
+        txtDescription.setText(resMessages.getString("about_description") + "<BR>" + resGlobal.getString("about_github"));
         jScrollPane1.setViewportView(txtDescription);
 
         lblDevelopment.setBackground(new java.awt.Color(255, 255, 255));
@@ -112,7 +113,7 @@ public class JAbout extends javax.swing.JDialog {
         lblDevelopersTitle.setText(resMessages.getString("about_developers_title"));
 
         lblDevelopersList.setBackground(new java.awt.Color(255, 255, 255));
-        lblDevelopersList.setText(resMessages.getString("about_developers_list"));
+        lblDevelopersList.setText(resGlobal.getString("about_developers_list"));
         lblDevelopersList.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);

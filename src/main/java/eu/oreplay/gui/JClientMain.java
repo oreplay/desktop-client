@@ -17,6 +17,8 @@ import org.apache.logging.log4j.*;
  */
 public class JClientMain extends javax.swing.JFrame implements ConnBackListener {
     private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages", java.util.Locale.getDefault()); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resGlobal = java.util.ResourceBundle.getBundle("messages.Global"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resDates = java.util.ResourceBundle.getBundle("messages.Dates", java.util.Locale.getDefault()); //$NON-NLS-1$;
     private boolean bFirstOpen = true;
     private static String cPathApp = "." + java.io.File.separator;
     private static FormsParameters oForms = null;
@@ -136,7 +138,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         mnuSpanish = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(resMessages.getString("oreplay"));
+        setTitle(resGlobal.getString("oreplay"));
         setBackground(new java.awt.Color(255, 255, 255));
         setBounds(new java.awt.Rectangle(200, 200, 785, 590));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/images/LogoOReplay_32.png")).getImage());
@@ -167,7 +169,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         lblStageDate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblStageDate.setText(resMessages.getString("csv_file_date"));
 
-        txtStageDate.setToolTipText("(" + resMessages.getString("format_date") + ") " + resMessages.getString("tooltip_base_date"));
+        txtStageDate.setToolTipText("(" + resDates.getString("format_date") + ") " + resMessages.getString("tooltip_base_date"));
         txtStageDate.setMaximumSize(new java.awt.Dimension(64, 22));
         txtStageDate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -178,7 +180,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         lblStageZeroTime.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblStageZeroTime.setText(resMessages.getString("csv_file_zerotime"));
 
-        txtStageZeroTime.setToolTipText("(" + resMessages.getString("format_time") + ") " + resMessages.getString("tooltip_zero_time"));
+        txtStageZeroTime.setToolTipText("(" + resDates.getString("format_time") + ") " + resMessages.getString("tooltip_zero_time"));
         txtStageZeroTime.setMaximumSize(new java.awt.Dimension(64, 22));
         txtStageZeroTime.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -240,7 +242,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
 
         mnuLanguage.setText(resMessages.getString("language"));
 
-        mnuEnglish.setText(resMessages.getString("english"));
+        mnuEnglish.setText(resGlobal.getString("english"));
         mnuEnglish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuEnglishActionPerformed(evt);
@@ -248,7 +250,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         });
         mnuLanguage.add(mnuEnglish);
 
-        mnuSpanish.setText(resMessages.getString("spanish"));
+        mnuSpanish.setText(resGlobal.getString("spanish"));
         mnuSpanish.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mnuSpanishActionPerformed(evt);
@@ -438,8 +440,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                             oForms.getoJClientMain().getoPos().getnPosY(), 
                             oForms.getoJClientMain().getoPos().getnSizeX(),
                             oForms.getoJClientMain().getoPos().getnSizeY());                
-                    cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resMessages.getString("format_date_dash")), resMessages.getString("format_date"));
-                    cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resMessages.getString("format_time")), resMessages.getString("format_time"));
+                    cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resDates.getString("format_date_dash")), resDates.getString("format_date"));
+                    cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resDates.getString("format_time")), resDates.getString("format_time"));
                 }catch (Exception e) {
                     if (oLog!=null)
                         oLog.error(resMessages.getString("error_exception"), e);
@@ -506,15 +508,16 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
      */
     private void changeLanguage (String pcLocale) {
         try {
-            String vcOldDate = resMessages.getString("format_date");
-            String vcOldTime = resMessages.getString("format_time");
+            String vcOldDate = resDates.getString("format_date");
+            String vcOldTime = resDates.getString("format_time");
             //Change the resources locale
             java.util.Locale voLocale = new java.util.Locale(pcLocale);
             java.util.Locale.setDefault(voLocale);
             java.util.ResourceBundle.clearCache();
             resMessages = java.util.ResourceBundle.getBundle("messages.Messages", voLocale);
+            resDates = java.util.ResourceBundle.getBundle("messages.Dates", voLocale);
             //Set the texts again
-            setTitle(resMessages.getString("oreplay"));
+            setTitle(resGlobal.getString("oreplay"));
             mnuFile.setText(resMessages.getString("file"));
             mnuTest.setText(resMessages.getString("test"));
             mnuExit.setText(resMessages.getString("exit"));
@@ -523,20 +526,20 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             mnuManual.setText(resMessages.getString("online_manual"));
             mnuCheckUpdate.setText(resMessages.getString("check_updates"));
             mnuLanguage.setText(resMessages.getString("language"));
-            mnuEnglish.setText(resMessages.getString("english"));
-            mnuSpanish.setText(resMessages.getString("spanish"));
+            mnuEnglish.setText(resGlobal.getString("english"));
+            mnuSpanish.setText(resGlobal.getString("spanish"));
             //Labels
             lblCsvWarning.setText(resMessages.getString("csv_file_warning"));
             lblStageDate.setText(resMessages.getString("csv_file_date"));
             lblStageZeroTime.setText(resMessages.getString("csv_file_zerotime"));
             lblOffset.setText(resMessages.getString("timezone_offset"));
             //And change the format of the date and zero time
-            cStageDate = Utils.format(Utils.parse(txtStageDate.getText(), vcOldDate), resMessages.getString("format_date"));
-            cStageZeroTime = Utils.format(Utils.parse(txtStageZeroTime.getText(), vcOldTime), resMessages.getString("format_time"));
+            cStageDate = Utils.format(Utils.parse(txtStageDate.getText(), vcOldDate), resDates.getString("format_date"));
+            cStageZeroTime = Utils.format(Utils.parse(txtStageZeroTime.getText(), vcOldTime), resDates.getString("format_time"));
             txtStageDate.setText(cStageDate);
-            txtStageDate.setToolTipText("(" + resMessages.getString("format_date") + ") " + resMessages.getString("tooltip_base_date"));
+            txtStageDate.setToolTipText("(" + resDates.getString("format_date") + ") " + resMessages.getString("tooltip_base_date"));
             txtStageZeroTime.setText(cStageZeroTime);
-            txtStageZeroTime.setToolTipText("(" + resMessages.getString("format_time") + ") " + resMessages.getString("tooltip_zero_time"));
+            txtStageZeroTime.setToolTipText("(" + resDates.getString("format_time") + ") " + resMessages.getString("tooltip_zero_time"));
             //Force the panels to do the same
             pnlCheck.changeLanguage(pcLocale);
             pnlLogin.changeLanguage(pcLocale);
@@ -561,8 +564,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                         oForms.getoJClientMain().getoPos().getnPosY(), 
                         oForms.getoJClientMain().getoPos().getnSizeX(),
                         oForms.getoJClientMain().getoPos().getnSizeY());
-                cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resMessages.getString("format_date_dash")), resMessages.getString("format_date"));
-                cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resMessages.getString("format_time")), resMessages.getString("format_time"));
+                cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resDates.getString("format_date_dash")), resDates.getString("format_date"));
+                cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resDates.getString("format_time")), resDates.getString("format_time"));
                 txtStageDate.setText(cStageDate);
                 txtStageZeroTime.setText(cStageZeroTime);
             } else {
@@ -593,8 +596,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                     
                 }
                 //Tries to save the values of date and zero time
-                oForms.getoJClientMain().setcStageDate(Utils.format(Utils.parse(cStageDate, resMessages.getString("format_date")), resMessages.getString("format_date_dash")));
-                oForms.getoJClientMain().setcStageZeroTime(Utils.format(Utils.parse(cStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time")));
+                oForms.getoJClientMain().setcStageDate(Utils.format(Utils.parse(cStageDate, resDates.getString("format_date")), resDates.getString("format_date_dash")));
+                oForms.getoJClientMain().setcStageZeroTime(Utils.format(Utils.parse(cStageZeroTime, resDates.getString("format_time")), resDates.getString("format_time")));
                 //Save the file
                 String vcFile = cPathApp+"FormsParameters.xml";
                 FormsParametersXMLHandler.writeXmlData(oForms, vcFile);
@@ -733,7 +736,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         int vnChanged = 0;
         String vcMessage = resMessages.getString("info_current_version");
         try {
-            vnChanged = Utils.checkForNewVersion(resMessages.getString("version"));
+            vnChanged = Utils.checkForNewVersion(resGlobal.getString("version"));
             if (vnChanged>0) {
                 vcMessage = resMessages.getString("info_new_version");
             } else if (vnChanged<0) {
@@ -759,9 +762,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         try {
             //Tries to save the values of date and zero time
             String vcStageDate = txtStageDate.getText();
-            cStageDate = Utils.format(Utils.parse(vcStageDate, resMessages.getString("format_date")), resMessages.getString("format_date"));
+            cStageDate = Utils.format(Utils.parse(vcStageDate, resDates.getString("format_date")), resDates.getString("format_date"));
             String vcStageZeroTime = txtStageZeroTime.getText();
-            cStageZeroTime = Utils.format(Utils.parse(vcStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time"));
+            cStageZeroTime = Utils.format(Utils.parse(vcStageZeroTime, resDates.getString("format_time")), resDates.getString("format_time"));
         }catch(Exception e) {
             if (oLog!=null)
                 oLog.error(resMessages.getString("error_exception"), e);
@@ -777,7 +780,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         String vcResul = "";
         try {
             //Tries to save the values of date and zero time
-            vcResul = Utils.format(Utils.parse(cStageDate, resMessages.getString("format_date")), resMessages.getString("format_date_dash"));
+            vcResul = Utils.format(Utils.parse(cStageDate, resDates.getString("format_date")), resDates.getString("format_date_dash"));
         }catch(Exception e) {
             if (oLog!=null)
                 oLog.error(resMessages.getString("error_exception"), e);
@@ -793,7 +796,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         String vcResul = "";
         try {
             //Tries to save the values of date and zero time
-            vcResul = Utils.format(Utils.parse(cStageZeroTime, resMessages.getString("format_time")), resMessages.getString("format_time"));
+            vcResul = Utils.format(Utils.parse(cStageZeroTime, resDates.getString("format_time")), resDates.getString("format_time"));
         }catch(Exception e) {
             if (oLog!=null)
                 oLog.error(resMessages.getString("error_exception"), e);
