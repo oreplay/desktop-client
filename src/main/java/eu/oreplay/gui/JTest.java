@@ -18,6 +18,8 @@ import java.io.FileWriter;
  */
 public class JTest extends javax.swing.JDialog {
     private java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
+    private java.util.ResourceBundle resGlobal = java.util.ResourceBundle.getBundle("messages.Global"); //$NON-NLS-1$;
+    private java.util.ResourceBundle resDates = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
     private ConverterToModel oConv = null;
     private String cPath = "." + java.io.File.separator;
     
@@ -564,7 +566,7 @@ public class JTest extends javax.swing.JDialog {
                     oConv.setcStageDate(JClientMain.getDateForTransfer());
                     oConv.setcStageZeroTime(JClientMain.getZeroTimeForTransfer());
                     oConv.setbForce(JClientMain.isbForce());
-                    oConv.setcDateFormat(resMessages.getString("format_date_dash"));
+                    oConv.setcDateFormat(resDates.getString("format_date_dash"));
                 }catch(Exception eDate) {
                     //Nothing to do
                 }

@@ -31,6 +31,8 @@ import javax.swing.SwingWorker;
  */
 public class ConnBackUploadPanel extends javax.swing.JPanel {
     private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resGlobal = java.util.ResourceBundle.getBundle("messages.Global"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resDates = java.util.ResourceBundle.getBundle("messages.Dates"); //$NON-NLS-1$;
     private ConnBackStatus oStatus = new ConnBackStatus();
     private java.util.List lListeners = new java.util.ArrayList();
     private String cFolder = "";
@@ -58,6 +60,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
         java.util.Locale.setDefault(voLocale);
         java.util.ResourceBundle.clearCache();
         resMessages = java.util.ResourceBundle.getBundle("messages.Messages", voLocale);
+        resDates = java.util.ResourceBundle.getBundle("messages.Dates", voLocale);
         //Change the texts
         lblTitle.setText("3. " + resMessages.getString("upload_data"));
         if (!bRun)
@@ -480,7 +483,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             vbDeleteFile = true;
                             //Get a Timestamp when starting process
                             voStart = new Date();
-                            vcNow = Utils.format(voStart, resMessages.getString("format_datetime_milli_dash"));
+                            vcNow = Utils.format(voStart, resDates.getString("format_datetime_milli_dash"));
                             publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_started") + " - " + vcNow);
                             if (JClientMain.getoLog()!=null)
                                 JClientMain.getoLog().info("File: " + vcFile + "\n" +
@@ -497,7 +500,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 voConv.setcStageDate(JClientMain.getDateForTransfer());
                                 voConv.setcStageZeroTime(JClientMain.getZeroTimeForTransfer());
                                 voConv.setbForce(JClientMain.isbForce());
-                                voConv.setcDateFormat(resMessages.getString("format_date"));
+                                voConv.setcDateFormat(resDates.getString("format_date"));
                             }catch(Exception eDate) {
                             }
                             HashMap<String, String> vaJson = null;
@@ -533,10 +536,10 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                             if (!vcJson.toLowerCase().startsWith("error")) {
                                                 //Get a Timestamp when starting process for a part of the file
                                                 Date voStartPart = new Date();
-                                                vcNow = Utils.format(voStartPart, resMessages.getString("format_datetime_milli_dash"));
+                                                vcNow = Utils.format(voStartPart, resDates.getString("format_datetime_milli_dash"));
                                                 publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_started") + " - " + vcClass + " - " + vcNow);
                                                 //Get a version number from version resource text
-                                                long vnVersion = Utils.getVersionNumberFromText(resMessages.getString("version"));
+                                                long vnVersion = Utils.getVersionNumberFromText(resGlobal.getString("version"));
                                                 //Next, send the contents to the backend
                                                 vbFound = false;
                                                 //Sets the request to the current server
@@ -587,13 +590,13 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                     }
                                                     if (!vbFound) {
                                                         voFinish = new java.util.Date();
-                                                        vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                        vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                                         //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                                         publish("#000000<JARUTAG>" + resMessages.getString("info_data_saved_error") + " - " + vcNow);
                                                     } else {
                                                         //Get a Timestamp when stopping process
                                                         voFinish = new java.util.Date();
-                                                        vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                        vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                                         long vnDiff = Math.abs(voFinish.getTime() - voStartPart.getTime());
                                                         long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
                                                         publish("#000000<JARUTAG>" + resMessages.getString("info_classprocess_finished") + " - " + vcNow + 
@@ -601,11 +604,11 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                     }
                                                 } else {
                                                     voFinish = new java.util.Date();
-                                                    vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                    vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                                     //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                                     publish("#000000<JARUTAG>" + resMessages.getString("info_connection_nook") + " - " + voResp.statusCode() + " - " + vcNow);
                                                     //Temporal, for testing when big files returning connection errors. Set split check to true
-                                                    if ((voResp.statusCode()==500 || voResp.statusCode() == 502) &&
+                                                    if ((voResp.statusCode()==500 || voResp.statusCode() == 502 || voResp.statusCode() == 504) &&
                                                             vaJson.size()==1 && !chkSplit.isSelected()) {
                                                         vbDeleteFile = false;
                                                         chkSplit.setSelected(true);
@@ -621,7 +624,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                 }
                                             } else {
                                                 voFinish = new java.util.Date();
-                                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                                vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                                 //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                                 if (vcJson.startsWith("error_exception")) {
                                                     publish("#FF0000<JARUTAG>" + vcJson + " - " + vcNow);
@@ -637,7 +640,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 }
                                 //Get a Timestamp when stopping process
                                 voFinish = new java.util.Date();
-                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                 long vnDiff = Math.abs(voFinish.getTime() - voStart.getTime());
                                 long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
                                 publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
@@ -646,7 +649,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 //If any of the connections fails, set the flag not to delete the file
                                 vbDeleteFile = false;
                                 voFinish = new java.util.Date();
-                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                 if (JClientMain.getoLog()!=null)
                                     JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eTimeout);
                                 //This calls the method "process" in the SwingWorker, to set a status text in the panel
@@ -654,7 +657,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             } catch (java.io.IOException | java.lang.InterruptedException eInterrupt) {
                                 vbDeleteFile = false;
                                 voFinish = new java.util.Date();
-                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                 if (JClientMain.getoLog()!=null)
                                     JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eInterrupt);
                                 //This calls the method "process" in the SwingWorker, to set a status text in the panel
@@ -662,7 +665,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             } catch (Exception eNet) {
                                 vbDeleteFile = false;
                                 voFinish = new java.util.Date();
-                                vcNow = Utils.format(voFinish, resMessages.getString("format_datetime_milli_dash"));
+                                vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                 if (JClientMain.getoLog()!=null)
                                     JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eNet);
                                 //This calls the method "process" in the SwingWorker, to set a status text in the panel
@@ -777,9 +780,9 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
         try {
             if (cExtension.toLowerCase().equals("csv")) {
                 String vcStageDate = JClientMain.getcStageDate();
-                Date voStageDate = Utils.parse(vcStageDate, resMessages.getString("format_date"));
+                Date voStageDate = Utils.parse(vcStageDate, resDates.getString("format_date"));
                 String vcStageZeroTime = JClientMain.getcStageZeroTime();
-                Date voStageZeroTime = Utils.parse(vcStageZeroTime, resMessages.getString("format_time"));
+                Date voStageZeroTime = Utils.parse(vcStageZeroTime, resDates.getString("format_time"));
                 if (voStageDate==null || voStageZeroTime==null) {
                     JOptionPane.showMessageDialog(this , 
                             resMessages.getString("info_date_time_needed"), 

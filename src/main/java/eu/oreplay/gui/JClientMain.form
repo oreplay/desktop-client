@@ -86,7 +86,7 @@
                 <MenuItem class="javax.swing.JMenuItem" name="mnuEnglish">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="resMessages.getString(&quot;english&quot;)" type="code"/>
+                      <Connection code="resGlobal.getString(&quot;english&quot;)" type="code"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -96,7 +96,7 @@
                 <MenuItem class="javax.swing.JMenuItem" name="mnuSpanish">
                   <Properties>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                      <Connection code="resMessages.getString(&quot;spanish&quot;)" type="code"/>
+                      <Connection code="resGlobal.getString(&quot;spanish&quot;)" type="code"/>
                     </Property>
                   </Properties>
                   <Events>
@@ -113,7 +113,7 @@
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="title" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-      <Connection code="resMessages.getString(&quot;oreplay&quot;)" type="code"/>
+      <Connection code="resGlobal.getString(&quot;oreplay&quot;)" type="code"/>
     </Property>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
       <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -282,7 +282,7 @@
     <Component class="javax.swing.JTextField" name="txtStageDate">
       <Properties>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="&quot;(&quot; + resMessages.getString(&quot;format_date&quot;) + &quot;) &quot; + resMessages.getString(&quot;tooltip_base_date&quot;)" type="code"/>
+          <Connection code="&quot;(&quot; + resGlobal.getString(&quot;format_date&quot;) + &quot;) &quot; + resMessages.getString(&quot;tooltip_base_date&quot;)" type="code"/>
         </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[64, 22]"/>
@@ -303,7 +303,7 @@
     <Component class="javax.swing.JTextField" name="txtStageZeroTime">
       <Properties>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="&quot;(&quot; + resMessages.getString(&quot;format_time&quot;) + &quot;) &quot; + resMessages.getString(&quot;tooltip_zero_time&quot;)" type="code"/>
+          <Connection code="&quot;(&quot; + resGlobal.getString(&quot;format_time&quot;) + &quot;) &quot; + resMessages.getString(&quot;tooltip_zero_time&quot;)" type="code"/>
         </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[64, 22]"/>

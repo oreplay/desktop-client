@@ -147,7 +147,7 @@
               <Font name="Segoe UI" size="14" style="1"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="resMessages.getString(&quot;main&quot;)" type="code"/>
+              <Connection code="resMessages.getString(&quot;main&quot;) + &quot; &quot; + resGlobal.getString(&quot;version&quot;)" type="code"/>
             </Property>
           </Properties>
         </Component>
@@ -166,7 +166,7 @@
                 </Property>
                 <Property name="contentType" type="java.lang.String" value="text/html" noResource="true"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="resMessages.getString(&quot;about_description&quot;) + &quot;&lt;BR&gt;&quot; + resMessages.getString(&quot;about_github&quot;)" type="code"/>
+                  <Connection code="resMessages.getString(&quot;about_description&quot;) + &quot;&lt;BR&gt;&quot; + resGlobal.getString(&quot;about_github&quot;)" type="code"/>
                 </Property>
               </Properties>
             </Component>
@@ -204,7 +204,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="resMessages.getString(&quot;about_developers_list&quot;)" type="code"/>
+              <Connection code="resGlobal.getString(&quot;about_developers_list&quot;)" type="code"/>
             </Property>
             <Property name="verticalAlignment" type="int" value="1"/>
           </Properties>
