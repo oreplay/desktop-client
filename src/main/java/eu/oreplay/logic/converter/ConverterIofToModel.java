@@ -1444,6 +1444,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                             voTes.setStageOrder(voRes.getStageOrder());
                                                             voTes.setContributory(true);
                                                             voTes.setResultType(voRes.getResultType());
+                                                            voTes.setLegNumber(vnLegNumber);
                                                             voTes.setStatusCode(voRes.getStatusCode());
                                                             voTes.setTimeSeconds(voRes.getTimeSeconds());
                                                             voTes.setTimeBehind(voRes.getTimeBehind());
