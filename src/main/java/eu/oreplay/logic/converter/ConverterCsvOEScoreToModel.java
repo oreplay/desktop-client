@@ -641,8 +641,12 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                                     try {
                                         int vnSplPoints = 0;
                                         String vcTime = "";
+                                        boolean vbEmptyPoints = false;
                                         if (vbSplit) {
                                             try {
+                                                if (vaRecord[vnCol+1].trim().equals("")) {
+                                                    vbEmptyPoints = true;
+                                                }
                                                 vnSplPoints = Integer.parseInt(vaRecord[vnCol+1].trim().replaceAll("\"", "0"));
                                             }catch(Exception eSplPoints) {
                                                 vnSplPoints = 0;
@@ -650,6 +654,9 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                                             vcTime = (vaRecord[vnCol+2].trim().replaceAll("\"", ""));
                                         } else {
                                             try {
+                                                if (vaRecord[vnCol+2].trim().equals("")) {
+                                                    vbEmptyPoints = true;
+                                                }
                                                 vnSplPoints = Integer.parseInt(vaRecord[vnCol+2].trim().replaceAll("\"", "0"));
                                             }catch(Exception eSplPoints) {
                                                 vnSplPoints = 0;
@@ -674,11 +681,17 @@ public class ConverterCsvOEScoreToModel extends ConverterToModel{
                                             //if (vnSplOrder>voCla.getCourse().getControls()) {
                                             //    voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
                                             //} else {
-                                                voSpl.setStatus("");
+                                            //    voSpl.setStatus("");
                                             //}
                                         } else {
                                             //If there is no time, then it's missing
                                             //voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
+                                        }
+                                        //If some control is revisited, in the CSV it's located at the end of the splits with points column empty. Then, set as Additional
+                                        if (vbEmptyPoints) {
+                                            voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
+                                        } else {
+                                            voSpl.setStatus("");
                                         }
                                     }catch(Exception eSplit) {
                                         voSpl.setReadingMilli(null);
