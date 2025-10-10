@@ -170,7 +170,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         lblStageDate.setText(resMessages.getString("csv_file_date"));
 
         txtStageDate.setToolTipText("(" + resDates.getString("format_date") + ") " + resMessages.getString("tooltip_base_date"));
-        txtStageDate.setMaximumSize(new java.awt.Dimension(64, 22));
+        txtStageDate.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtStageDate.setMinimumSize(new java.awt.Dimension(90, 22));
+        txtStageDate.setPreferredSize(new java.awt.Dimension(90, 22));
         txtStageDate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtStageDateFocusLost(evt);
@@ -181,7 +183,9 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         lblStageZeroTime.setText(resMessages.getString("csv_file_zerotime"));
 
         txtStageZeroTime.setToolTipText("(" + resDates.getString("format_time") + ") " + resMessages.getString("tooltip_zero_time"));
-        txtStageZeroTime.setMaximumSize(new java.awt.Dimension(64, 22));
+        txtStageZeroTime.setMaximumSize(new java.awt.Dimension(150, 22));
+        txtStageZeroTime.setMinimumSize(new java.awt.Dimension(90, 22));
+        txtStageZeroTime.setPreferredSize(new java.awt.Dimension(90, 22));
         txtStageZeroTime.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtStageZeroTimeFocusLost(evt);
@@ -286,11 +290,11 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(lblStageDate, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtStageDate, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtStageDate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(lblStageZeroTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtStageZeroTime, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtStageZeroTime, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lblCsvWarning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
