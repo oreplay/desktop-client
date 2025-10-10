@@ -356,8 +356,8 @@ public class ConverterCsvOEToModelMulti extends ConverterToModel{
                             voRes.setLegNumber(1);
                             //Compose the type of result, which is a Stage Result
                             voResType = new eu.oreplay.db.ResultType();
-                            voResType.setId(Utils.RESULT_STAGE_ID);
-                            voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                            voResType.setId(Utils.RESULT_OVERALLPARTIAL_ID);
+                            voResType.setDescription(Utils.RESULT_OVERALLPARTIAL_DESC);
                             voRes.setResultType(voResType);
                             //Some values that don't depend on participation of the runner
                             voRes.setStartTime(null);
