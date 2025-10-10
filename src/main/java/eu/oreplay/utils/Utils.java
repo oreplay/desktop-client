@@ -92,6 +92,8 @@ public class Utils {
     public static final String RESULT_OVERALL_DESC = "Overall";
     public static final String RESULT_STAGE_ID = "e4ddfa9d-3347-47e4-9d32-c6c119aeac0e";
     public static final String RESULT_STAGE_DESC = "Stage";
+    public static final String RESULT_OVERALLPARTIAL_ID = "292d7076-912b-4713-8cd3-039ee5a394a7";
+    public static final String RESULT_OVERALLPARTIAL_DESC = "PARTIAL_OVERALL";
     public static final String RESULT_TRAILO_NORMAL_ID = "0ca9c166-929e-4b14-a408-28aa4ddeca81";
     public static final String RESULT_TRAILO_NORMAL_DESC = "TrailO_Normal";
     public static final String RESULT_TRAILO_TIMED_ID = "935acae9-1bad-4a79-9010-018008a6766a";

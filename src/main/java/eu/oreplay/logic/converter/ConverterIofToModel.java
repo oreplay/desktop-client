@@ -838,8 +838,15 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 //Compose the type of result, which is a Stage Result for normal competitions, or others for Trail-O
                                                 eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
                                                 if (!getcSource().equals(ConverterToModel.SRC_OPRE)) {
-                                                    voResType.setId(Utils.RESULT_STAGE_ID);
-                                                    voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                                                    //Different ResultType whether it's a totalization file or a classic results file
+                                                    if (getcTotalization().equals(ConverterToModel.TOT_POINTS) || 
+                                                            getcTotalization().equals(ConverterToModel.TOT_TIME)) {
+                                                        voResType.setId(Utils.RESULT_OVERALLPARTIAL_ID);
+                                                        voResType.setDescription(Utils.RESULT_OVERALLPARTIAL_DESC);
+                                                    } else {
+                                                        voResType.setId(Utils.RESULT_STAGE_ID);
+                                                        voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                                                    }
                                                 } else {
                                                     //In Trail-O, first Race Result is for totals
                                                     //In PreO and Sprint, the second one is for normal controls; the rest for timed groups
@@ -1248,11 +1255,18 @@ public class ConverterIofToModel extends ConverterToModel {
                                                             vnLegNumber = voPrs.getLeg().intValue();
                                                             voRes.setLegNumber(vnLegNumber);
                                                         }
-                                                        //Compose the type of result, which is a Stage Result
+                                                        //Different ResultType whether it's a totalization file or a classic results file
                                                         eu.oreplay.db.ResultType voResType = new eu.oreplay.db.ResultType();
-                                                        voResType.setId(Utils.RESULT_STAGE_ID);
-                                                        voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                                                        if (getcTotalization().equals(ConverterToModel.TOT_POINTS) || 
+                                                                getcTotalization().equals(ConverterToModel.TOT_TIME)) {
+                                                            voResType.setId(Utils.RESULT_OVERALLPARTIAL_ID);
+                                                            voResType.setDescription(Utils.RESULT_OVERALLPARTIAL_DESC);
+                                                        } else {
+                                                            voResType.setId(Utils.RESULT_STAGE_ID);
+                                                            voResType.setDescription(Utils.RESULT_STAGE_DESC);
+                                                        }
                                                         voRes.setResultType(voResType);
+                                                        
                                                         //Transform date values
                                                         //voRes.setStartTime((voPrs.getStartTime()!=null?voPrs.getStartTime().toGregorianCalendar().getTime():null));
                                                         //voRes.setFinishTime((voPrs.getFinishTime()!=null?voPrs.getFinishTime().toGregorianCalendar().getTime():null));
