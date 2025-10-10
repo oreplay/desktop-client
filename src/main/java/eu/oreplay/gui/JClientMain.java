@@ -136,6 +136,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         mnuLanguage = new javax.swing.JMenu();
         mnuEnglish = new javax.swing.JMenuItem();
         mnuSpanish = new javax.swing.JMenuItem();
+        mnuFrench = new javax.swing.JMenuItem();
+        mnuGalician = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(resGlobal.getString("oreplay"));
@@ -261,6 +263,22 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             }
         });
         mnuLanguage.add(mnuSpanish);
+
+        mnuFrench.setText(resGlobal.getString("french"));
+        mnuFrench.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFrenchActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuFrench);
+
+        mnuGalician.setText(resGlobal.getString("galician"));
+        mnuGalician.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuGalicianActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuGalician);
 
         mnuHelp.add(mnuLanguage);
 
@@ -399,6 +417,14 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         this.checkForNewVersion(true);
     }//GEN-LAST:event_mnuCheckUpdateActionPerformed
 
+    private void mnuFrenchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFrenchActionPerformed
+        this.changeLanguage("fr");
+    }//GEN-LAST:event_mnuFrenchActionPerformed
+
+    private void mnuGalicianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGalicianActionPerformed
+        this.changeLanguage("gl");
+    }//GEN-LAST:event_mnuGalicianActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -468,6 +494,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private javax.swing.JMenuItem mnuEnglish;
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
+    private javax.swing.JMenuItem mnuFrench;
+    private javax.swing.JMenuItem mnuGalician;
     private javax.swing.JMenu mnuHelp;
     private javax.swing.JMenu mnuLanguage;
     private javax.swing.JMenuBar mnuMain;
@@ -532,6 +560,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             mnuLanguage.setText(resMessages.getString("language"));
             mnuEnglish.setText(resGlobal.getString("english"));
             mnuSpanish.setText(resGlobal.getString("spanish"));
+            mnuFrench.setText(resGlobal.getString("french"));
+            mnuGalician.setText(resGlobal.getString("galician"));
             //Labels
             lblCsvWarning.setText(resMessages.getString("csv_file_warning"));
             lblStageDate.setText(resMessages.getString("csv_file_date"));
