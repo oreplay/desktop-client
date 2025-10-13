@@ -26,6 +26,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private ConnBackStatus oStatus = new ConnBackStatus();
     private static String cStageDate = "";
     private static String cStageZeroTime = "";
+    private static String cLang = "";
     private static boolean bForce = false;
 
     /**
@@ -68,6 +69,12 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     public static void setcStageZeroTime(String cStageZeroTime) {
         JClientMain.cStageZeroTime = cStageZeroTime;
     }
+    public static String getcLang() {
+        return cLang;
+    }
+    public static void setcLang(String cLang) {
+        JClientMain.cLang = cLang;
+    }  
     public static boolean isbForce() {
         return bForce;
     }
@@ -136,8 +143,23 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         mnuLanguage = new javax.swing.JMenu();
         mnuEnglish = new javax.swing.JMenuItem();
         mnuSpanish = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        mnuBulgarian = new javax.swing.JMenuItem();
+        mnuCatalonian = new javax.swing.JMenuItem();
+        mnuCzech = new javax.swing.JMenuItem();
+        mnuGerman = new javax.swing.JMenuItem();
+        mnuBasque = new javax.swing.JMenuItem();
         mnuFrench = new javax.swing.JMenuItem();
         mnuGalician = new javax.swing.JMenuItem();
+        mnuItalian = new javax.swing.JMenuItem();
+        mnuHungarian = new javax.swing.JMenuItem();
+        mnuPolish = new javax.swing.JMenuItem();
+        mnuPortuguese = new javax.swing.JMenuItem();
+        mnuRussian = new javax.swing.JMenuItem();
+        mnuFinnish = new javax.swing.JMenuItem();
+        mnuSwedish = new javax.swing.JMenuItem();
+        mnuTurkish = new javax.swing.JMenuItem();
+        mnuUcranian = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(resGlobal.getString("oreplay"));
@@ -263,6 +285,47 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             }
         });
         mnuLanguage.add(mnuSpanish);
+        mnuLanguage.add(jSeparator4);
+
+        mnuBulgarian.setText(resGlobal.getString("bulgarian"));
+        mnuBulgarian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuBulgarianActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuBulgarian);
+
+        mnuCatalonian.setText(resGlobal.getString("catalonian"));
+        mnuCatalonian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCatalonianActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuCatalonian);
+
+        mnuCzech.setText(resGlobal.getString("czech"));
+        mnuCzech.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCzechActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuCzech);
+
+        mnuGerman.setText(resGlobal.getString("german"));
+        mnuGerman.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuGermanActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuGerman);
+
+        mnuBasque.setText(resGlobal.getString("basque"));
+        mnuBasque.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuBasqueActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuBasque);
 
         mnuFrench.setText(resGlobal.getString("french"));
         mnuFrench.addActionListener(new java.awt.event.ActionListener() {
@@ -279,6 +342,78 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             }
         });
         mnuLanguage.add(mnuGalician);
+
+        mnuItalian.setText(resGlobal.getString("italian"));
+        mnuItalian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuItalianActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuItalian);
+
+        mnuHungarian.setText(resGlobal.getString("hungarian"));
+        mnuHungarian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuHungarianActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuHungarian);
+
+        mnuPolish.setText(resGlobal.getString("polish"));
+        mnuPolish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPolishActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuPolish);
+
+        mnuPortuguese.setText(resGlobal.getString("portuguese"));
+        mnuPortuguese.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuPortugueseActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuPortuguese);
+
+        mnuRussian.setText(resGlobal.getString("russian"));
+        mnuRussian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuRussianActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuRussian);
+
+        mnuFinnish.setText(resGlobal.getString("finnish"));
+        mnuFinnish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuFinnishActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuFinnish);
+
+        mnuSwedish.setText(resGlobal.getString("swedish"));
+        mnuSwedish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuSwedishActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuSwedish);
+
+        mnuTurkish.setText(resGlobal.getString("turkish"));
+        mnuTurkish.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuTurkishActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuTurkish);
+
+        mnuUcranian.setText(resGlobal.getString("ucranian"));
+        mnuUcranian.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuUcranianActionPerformed(evt);
+            }
+        });
+        mnuLanguage.add(mnuUcranian);
 
         mnuHelp.add(mnuLanguage);
 
@@ -376,6 +511,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             this.checkForNewVersion(false);
             //Get data from XML files
             getXmlData();
+            //Change default language as is set in Form Parameters
+            this.changeLanguage(cLang);
             //Get Timezone offset from computer
             getTimezoneOffset();
             //For each Connection panel, add managing events, set status and pass default values
@@ -425,6 +562,62 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
         this.changeLanguage("gl");
     }//GEN-LAST:event_mnuGalicianActionPerformed
 
+    private void mnuBulgarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBulgarianActionPerformed
+        this.changeLanguage("bg");
+    }//GEN-LAST:event_mnuBulgarianActionPerformed
+
+    private void mnuCatalonianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCatalonianActionPerformed
+        this.changeLanguage("ca");
+    }//GEN-LAST:event_mnuCatalonianActionPerformed
+
+    private void mnuCzechActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCzechActionPerformed
+        this.changeLanguage("cs");
+    }//GEN-LAST:event_mnuCzechActionPerformed
+
+    private void mnuRussianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRussianActionPerformed
+        this.changeLanguage("ru");
+    }//GEN-LAST:event_mnuRussianActionPerformed
+
+    private void mnuUcranianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUcranianActionPerformed
+        this.changeLanguage("uk");
+    }//GEN-LAST:event_mnuUcranianActionPerformed
+
+    private void mnuGermanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuGermanActionPerformed
+        this.changeLanguage("de");
+    }//GEN-LAST:event_mnuGermanActionPerformed
+
+    private void mnuBasqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuBasqueActionPerformed
+        this.changeLanguage("eu");        
+    }//GEN-LAST:event_mnuBasqueActionPerformed
+
+    private void mnuItalianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuItalianActionPerformed
+        this.changeLanguage("it");
+    }//GEN-LAST:event_mnuItalianActionPerformed
+
+    private void mnuHungarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHungarianActionPerformed
+        this.changeLanguage("hu");
+    }//GEN-LAST:event_mnuHungarianActionPerformed
+
+    private void mnuPolishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPolishActionPerformed
+        this.changeLanguage("pl");
+    }//GEN-LAST:event_mnuPolishActionPerformed
+
+    private void mnuPortugueseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuPortugueseActionPerformed
+        this.changeLanguage("pt");
+    }//GEN-LAST:event_mnuPortugueseActionPerformed
+
+    private void mnuFinnishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuFinnishActionPerformed
+        this.changeLanguage("fi");
+    }//GEN-LAST:event_mnuFinnishActionPerformed
+
+    private void mnuSwedishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSwedishActionPerformed
+        this.changeLanguage("sv");
+    }//GEN-LAST:event_mnuSwedishActionPerformed
+
+    private void mnuTurkishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuTurkishActionPerformed
+        this.changeLanguage("tr");
+    }//GEN-LAST:event_mnuTurkishActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -472,6 +665,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                             oForms.getoJClientMain().getoPos().getnSizeY());                
                     cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resDates.getString("format_date_dash")), resDates.getString("format_date"));
                     cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resDates.getString("format_time")), resDates.getString("format_time"));
+                    cLang = oForms.getoJClientMain().getcLang();
                 }catch (Exception e) {
                     if (oLog!=null)
                         oLog.error(resMessages.getString("error_exception"), e);
@@ -485,23 +679,38 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JLabel lblCsvWarning;
     private javax.swing.JLabel lblOffset;
     private javax.swing.JLabel lblStageDate;
     private javax.swing.JLabel lblStageZeroTime;
     private javax.swing.JMenuItem mnuAbout;
+    private javax.swing.JMenuItem mnuBasque;
+    private javax.swing.JMenuItem mnuBulgarian;
+    private javax.swing.JMenuItem mnuCatalonian;
     private javax.swing.JMenuItem mnuCheckUpdate;
+    private javax.swing.JMenuItem mnuCzech;
     private javax.swing.JMenuItem mnuEnglish;
     private javax.swing.JMenuItem mnuExit;
     private javax.swing.JMenu mnuFile;
+    private javax.swing.JMenuItem mnuFinnish;
     private javax.swing.JMenuItem mnuFrench;
     private javax.swing.JMenuItem mnuGalician;
+    private javax.swing.JMenuItem mnuGerman;
     private javax.swing.JMenu mnuHelp;
+    private javax.swing.JMenuItem mnuHungarian;
+    private javax.swing.JMenuItem mnuItalian;
     private javax.swing.JMenu mnuLanguage;
     private javax.swing.JMenuBar mnuMain;
     private javax.swing.JMenuItem mnuManual;
+    private javax.swing.JMenuItem mnuPolish;
+    private javax.swing.JMenuItem mnuPortuguese;
+    private javax.swing.JMenuItem mnuRussian;
     private javax.swing.JMenuItem mnuSpanish;
+    private javax.swing.JMenuItem mnuSwedish;
     private javax.swing.JMenuItem mnuTest;
+    private javax.swing.JMenuItem mnuTurkish;
+    private javax.swing.JMenuItem mnuUcranian;
     private eu.oreplay.gui.ConnBackCheckPanel pnlCheck;
     private eu.oreplay.gui.ConnBackLoginPanel pnlLogin;
     private eu.oreplay.gui.ConnBackUploadPanel pnlUpload;
@@ -540,6 +749,10 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
      */
     private void changeLanguage (String pcLocale) {
         try {
+            if (pcLocale==null || pcLocale.equals("")) {
+                pcLocale = java.util.Locale.getDefault().getCountry();
+            }
+            cLang = pcLocale;
             String vcOldDate = resDates.getString("format_date");
             String vcOldTime = resDates.getString("format_time");
             //Change the resources locale
@@ -600,6 +813,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                         oForms.getoJClientMain().getoPos().getnSizeY());
                 cStageDate = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageDate(), resDates.getString("format_date_dash")), resDates.getString("format_date"));
                 cStageZeroTime = Utils.format(Utils.parse(oForms.getoJClientMain().getcStageZeroTime(), resDates.getString("format_time")), resDates.getString("format_time"));
+                cLang = oForms.getoJClientMain().getcLang();
                 txtStageDate.setText(cStageDate);
                 txtStageZeroTime.setText(cStageZeroTime);
             } else {
@@ -632,6 +846,8 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 //Tries to save the values of date and zero time
                 oForms.getoJClientMain().setcStageDate(Utils.format(Utils.parse(cStageDate, resDates.getString("format_date")), resDates.getString("format_date_dash")));
                 oForms.getoJClientMain().setcStageZeroTime(Utils.format(Utils.parse(cStageZeroTime, resDates.getString("format_time")), resDates.getString("format_time")));
+                //Tries to save default language
+                oForms.getoJClientMain().setcLang(cLang);
                 //Save the file
                 String vcFile = cPathApp+"FormsParameters.xml";
                 FormsParametersXMLHandler.writeXmlData(oForms, vcFile);

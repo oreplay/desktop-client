@@ -250,6 +250,14 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                                 break;
                         }
                     }catch(Exception e16) {}
+                } else if (lname.equalsIgnoreCase("clang")) {
+                    try {
+                        switch (nType) {
+                            case 1:
+                                oRec.getoJClientMain().setcLang(content);
+                                break;
+                        }
+                    }catch(Exception e16) {}
                 }
             }
         }
@@ -305,6 +313,7 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                 voStream.println("    <nSizeY>" + poRec.getoJClientMain().getoPos().getnSizeY()+ "</nSizeY>");
                 voStream.println("    <cStageDate>" + poRec.getoJClientMain().getcStageDate()+ "</cStageDate>");
                 voStream.println("    <cStageZeroTime>" + poRec.getoJClientMain().getcStageZeroTime()+ "</cStageZeroTime>");
+                voStream.println("    <cLang>" + poRec.getoJClientMain().getcLang()+ "</cLang>");
                 voStream.println("  </JClientMain>");
                 //Form JAbout
                 voStream.println("  <JAbout>");
