@@ -203,6 +203,7 @@ public class FormsParameters {
     public class ParJClientMain extends ParBase{
         private String cStageDate = ""; //Uses yyyy-MM-dd format
         private String cStageZeroTime = ""; //Uses HH:mm:ss format
+        private String cLang = "";
         /**
          * Constructor by default
          */
@@ -227,6 +228,20 @@ public class FormsParameters {
             this.cStageDate = pcDate;
             this.cStageZeroTime = pcTime;
         }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcDate String Stage Date (yyyy-MM-dd)
+         * @param pcTime String Stage Zero Time (HH:mm:ss)
+         * @param pcLang String Language
+         */
+        public ParJClientMain(ParPosition oPos, String pcDate, String pcTime, String pcLang) {
+            this.oPos = oPos;
+            this.cStageDate = pcDate;
+            this.cStageZeroTime = pcTime;
+            this.cLang = pcLang;
+        }
+        
         public String getcStageDate() {
             return cStageDate;
         }
@@ -238,6 +253,12 @@ public class FormsParameters {
         }
         public void setcStageZeroTime(String cStageZeroTime) {
             this.cStageZeroTime = cStageZeroTime;
+        }
+        public String getcLang() {
+            return cLang;
+        }
+        public void setcLang(String cLang) {
+            this.cLang = cLang;
         }
     }
     /**
