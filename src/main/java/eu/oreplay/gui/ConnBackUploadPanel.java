@@ -544,11 +544,13 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                 vbFound = false;
                                                 //Sets the request to the current server
                                                 HttpRequest voReq = HttpRequest.newBuilder()
-                                                    .POST(HttpRequest.BodyPublishers.ofString(vcJson))
+                                                    .POST(HttpRequest.BodyPublishers.ofByteArray(Utils.compressGzip(vcJson)))    //Replacement to send compressed text
+                                                    //.POST(HttpRequest.BodyPublishers.ofString(vcJson))
                                                     .uri(new URI(oStatus.getcServer() + 
                                                             "/api/v1/events/" + oStatus.getcEveId() + "/uploads?version=" + vnVersion))
                                                     .header("Authorization", "Bearer " + oStatus.getcToken())
                                                     .header("Content-Type", "application/json")
+                                                    .header("Content-Encoding", "gzip")  // Include this line to inform that compressed contents are being sent 
                                                     .header("Accept", "application/json")
                                                     .build();
                                                 //Sends the request an gets the response
