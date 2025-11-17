@@ -943,6 +943,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                 }
                                                 //Now, process Splits, if present
                                                 if (voPrs.getSplitTime()!=null && !voPrs.getSplitTime().isEmpty()) {
+                                                    boolean vbMissing = false; //Set to true if any control is missing; to adjust the status of the not competing
                                                     int vnSplOrder = 1;
                                                     ArrayList<eu.oreplay.db.Split> vlSpl = new ArrayList<>();
                                                     for (eu.oreplay.logic.iof.SplitTime voSplitTime : voPrs.getSplitTime()) {
@@ -971,6 +972,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                             voSpl.setReadingMilli(null);
                                                             voSpl.setTimeSeconds(null);
                                                             voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
+                                                            vbMissing = true;   //Set the global missing flag to true in order to adjust status of not competing
                                                         }
                                                         voSpl.setBibRunner(voRun.getBibNumber());
                                                         voSpl.setOrderNumber(vnSplOrder);
@@ -1002,6 +1004,10 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     }
                                                     //Add the list of splits to the results
                                                     voRes.setSplitList(vlSpl);
+                                                    //Finally adjustment of status of not competing
+                                                    if (voRun.getIsNc() && voRes.getStatusCode()==Utils.STATUS_OK_ID && vbMissing) {
+                                                        voRes.setStatusCode(Utils.STATUS_MISSING_ID);
+                                                    }
                                                 }
                                                 //Now, process Answers, if present (Trail-O)
                                                 if (voPrs.getControlAnswer()!=null && !voPrs.getControlAnswer().isEmpty()) {
@@ -1331,6 +1337,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voRes.setTimePenalty(BigDecimal.ZERO);
                                                         //Now, process Splits, if present
                                                         if (voPrs.getSplitTime()!=null && !voPrs.getSplitTime().isEmpty()) {
+                                                            boolean vbMissing = false; //Set to true if any control is missing; to adjust the status of the not competing
                                                             int vnSplOrder = 1;
                                                             ArrayList<eu.oreplay.db.Split> vlSpl = new ArrayList<>();
                                                             for (eu.oreplay.logic.iof.SplitTime voSplitTime : voPrs.getSplitTime()) {
@@ -1359,6 +1366,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                                     voSpl.setReadingMilli(null);
                                                                     voSpl.setTimeSeconds(null);
                                                                     voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
+                                                                    vbMissing = true;   //Set the global missing flag to true in order to adjust status of not competing
                                                                 }
                                                                 voSpl.setBibRunner(voRun.getBibNumber());
                                                                 voSpl.setOrderNumber(vnSplOrder);
@@ -1390,6 +1398,10 @@ public class ConverterIofToModel extends ConverterToModel {
                                                             }
                                                             //Add the list of splits to the results
                                                             voRes.setSplitList(vlSpl);
+                                                            //Finally adjustment of status of not competing
+                                                            if (voRun.getIsNc() && voRes.getStatusCode()==Utils.STATUS_OK_ID && vbMissing) {
+                                                                voRes.setStatusCode(Utils.STATUS_MISSING_ID);
+                                                            }
                                                         }
                                                         //Create or update the team's result from the OverallResult tag
                                                         //The next sentence is moved up to create one array for several TeamResult elements (the accumulated overall of each leg)

@@ -445,9 +445,9 @@ public class RunnerResult implements Serializable {
                 setStatusCode(Utils.STATUS_OK_ID);
             } else {
                 //If not, there is no chance to exactly know the status
-                //If there are StartTime and FinishTime, let's assume MissingPunch
+                //If there are StartTime and FinishTime, let's assume OK
                 if (getStartTime()!=null && getFinishTime()!=null) {
-                    setStatusCode(Utils.STATUS_MISSING_ID);
+                    setStatusCode(Utils.STATUS_OK_ID);
                 //If there is no StartTime and no FinishTime, let's assume DidNotStart
                 } else if (getStartTime()==null && getFinishTime()==null) {
                     setStatusCode(Utils.STATUS_DNS_ID);
