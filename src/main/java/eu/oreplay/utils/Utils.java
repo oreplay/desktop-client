@@ -35,6 +35,9 @@ import java.util.TimeZone;
 import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.logging.log4j.*;
+import java.io.ByteArrayOutputStream;
+import java.util.zip.GZIPOutputStream;
+
 
 /**
  *
@@ -1285,6 +1288,21 @@ public static long getVersionNumberFromText (String pcCurrent) {
         vnResul = 301;
     }
     return vnResul;
+}
+
+
+/**
+ * Accepts a string with some text and returns a compressed byte array
+ * @param data String Source text
+ * @return byte[] compressed byte array
+ * @throws IOException 
+ */
+public static byte[] compressGzip(String data) throws IOException {
+    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+    try (GZIPOutputStream gzipStream = new GZIPOutputStream(byteStream)) {
+        gzipStream.write(data.getBytes("UTF-8"));
+    }
+    return byteStream.toByteArray();
 }
 
 }
