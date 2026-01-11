@@ -343,7 +343,7 @@ public abstract class ConverterToModel {
             vbResul = true;
         }
         return vbResul;
-    }    
+    }
     @JsonIgnore
     public boolean isScoring () {
         boolean vbResul = false;
@@ -354,7 +354,16 @@ public abstract class ConverterToModel {
             vbResul = true;
         }
         return vbResul;
-    }    
+    }
+    @JsonIgnore
+    public boolean isSITiming () {
+        boolean vbResul = false;
+        if (getcSource()!=null &&
+                (getcSource().equals(ConverterToModel.SRC_SITIMING))) {
+            vbResul = true;
+        }
+        return vbResul;
+    }
     /**
      * Makes some initial inspection to get the kind of contents of the file;
      * the information is stored in the properties of this class
