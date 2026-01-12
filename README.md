@@ -42,6 +42,7 @@ Current file processing capabilities (uploading from csv files are currently dis
 | Rogaine         |                   |         |        |                    |               |                 |
 |                 | OEScore2010       |    X    | X      | X                  | N/A           |                 |
 |                 | OEScorev12        |    X    | X      | X                  | N/A           |                 |
+|                 | SiTiming          |         | X      | X                  | N/A           |                 |
 
 | XML             |                   | Starts  | Totals | Breakdown (splits) | Radiocontrols | n-Stages Totals |
 | :-------------- | :---------------- | :-----: | :----: | :----------------: | :-----------: | :-------------: |
