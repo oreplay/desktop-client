@@ -431,6 +431,10 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
     { 
         SwingWorker voSw = new SwingWorker() { 
             // Method to perform tasks in background and free the GUI to refresh data
+            // Each step of the loop -> 500 mseg delay
+            // If there is a connection break during a data communication, it waits for 90 seconds until a connection timeout
+            // While the break persists, an exponential delay is applied: 2 seconds, 4, 8, 16, 30, 30, 30, ...
+            // When the connection is back and the communication is performed, the exponential delay is reset back to 2 seconds
             @Override
             protected String doInBackground() 
                 throws Exception { 
@@ -442,12 +446,18 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                 String vcNow = "";
                 String vcFile = "";
                 boolean vbDeleteFile = true;
+                //Properties to manage an exponential delay (with a max value) during connection breaks, from 0.5 to 30 seconds
+                long backoffBase = 2000;    // 2 seconds
+                long backoffMax  = 30000;   // 30 seconds
+                long currentBackoff = backoffBase;
+                //There is no need to recreate the client after a connection break, because it doesn't recreate the timeout because the DNS is cached so it's remembered
                 HttpClient voClient = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(5))
-                    .build();
-
+                                .connectTimeout(Duration.ofSeconds(5))
+                                .build();
                 //Iterate until the thread is stopped
                 while (bRun) {
+                    //Flag to avoid an extra delay if a timeout delay is already applied
+                    boolean vbSleptByBackoff = false;
                     //Before checking for new contents, check if the user has requested to stop
                     if (oStatus.getnStatusNext()==ConnBackStatus.UPLOAD_OFF) {
                         JOptionPane.showMessageDialog(ConnBackUploadPanel.this , 
@@ -459,7 +469,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         //Launches the method to effectively stop
                         oStatus.setnStatus(ConnBackStatus.UPLOAD_OFF);
                         ConnBackUploadPanel.this.startStopUpload();
-                    } else {                   
+                    } else {       
                         //First, find a file with the given extension located at the given folder
                         //If it's not the first time, and the last file was unsuccessful and needs to be uploaded again, don't try to find another file, keep on with the same
                         if (!(vbDeleteFile==false && vcFile!=null && !vcFile.equals(""))) {
@@ -544,6 +554,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                 vbFound = false;
                                                 //Sets the request to the current server
                                                 HttpRequest voReq = HttpRequest.newBuilder()
+                                                    .timeout(Duration.ofSeconds(90))  //Response timeout, 90 seconds
                                                     .POST(HttpRequest.BodyPublishers.ofByteArray(Utils.compressGzip(vcJson)))    //Replacement to send compressed text
                                                     //.POST(HttpRequest.BodyPublishers.ofString(vcJson))
                                                     .uri(new URI(oStatus.getcServer() + 
@@ -555,6 +566,8 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                                     .build();
                                                 //Sends the request an gets the response
                                                 HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());
+                                                //If passes the sending process without connection problems, reset exponential backoff
+                                                currentBackoff = backoffBase;
                                                 //If there is a correct response, finish the process to fire the event
                                                 if (voResp.statusCode()==200 || voResp.statusCode() == 202) {
                                                     try {
@@ -647,23 +660,47 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                                 long vnDiffSec = TimeUnit.SECONDS.convert(vnDiff, TimeUnit.MILLISECONDS);
                                 publish("#000000<JARUTAG>" + resMessages.getString("info_fileprocess_finished") + " - " + vcNow + 
                                         " - " + vnDiffSec + " " + resMessages.getString("second_mid"));
-                            } catch (java.net.http.HttpConnectTimeoutException eTimeout) {
+                            } catch (java.net.http.HttpConnectTimeoutException eConnTimeout) {
                                 //If any of the connections fails, set the flag not to delete the file
                                 vbDeleteFile = false;
                                 voFinish = new java.util.Date();
                                 vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                 if (JClientMain.getoLog()!=null)
-                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eTimeout);
+                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eConnTimeout);
+                                // Exponential Backoff
+                                Thread.sleep(currentBackoff);
+                                currentBackoff = Math.min(currentBackoff * 2, backoffMax);
+                                vbSleptByBackoff = true;
                                 //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                 publish("#000000<JARUTAG>" + resMessages.getString("info_connection_timeout") + " - " + vcNow);
-                            } catch (java.io.IOException | java.lang.InterruptedException eInterrupt) {
+                            } catch (java.net.http.HttpTimeoutException eSendTimeout) {
+                                //If the connection was ok but sending reach its ows timeout, set the flag not to delete the file
                                 vbDeleteFile = false;
                                 voFinish = new java.util.Date();
                                 vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
                                 if (JClientMain.getoLog()!=null)
-                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eInterrupt);
+                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eSendTimeout);
+                                // Exponential Backoff
+                                Thread.sleep(currentBackoff);
+                                currentBackoff = Math.min(currentBackoff * 2, backoffMax);
+                                vbSleptByBackoff = true;
                                 //This calls the method "process" in the SwingWorker, to set a status text in the panel
                                 publish("#000000<JARUTAG>" + resMessages.getString("info_connection_break") + " - " + vcNow);
+                            } catch (java.io.IOException eIO) {
+                                vbDeleteFile = false;
+                                voFinish = new java.util.Date();
+                                vcNow = Utils.format(voFinish, resDates.getString("format_datetime_milli_dash"));
+                                if (JClientMain.getoLog()!=null)
+                                    JClientMain.getoLog().error(resMessages.getString("error_exception") + " - " + vcNow, eIO);
+                                // Exponential Backoff
+                                Thread.sleep(currentBackoff);
+                                currentBackoff = Math.min(currentBackoff * 2, backoffMax);
+                                vbSleptByBackoff = true;
+                                //This calls the method "process" in the SwingWorker, to set a status text in the panel
+                                publish("#000000<JARUTAG>" + resMessages.getString("info_connection_break") + " - " + vcNow);
+                            } catch (java.lang.InterruptedException eInterrupt) {
+                                Thread.currentThread().interrupt();
+                                break; // o return; para salir con limpieza
                             } catch (Exception eNet) {
                                 vbDeleteFile = false;
                                 voFinish = new java.util.Date();
@@ -694,13 +731,17 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                             }
                         }
                     }
-                    //Waits 0.5 seconds to let the system breathe
-                    Thread.sleep(Duration.ofMillis(500));
+                    //Waits 0.5 seconds to let the system breathe                    
+                    if (!vbSleptByBackoff) {
+                        Thread.sleep(Duration.ofMillis(500));
+                    }
                 }
                 try {
-                    voClient.close();
-                    voClient.shutdownNow();
-                    voClient = null;
+                    if (voClient!=null && !voClient.isTerminated()) {
+                        voClient.close();
+                        voClient.shutdownNow();
+                        voClient = null;
+                    }
                 }catch (Exception eCloseConn) {
                     if (JClientMain.getoLog()!=null)
                         JClientMain.getoLog().error(resMessages.getString("error_exception"), eCloseConn);
