@@ -540,6 +540,10 @@ public abstract class ConverterToModel {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_BREAKDOWN;
                     cSource = SRC_SITIMING;
+                } else if (vcTopValues.startsWith("BibNumber;CardNumbers;MembershipNumbers;Name (Free Format);Category;Club;Country;CourseClass;StartTime;FinishTime")) {
+                    cContents = CONTENTS_RESULT;
+                    cResultsType = RES_BREAKDOWN;
+                    cSource = SRC_SITIMING;
                 } else if (vcTopValues.startsWith("OE0013a_V12")) {
                     cContents = CONTENTS_RESULT;
                     cResultsType = RES_TOTALS;

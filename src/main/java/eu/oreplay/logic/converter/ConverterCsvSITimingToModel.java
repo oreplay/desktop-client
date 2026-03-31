@@ -31,7 +31,7 @@ public class ConverterCsvSITimingToModel extends ConverterToModel{
     private final int[] COL_BIB = {0}; //RaceNumber
     private final int[] COL_SICARD = {1};
     private final int[] COL_DBID = {2}; //MembershipNumbers
-    private final int[] COL_NAME = {3}; // Team|Member1~Member2~...~MemberN
+    private final int[] COL_NAME = {3}; // Team|Member1~Member2~...~MemberN (old version. new version is just Member1/.../MemberN)
     private final int[] COL_NC = {11}; //NonCompetitive
     private final int[] COL_START = {8};
     private final int[] COL_FINISH = {9};
@@ -39,7 +39,7 @@ public class ConverterCsvSITimingToModel extends ConverterToModel{
     private final int[] COL_STATUS = {13}; //??
     private final int[] COL_CLU_ID = {0};
     private final int[] COL_CLU_CITY = {-1};
-    private final int[] COL_CLU_SHORT = {-1};
+    private final int[] COL_CLU_SHORT = {5}; // Team in new version (if it's not in COL_NAME)
     private final int[] COL_CAT_ID = {7};
     private final int[] COL_CAT_SHORT = {7}; //CourseClass
     private final int[] COL_CAT_LONG = {-1};
@@ -420,8 +420,17 @@ public class ConverterCsvSITimingToModel extends ConverterToModel{
                     if (vaRecord.length>=34) {
                         String teamInfo = COL_NAME[vnColIndex]>=0?vaRecord[COL_NAME[vnColIndex]].trim().replaceAll("\"", ""):"";
                         String[] teamInfo_arr = teamInfo.split("\\|", 2);
-                        String teamName = teamInfo_arr[0].trim().replaceAll("\"", "");
-                        String membersNames = teamInfo_arr.length > 1 ? teamInfo_arr[1].trim().replaceAll("~", " / ") : "";
+                        String teamName = "";
+                        String membersNames = "";
+                        if (teamInfo_arr.length > 1) {
+                            // old format
+                            teamName = teamInfo_arr[0].trim();
+                            membersNames = teamInfo_arr[1].trim().replaceAll("~", " / ");
+                        } else {
+                            // new format
+                            teamName = COL_CLU_SHORT[vnColIndex] >= 0 ? vaRecord[COL_CLU_SHORT[vnColIndex]].trim().replaceAll("\"", "") : "";
+                            membersNames = teamInfo_arr[0].trim().replaceAll("/", " / ");
+                        }
 
                         String vcClaId = (COL_CAT_ID[vnColIndex]>=0?vaRecord[COL_CAT_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
                         String vcClaShort = (COL_CAT_SHORT[vnColIndex]>=0?vaRecord[COL_CAT_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
@@ -441,14 +450,11 @@ public class ConverterCsvSITimingToModel extends ConverterToModel{
                         ArrayList<ClazzControl> vlClaCon = (voCla.getClazzControlList()!=null?(ArrayList)voCla.getClazzControlList():new ArrayList<>());
                         //Now, the course of the class
                         if (voCla.getCourse()==null && !vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", "").equals("")) {
-                        //if (voCla.getCourse()==null && !teamName.equals("")) {
                             Course voCou = new Course();
                             voCou.setId("");
                             voCou.setUuid("");
                             voCou.setOeKey(COL_COU_ID[vnColIndex]>=0?vaRecord[COL_COU_ID[vnColIndex]].trim().replaceAll("\"", ""):"");
                             voCou.setShortName(COL_COU_SHORT[vnColIndex]>=0?vaRecord[COL_COU_SHORT[vnColIndex]].trim().replaceAll("\"", ""):"");
-                            //voCou.setOeKey(teamName); //vcClaShort
-                            //voCou.setShortName(teamName);
                             voCou.setDistance(COL_COU_DIST[vnColIndex]>=0?vaRecord[COL_COU_DIST[vnColIndex]].trim().replaceAll("\"", ""):"");
                             voCou.setClimb(COL_COU_CLIMB[vnColIndex]>=0?vaRecord[COL_COU_CLIMB[vnColIndex]].trim().replaceAll("\"", ""):"");
                             int vnControls = 0;
