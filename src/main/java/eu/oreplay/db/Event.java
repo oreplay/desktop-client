@@ -77,6 +77,9 @@ public class Event implements Serializable {
     private String location;
     @Column(name = "country_code")
     private String countryCode;
+    private String timezone;
+    @Column(name = "organizer_id")
+    private String organizerId;
     
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
@@ -92,6 +95,9 @@ public class Event implements Serializable {
     @JoinColumn(name = "federation_id", referencedColumnName = "id")
     @ManyToOne
     private Federation federation;
+    @JoinColumn(name = "organizer_id", referencedColumnName = "id")
+    @ManyToOne
+    private Organizer organizer;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private List<Split> splitList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
@@ -164,11 +170,18 @@ public class Event implements Serializable {
     public Federation getFederation() {
         return federation;
     }
-
     public void setFederation(Federation federation) {
         this.federation = federation;
     }
 
+    @JsonProperty("organizer")
+    public Organizer getOrganizer() {
+        return organizer;
+    }
+    public void setOrganizer(Organizer organizer) {
+        this.organizer = organizer;
+    }
+    
     @JsonProperty("splits")
     @XmlTransient
     public List<Split> getSplitList() {
@@ -387,10 +400,26 @@ public class Event implements Serializable {
     public String getCountryCode() {
         return countryCode;
     }
-
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
+
+    public String getTimezone() {
+        return timezone;
+    }
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    @JsonProperty("organizer_id")
+    public String getOrganizerId() {
+        return organizerId;
+    }
+    public void setOrganizerId(String organizerId) {
+        this.organizerId = organizerId;
+    }
+
+    
     
     
     @Override

@@ -8,6 +8,7 @@ import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
 import eu.oreplay.logic.xml.FormsParametersXMLHandler;
 import eu.oreplay.utils.Utils;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import org.apache.logging.log4j.*;
 
@@ -907,6 +908,7 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
                 pnlLogin.enableForStage();
                 pnlUpload.setoStatus(this.getoStatus());
                 pnlUpload.enableForUpload();
+                this.updateDateAndZeroTime(e.getoStatus().getcStaDate(), e.getoStatus().getcStaZeroTime());
             //If a text is pasted into EventId or Token, split the contents
             } else if (e.getoStatus().getnStatus()==ConnBackStatus.PASTE_IDTOKEN) {
                 pnlLogin.populateIdToken();
@@ -1053,6 +1055,25 @@ public class JClientMain extends javax.swing.JFrame implements ConnBackListener 
             vcResul = "";
         }
         return vcResul;
+    }
+    /**
+     * Receives new Base Date and Zero Time, then set these values in global properties
+     * and text fields
+     * @param pcDate String Stage's Base Date (yyyy-MM-dd)
+     * @param pcTime String Stage's Zero Time (HH:mm:ss)
+     */
+    public void updateDateAndZeroTime (String pcDate, String pcTime) {
+        try {
+            if (!pcDate.equals("") && !pcTime.equals("")) {
+                cStageDate = Utils.format(Utils.parse(pcDate, resDates.getString("format_date_dash")), resDates.getString("format_date"));
+                cStageZeroTime = Utils.format(Utils.parse(pcTime, resDates.getString("format_time")), resDates.getString("format_time"));
+                txtStageDate.setText(cStageDate);
+                txtStageZeroTime.setText(cStageZeroTime);
+            }
+        } catch (Exception e) {
+            if (oLog!=null)
+                oLog.error(resMessages.getString("error_exception"), e);
+        }
     }
     /**
      * Opens a web explorer to the page of the documentation for organizers

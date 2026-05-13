@@ -4,6 +4,7 @@
  */
 package eu.oreplay.logic.converter;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import eu.oreplay.db.Event;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -29,9 +30,11 @@ import org.apache.logging.log4j.*;
 @JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({
    "configuration",
-   "event"
+   "event",
+   "data"
 })
 public class OReplayDataTransfer {
+    @JsonAlias({"event", "data"})
     Event oEve = null;
     ConverterToModel oConf = null;
     Logger oLog = null;
@@ -44,12 +47,11 @@ public class OReplayDataTransfer {
         oConf = poConf;
         oEve = poEve;
     }
-    
+   
     @JsonProperty("event")
     public Event getoEve() {
         return oEve;
     }
-
     public void setoEve(Event oEve) {
         this.oEve = oEve;
     }
@@ -58,7 +60,6 @@ public class OReplayDataTransfer {
     public ConverterToModel getoConf() {
         return oConf;
     }
-
     public void setoConf(ConverterToModel oConf) {
         this.oConf = oConf;
     }

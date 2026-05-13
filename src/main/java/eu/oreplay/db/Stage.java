@@ -30,9 +30,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.oreplay.logic.converter.IsoDateSerializer;
 import eu.oreplay.logic.converter.IsoTimeSerializer;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -119,6 +124,8 @@ public class Stage implements Serializable {
     private List<Runner> runnerList;
     //Dummy needed for not breaking the communication between Back and Client
     private Link _links;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+    private List<LastLog> lastlogs;
 
     public Stage() {
     }
@@ -161,6 +168,35 @@ public class Stage implements Serializable {
         this.baseTime = baseTime;
     }
 
+    //Converter from JSON start field to baseDate and baseTime properties
+    @JsonSetter("start")
+    public void setStart(String start) {
+        if (start == null) return;
+
+        try {
+            OffsetDateTime odt = OffsetDateTime.parse(start);
+
+            // Convertir a hora local (España)
+            ZonedDateTime zdt = odt.atZoneSameInstant(ZoneId.systemDefault());
+
+            // Fecha (a medianoche local)
+            baseDate = Date.from(
+                    zdt.toLocalDate()
+                       .atStartOfDay(ZoneId.systemDefault())
+                       .toInstant());
+
+            // Hora (fecha dummy pero en zona local)
+            baseTime = Date.from(
+                    zdt.toLocalTime()
+                       .atDate(LocalDate.of(1970,1,1))
+                       .atZone(ZoneId.systemDefault())
+                       .toInstant());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     @JsonProperty("server_offset")
     public Integer getServerOffset() {
         return serverOffset;
@@ -361,6 +397,15 @@ public class Stage implements Serializable {
         this._links = _links;
     }
 
+    @JsonProperty("last_logs")
+    @XmlTransient
+    public List<LastLog> getLastlogs() {
+        return lastlogs;
+    }
+    public void setLastlogs(List<LastLog> lastlogs) {
+        this.lastlogs = lastlogs;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
