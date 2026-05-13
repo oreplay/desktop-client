@@ -33,6 +33,8 @@ public class ConnBackStatus implements java.io.Serializable {
     private String cStaDesc = "";
     private String cToken = "";
     private String cIdToken = "";
+    private String cStaDate = "";
+    private String cStaZeroTime = "";
 
     public ConnBackStatus() {
         nStatus = DISCONNECTED;
@@ -45,6 +47,8 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = "";
         cToken = "";
         cIdToken = "";
+        cStaDate = "";
+        cStaZeroTime = "";
     }
     public ConnBackStatus(int pnStatus) {
         nStatus = pnStatus;
@@ -56,6 +60,8 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = "";
         cToken = "";
         cIdToken = "";
+        cStaDate = "";
+        cStaZeroTime = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer) {
         nStatus = pnStatus;
@@ -68,6 +74,8 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = "";
         cToken = "";
         cIdToken = "";
+        cStaDate = "";
+        cStaZeroTime = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, String pcStaId) {
         nStatus = pnStatus;
@@ -80,6 +88,8 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = "";
         cToken = "";
         cIdToken = "";
+        cStaDate = "";
+        cStaZeroTime = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, String pcStaId, String pcToken) {
         nStatus = pnStatus;
@@ -92,6 +102,8 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = "";
         cToken = pcToken;
         cIdToken = "";
+        cStaDate = "";
+        cStaZeroTime = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
             String pcStaId, String pcEveDesc, String pcStaDesc) {
@@ -105,6 +117,8 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = pcStaDesc;
         cToken = "";
         cIdToken = "";
+        cStaDate = "";
+        cStaZeroTime = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
             String pcStaId, String pcEveDesc, String pcStaDesc, String pcToken) {
@@ -118,6 +132,8 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = pcStaDesc;
         cToken = pcToken;
         cIdToken = "";
+        cStaDate = "";
+        cStaZeroTime = "";
     }
     public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
             String pcStaId, String pcEveDesc, String pcStaDesc, String pcToken,
@@ -132,6 +148,24 @@ public class ConnBackStatus implements java.io.Serializable {
         cStaDesc = pcStaDesc;
         cToken = pcToken;
         cIdToken = pcIdToken;
+        cStaDate = "";
+        cStaZeroTime = "";
+    }
+    public ConnBackStatus(int pnStatus, String pcServer, String pcEveId, 
+            String pcStaId, String pcEveDesc, String pcStaDesc, String pcToken,
+            String pcIdToken, String pcStaDate, String pcStaZeroTime) {
+        nStatus = pnStatus;
+        nStatusOld = NO_STATUS;
+        nStatusNext = NO_STATUS;
+        cServer = pcServer;
+        cEveId = pcEveId;
+        cStaId = pcStaId;
+        cEveDesc = pcEveDesc;
+        cStaDesc = pcStaDesc;
+        cToken = pcToken;
+        cIdToken = pcIdToken;
+        cStaDate = pcStaDate;
+        cStaZeroTime = pcStaZeroTime;
     }
     
 
@@ -215,6 +249,23 @@ public class ConnBackStatus implements java.io.Serializable {
         this.cIdToken = cIdToken;
     }
 
+    public String getcStaDate() {
+        return cStaDate;
+    }
+
+    public void setcStaDate(String cStaDate) {
+        this.cStaDate = cStaDate;
+    }
+
+    public String getcStaZeroTime() {
+        return cStaZeroTime;
+    }
+
+    public void setcStaZeroTime(String cStaZeroTime) {
+        this.cStaZeroTime = cStaZeroTime;
+    }
+
+    
     /**
      * The status of the connection with the Backend is ready to make a transfer
      * when there is a server, an event id, a stage id and a token
@@ -231,7 +282,10 @@ public class ConnBackStatus implements java.io.Serializable {
     
     @Override
     public String toString() {
-        return "ConnBackStatus{" + "nStatus=" + nStatus + ", cServer=" + cServer + ", cEveId=" + cEveId + ", cStaId=" + cStaId + ", cEveDesc=" + cEveDesc + ", cStaDesc=" + cStaDesc + ", cToken=" + cToken + '}';
+        return "ConnBackStatus{" + "nStatus=" + nStatus + ", cServer=" + cServer + 
+                ", cEveId=" + cEveId + ", cStaId=" + cStaId + ", cEveDesc=" + cEveDesc + 
+                ", cStaDesc=" + cStaDesc + ", cToken=" + cToken +
+                ", cStaDate=" + cStaDate + ", cStaZeroTime=" + cStaZeroTime + "}";
     }
     
     

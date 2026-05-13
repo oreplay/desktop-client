@@ -4,6 +4,7 @@
  */
 package eu.oreplay.gui;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.oreplay.gui.events.*;
 import eu.oreplay.logic.FormsParameters;
@@ -34,6 +35,7 @@ import javax.swing.text.Document;
  */
 public class ConnBackLoginPanel extends javax.swing.JPanel {
     private static java.util.ResourceBundle resMessages = java.util.ResourceBundle.getBundle("messages.Messages"); //$NON-NLS-1$;
+    private static java.util.ResourceBundle resDates = java.util.ResourceBundle.getBundle("messages.Dates", java.util.Locale.getDefault()); //$NON-NLS-1$;
     private ConnBackStatus oStatus = new ConnBackStatus();
     private java.util.List lListeners = new java.util.ArrayList();
     private String cEveId = "";
@@ -42,6 +44,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
     private String cStaId = "";
     private String cEveDesc = "";
     private String cStaDesc = "";
+    private String cStaDate = "";
+    private String cStaZeroTime = "";
     private java.util.HashMap<Integer, eu.oreplay.db.Stage> lStages = new java.util.HashMap<>();
     private transient DocumentListenerIdToken oDoc = new DocumentListenerIdToken();
     private static final String MESSAGE_ERROR_1 = "error_exception";    
@@ -91,6 +95,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             cStaId = poParam.getcStaId();
             cEveDesc = poParam.getcEveDesc();
             cStaDesc = poParam.getcStaDesc();
+            cStaDate = poParam.getcStaDate();
+            cStaZeroTime = poParam.getcStaZeroTime();
         }catch (Exception e) {
             if (JClientMain.getoLog()!=null)
                 JClientMain.getoLog().error(resMessages.getString(MESSAGE_ERROR_1), e);
@@ -107,6 +113,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             voParam.setcStaId(cStaId);
             voParam.setcEveDesc(cEveDesc);
             voParam.setcStaDesc(cStaDesc);
+            voParam.setcStaDate(cStaDate);
+            voParam.setcStaZeroTime(cStaZeroTime);
             //Calls the method in the main form to receive and to store the parameters
             JClientMain.updateFormsParameters("ConnBackLoginPanel", voParam);
         } catch(Exception e) {
@@ -476,6 +484,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
         oStatus.setcStaDesc("");
         oStatus.setcToken("");
         oStatus.setcIdToken("");
+        oStatus.setcStaDate("");
+        oStatus.setcStaZeroTime("");
         oStatus.setnStatus(ConnBackStatus.LOGIN_NOOK);
         lblStatus.setText(pcMessage);
         lstStages.setModel(new DefaultListModel<String>());
@@ -495,20 +505,36 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
      */
     private void login() {
         boolean vbOneStage = false;
-        int vnStageSel = -1;
+        int vnStageSel = 0;
         try {
             //Gets an HTTP Client to make a request
             HttpClient voClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(5))
+                .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
             //Sets the request to the current server
+            //------------------------------------------------------------------
+            //Using http because actually is the only way to get the complete event information
+            //------------------------------------------------------------------
+            String vcServer = oStatus.getcServer().replaceAll("https", "http") + "/api/v1/events/" + txtEveId.getText();
+            HttpRequest voReq = HttpRequest.newBuilder()
+                .GET()
+                .uri(new URI(vcServer.trim()))
+                .build();
+            //-----------------------------------------------------------------
+            //The next one is the good one, using https and Bearer Token
+            //Commented to use http without Bearer in order to take the complete information of the event
+            //To change in the future, when decission is made about changing the server to give the complete information
+            //-----------------------------------------------------------------
+            /*
             HttpRequest voReq = HttpRequest.newBuilder()
                 .GET()
                 .uri(new URI(oStatus.getcServer() + "/api/v1/events/" + txtEveId.getText()))
                 .header("Authorization", "Bearer " + txtToken.getText())
                 .build();
+            */
             //Sends the request an gets the response
-            HttpResponse<String> voResp = voClient.send(voReq, BodyHandlers.ofString());
+            HttpResponse<String> voResp = voClient.send(voReq, HttpResponse.BodyHandlers.ofString());
             //If there is a correct response, fire the event to notify that
             if (voResp.statusCode()==200) {
                 try {
@@ -516,6 +542,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                     String vcContents = voResp.body();
                     //JSON file with Jackson
                     ObjectMapper voMapper = new ObjectMapper();
+                    //Configuration that avoids exceptions if any unknown property
+                    //voMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                     OReplayDataTransfer voData = voMapper.readValue(vcContents, OReplayDataTransfer.class);
                     eu.oreplay.db.Event voEve = voData.getoEve();
                     if (voEve!=null) {
@@ -542,6 +570,8 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                             lstStages.ensureIndexIsVisible(vnStageSel);
                             cStaId = lStages.get(vnStageSel).getId();
                             cStaDesc = lStages.get(vnStageSel).getDescription();
+                            oStatus.setcStaDate(Utils.format(lStages.get(vnStageSel).getBaseDate(), resDates.getString("format_date_dash")));
+                            oStatus.setcStaZeroTime(Utils.format(lStages.get(vnStageSel).getBaseTime(), resDates.getString("format_time")));
                         }
                         cEveDesc = voEve.getDescription();
                     }
@@ -568,11 +598,13 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                         oStatus.setcStaDesc(cStaDesc);
                         oStatus.setnStatus(ConnBackStatus.STAGE_SELECTED);
                         if (JClientMain.getoLog()!=null)
-                            JClientMain.getoLog().info(resMessages.getString("stage") + " " + cStaId + " " + cStaDesc);
+                            JClientMain.getoLog().info(resMessages.getString("stage") + " " + 
+                                    cStaId + " " + cStaDesc + " " + oStatus.getcStaDate() + " " + oStatus.getcStaZeroTime());
                     }
                     this.fireEvent();
                 }catch(Exception eJson) {
                     this.loginNoOk(resMessages.getString("info_data_novalid"));
+                    eJson.printStackTrace();
                 }
             } else {
                 this.loginNoOk(resMessages.getString("info_login_nook"));
@@ -595,15 +627,23 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
             cIdToken = txtIdToken.getText();
             cStaId = lStages.get(vnRow).getId();
             cStaDesc = lStages.get(vnRow).getDescription();
-            if (JClientMain.getoLog()!=null)
-                JClientMain.getoLog().info(resMessages.getString("stage") + " " + cStaId + " " + cStaDesc);
             oStatus.setcEveId(cEveId);
             oStatus.setcStaId(cStaId);
             oStatus.setcEveDesc(cEveDesc);
             oStatus.setcStaDesc(cStaDesc);
             oStatus.setcToken(cToken);
             oStatus.setcIdToken(cIdToken);
+            try {
+                oStatus.setcStaDate(Utils.format(lStages.get(vnRow).getBaseDate(), resDates.getString("format_date_dash")));
+                oStatus.setcStaZeroTime(Utils.format(lStages.get(vnRow).getBaseTime(), resDates.getString("format_time")));
+            }catch (Exception eDate) {
+                oStatus.setcStaDate("");
+                oStatus.setcStaZeroTime("");
+            }
             oStatus.setnStatus(ConnBackStatus.STAGE_SELECTED);
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().info(resMessages.getString("stage") + " " + 
+                        cStaId + " " + cStaDesc + " " + oStatus.getcStaDate() + " " + oStatus.getcStaZeroTime());
             this.fireEvent();
         }
     }

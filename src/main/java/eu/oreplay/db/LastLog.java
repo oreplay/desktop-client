@@ -27,21 +27,19 @@ import com.fasterxml.jackson.annotation.JsonRootName;
  * @author javier.arufe
  */
 @Entity
-@Table(name = "links")
+@Table(name = "lastlogs")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Link.findAll", query = "SELECT l FROM Link l"),
+    @NamedQuery(name = "LastLog.findAll", query = "SELECT l FROM LastLog l"),
 })
-@JsonRootName(value = "_links")
+@JsonRootName(value = "last_logs")
 @JsonInclude(Include.NON_NULL)
-public class Link implements Serializable {
+public class LastLog implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     private String id;
-    private LinkValue self;
-    private LinkValue results;
-    private LinkValue classes;
+    private int state;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -53,10 +51,10 @@ public class Link implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date deleted;
 
-    public Link() {
+    public LastLog() {
     }
 
-    public Link(String id) {
+    public LastLog(String id) {
         this.id = id;
     }
 
@@ -68,37 +66,16 @@ public class Link implements Serializable {
         this.id = id;
     }
 
-    public LinkValue getSelf() {
-        return self;
+    public int getState() {
+        return state;
     }
-
-    public void setSelf(LinkValue self) {
-        this.self = self;
+    public void setState(int state) {
+        this.state = state;
     }
-
-    public LinkValue getResults() {
-        return results;
-    }
-
-    public void setResults(LinkValue results) {
-        this.results = results;
-    }
-
-    public LinkValue getClasses() {
-        return classes;
-    }
-
-    public void setClasses(LinkValue classes) {
-        this.classes = classes;
-    }
-
-    
-
-    @JsonIgnore
+  
     public Date getCreated() {
         return created;
     }
-
     public void setCreated(Date created) {
         this.created = created;
     }
@@ -132,7 +109,7 @@ public class Link implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Link other)) {
+        if (!(object instanceof LastLog other)) {
             vbResul = false;
         } else {
             if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
@@ -144,7 +121,7 @@ public class Link implements Serializable {
 
     @Override
     public String toString() {
-        return "eu.oreplay.db.Link[ id=" + id + " ]";
+        return "eu.oreplay.db.LastLog[ id=" + id + " ]";
     }
     
 }

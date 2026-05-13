@@ -240,6 +240,9 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                             case 1:
                                 oRec.getoJClientMain().setcStageDate(content);
                                 break;
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcStaDate(content);
+                                break;
                         }
                     }catch(Exception e15) {}
                 } else if (lname.equalsIgnoreCase("cstagezerotime")) {
@@ -247,6 +250,9 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                         switch (nType) {
                             case 1:
                                 oRec.getoJClientMain().setcStageZeroTime(content);
+                                break;
+                            case 5:
+                                oRec.getoConnBackLoginPanel().setcStaZeroTime(content);
                                 break;
                         }
                     }catch(Exception e16) {}
@@ -356,7 +362,8 @@ public class FormsParametersXMLHandler extends DefaultHandler {
                 voStream.println("    <cIdToken>" + poRec.getoConnBackLoginPanel().getcIdToken()+ "</cIdToken>");
                 voStream.println("    <cStaId>" + poRec.getoConnBackLoginPanel().getcStaId()+ "</cStaId>");
                 voStream.println("    <cEveDesc>" + poRec.getoConnBackLoginPanel().getcEveDesc()+ "</cEveDesc>");
-                voStream.println("    <cStaDesc>" + poRec.getoConnBackLoginPanel().getcStaDesc()+ "</cStaDesc>");
+                voStream.println("    <cStageDate>" + poRec.getoConnBackLoginPanel().getcStaDate()+ "</cStageDate>");
+                voStream.println("    <cStageZeroTime>" + poRec.getoConnBackLoginPanel().getcStaZeroTime()+ "</cStageZeroTime>");
                 voStream.println("  </ConnBackLoginPanel>");
                 //Panel ConnBackUploadPanel
                 voStream.println("  <ConnBackUploadPanel>");

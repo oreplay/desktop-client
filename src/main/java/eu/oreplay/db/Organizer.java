@@ -8,18 +8,23 @@ package eu.oreplay.db;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 /**
@@ -27,21 +32,24 @@ import com.fasterxml.jackson.annotation.JsonRootName;
  * @author javier.arufe
  */
 @Entity
-@Table(name = "links")
+@Table(name = "organizers")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Link.findAll", query = "SELECT l FROM Link l"),
+    @NamedQuery(name = "Organizer.findAll", query = "SELECT o FROM Organizer o"),
+    @NamedQuery(name = "Organizer.findById", query = "SELECT o FROM Organizer o WHERE o.id = :id"),
+    @NamedQuery(name = "Organizer.findByName", query = "SELECT o FROM Organizer o WHERE o.name = :name"),
 })
-@JsonRootName(value = "_links")
+@JsonRootName(value = "organizers")
 @JsonInclude(Include.NON_NULL)
-public class Link implements Serializable {
+public class Organizer implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     private String id;
-    private LinkValue self;
-    private LinkValue results;
-    private LinkValue classes;
+    private String name;
+    private String country;
+    private String region;
     //Dates for creation, modification and deletion
     @Column(name = "created", nullable=true)
     @Temporal(TemporalType.DATE)
@@ -52,11 +60,14 @@ public class Link implements Serializable {
     @Column(name = "deleted", nullable=true)
     @Temporal(TemporalType.DATE)
     private Date deleted;
+    //
+    @OneToMany(mappedBy = "organizer")
+    private List<Event> eventList;
 
-    public Link() {
+    public Organizer() {
     }
 
-    public Link(String id) {
+    public Organizer(String id) {
         this.id = id;
     }
 
@@ -68,31 +79,35 @@ public class Link implements Serializable {
         this.id = id;
     }
 
-    public LinkValue getSelf() {
-        return self;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setSelf(LinkValue self) {
-        this.self = self;
+    public String getCountry() {
+        return country;
+    }
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public LinkValue getResults() {
-        return results;
+    public String getRegion() {
+        return region;
+    }
+    public void setRegion(String region) {
+        this.region = region;
     }
 
-    public void setResults(LinkValue results) {
-        this.results = results;
+    @JsonProperty("events")
+    @XmlTransient
+    public List<Event> getEventList() {
+        return eventList;
     }
-
-    public LinkValue getClasses() {
-        return classes;
+    public void setEventList(List<Event> eventList) {
+        this.eventList = eventList;
     }
-
-    public void setClasses(LinkValue classes) {
-        this.classes = classes;
-    }
-
-    
 
     @JsonIgnore
     public Date getCreated() {
@@ -132,7 +147,7 @@ public class Link implements Serializable {
     public boolean equals(Object object) {
         boolean vbResul = true;
         // Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Link other)) {
+        if (!(object instanceof Organizer other)) {
             vbResul = false;
         } else {
             if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
@@ -144,7 +159,7 @@ public class Link implements Serializable {
 
     @Override
     public String toString() {
-        return "eu.oreplay.db.Link[ id=" + id + " ]";
+        return "eu.oreplay.db.Organizer[ id=" + id + " ]";
     }
     
 }

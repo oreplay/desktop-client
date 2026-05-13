@@ -382,6 +382,8 @@ public class FormsParameters {
         private String cStaId = "";
         private String cEveDesc = "";
         private String cStaDesc = "";
+        private String cStaDate = "";
+        private String cStaZeroTime = "";
         /**
          * Constructor by default
          */
@@ -393,6 +395,8 @@ public class FormsParameters {
             cStaId = "";
             cEveDesc = "";
             cStaDesc = "";
+            cStaDate = "";
+            cStaZeroTime = "";
         }
         /**
          * Constructor with parameters
@@ -406,6 +410,8 @@ public class FormsParameters {
             cStaId = "";
             cEveDesc = "";
             cStaDesc = "";
+            cStaDate = "";
+            cStaZeroTime = "";
         }
         /**
          * Constructor with parameters
@@ -422,6 +428,8 @@ public class FormsParameters {
             cStaId = pcStaId;
             cEveDesc = "";
             cStaDesc = "";
+            cStaDate = "";
+            cStaZeroTime = "";
         }
         /**
          * Constructor with parameters
@@ -441,6 +449,8 @@ public class FormsParameters {
             cStaId = pcStaId;
             cEveDesc = pcEveDesc;
             cStaDesc = pcStaDesc;
+            cStaDate = "";
+            cStaZeroTime = "";
         }
         /**
          * Constructor with parameters
@@ -461,6 +471,32 @@ public class FormsParameters {
             cStaId = pcStaId;
             cEveDesc = pcEveDesc;
             cStaDesc = pcStaDesc;
+            cStaDate = "";
+            cStaZeroTime = "";
+        }
+        /**
+         * Constructor with parameters
+         * @param oPos ParPosition
+         * @param pcEveId String Event's id
+         * @param pcToken String Event's secret
+         * @param pcIdToken String Event's Id + Token
+         * @param pcStaId String Stage's id
+         * @param pcEveDesc String Event's description
+         * @param pcStaDesc String Stage's description
+         * @param pcStaDate String Stage's date (yyyy-MM-dd)
+         * @param pcStaZeroTime String Stage's zero time (HH:mm:ss)
+         */
+        public ParConnBackLoginPanel(ParPosition oPos, String pcEveId, String pcToken, String pcIdToken,
+                String pcStaId, String pcEveDesc, String pcStaDesc, String pcStaDate, String pcStaZeroTime) {
+            this.oPos = oPos;
+            cEveId = pcEveId;
+            cToken = pcToken;
+            cIdToken = pcIdToken;
+            cStaId = pcStaId;
+            cEveDesc = pcEveDesc;
+            cStaDesc = pcStaDesc;
+            cStaDate = pcStaDate;
+            cStaZeroTime = pcStaZeroTime;
         }
 
         public String getcEveId() {
@@ -509,6 +545,22 @@ public class FormsParameters {
 
         public void setcStaDesc(String cStaDesc) {
             this.cStaDesc = cStaDesc;
+        }
+
+        public String getcStaDate() {
+            return cStaDate;
+        }
+
+        public void setcStaDate(String cStaDate) {
+            this.cStaDate = cStaDate;
+        }
+
+        public String getcStaZeroTime() {
+            return cStaZeroTime;
+        }
+
+        public void setcStaZeroTime(String cStaZeroTime) {
+            this.cStaZeroTime = cStaZeroTime;
         }
 
         
