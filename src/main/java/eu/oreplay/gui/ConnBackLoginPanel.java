@@ -504,6 +504,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
      * list of stages as a result
      */
     private void login() {
+        boolean vbConnected = false;
         boolean vbOneStage = false;
         int vnStageSel = 0;
         try {
@@ -521,22 +522,31 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                 .GET()
                 .uri(new URI(vcServer.trim()))
                 .build();
+            //Sends the request an gets the response
+            HttpResponse<String> voResp = voClient.send(voReq, HttpResponse.BodyHandlers.ofString());
+            //If there is a correct response, fire the event to notify that
+            if (voResp.statusCode()==200) {
+                vbConnected = true;
+            }
             //-----------------------------------------------------------------
             //The next one is the good one, using https and Bearer Token
             //Commented to use http without Bearer in order to take the complete information of the event
             //To change in the future, when decission is made about changing the server to give the complete information
             //-----------------------------------------------------------------
-            /*
-            HttpRequest voReq = HttpRequest.newBuilder()
-                .GET()
-                .uri(new URI(oStatus.getcServer() + "/api/v1/events/" + txtEveId.getText()))
-                .header("Authorization", "Bearer " + txtToken.getText())
-                .build();
-            */
-            //Sends the request an gets the response
-            HttpResponse<String> voResp = voClient.send(voReq, HttpResponse.BodyHandlers.ofString());
+            if (!vbConnected) {
+                voReq = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(new URI(oStatus.getcServer() + "/api/v1/events/" + txtEveId.getText()))
+                    .header("Authorization", "Bearer " + txtToken.getText())
+                    .build();
+                //Sends the request an gets the response
+                voResp = voClient.send(voReq, HttpResponse.BodyHandlers.ofString());
+                if (voResp.statusCode()==200) {
+                    vbConnected = true;
+                }
+            }
             //If there is a correct response, fire the event to notify that
-            if (voResp.statusCode()==200) {
+            if (vbConnected) {
                 try {
                     //First, parse the response (an event and its stages)
                     String vcContents = voResp.body();
@@ -552,7 +562,7 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                         lStages = new java.util.HashMap<Integer, eu.oreplay.db.Stage>();
                         DefaultListModel<String> voModel = new DefaultListModel<>();
                         int i = 0;
-                        if (voEve.getStageList()!=null) {
+                        if (voEve.getStageList()!=null && !voEve.getStageList().isEmpty()) {
                             for (eu.oreplay.db.Stage voSta : voEve.getStageList()) {
                                 voModel.addElement(voSta.getDescription());
                                 lStages.put(i, voSta);
@@ -561,56 +571,65 @@ public class ConnBackLoginPanel extends javax.swing.JPanel {
                                 }
                                 i++;
                             }
+                            lstStages.setModel(voModel);
+                            if (vnStageSel>=0) {
+                                vbOneStage = true;
+                                //Get the selected element by index and ensure the scroll is correct
+                                lstStages.setSelectedIndex(vnStageSel);
+                                lstStages.ensureIndexIsVisible(vnStageSel);
+                                cStaId = lStages.get(vnStageSel).getId();
+                                cStaDesc = lStages.get(vnStageSel).getDescription();
+                                oStatus.setcStaDate(Utils.format(lStages.get(vnStageSel).getBaseDate(), resDates.getString("format_date_dash")));
+                                oStatus.setcStaZeroTime(Utils.format(lStages.get(vnStageSel).getBaseTime(), resDates.getString("format_time")));
+                            }
+                            cEveDesc = voEve.getDescription();
+                            //Show the ok message in the status area
+                            lblStatus.setText(resMessages.getString("info_login_ok"));
+                            //Fire the event
+                            cEveId = txtEveId.getText();
+                            cToken = txtToken.getText();
+                            cIdToken = txtIdToken.getText();
+                            oStatus.setcEveId(cEveId);
+                            oStatus.setcEveDesc(cEveDesc);
+                            oStatus.setcToken(cToken);
+                            oStatus.setcIdToken(cIdToken);
+                            if (JClientMain.getoLog()!=null) {
+                                JClientMain.getoLog().info(resMessages.getString("info_login_ok"));
+                                JClientMain.getoLog().info(resMessages.getString("event") + " " + cEveId + " " + cEveDesc);
+                            }
+                            //If there are several stages, status is only login ok
+                            //But, if only one, select it inmediatly
+                            if (!vbOneStage) {
+                                oStatus.setnStatus(ConnBackStatus.LOGIN_OK);
+                            } else {
+                                oStatus.setcStaId(cStaId);
+                                oStatus.setcStaDesc(cStaDesc);
+                                oStatus.setnStatus(ConnBackStatus.STAGE_SELECTED);
+                                if (JClientMain.getoLog()!=null)
+                                    JClientMain.getoLog().info(resMessages.getString("stage") + " " + 
+                                            cStaId + " " + cStaDesc + " " + oStatus.getcStaDate() + " " + oStatus.getcStaZeroTime());
+                            }
+                            this.fireEvent();
+                        } else {
+                            this.loginNoOk(resMessages.getString("error_event_without_stages"));
                         }
-                        lstStages.setModel(voModel);
-                        if (vnStageSel>=0) {
-                            vbOneStage = true;
-                            //Get the selected element by index and ensure the scroll is correct
-                            lstStages.setSelectedIndex(vnStageSel);
-                            lstStages.ensureIndexIsVisible(vnStageSel);
-                            cStaId = lStages.get(vnStageSel).getId();
-                            cStaDesc = lStages.get(vnStageSel).getDescription();
-                            oStatus.setcStaDate(Utils.format(lStages.get(vnStageSel).getBaseDate(), resDates.getString("format_date_dash")));
-                            oStatus.setcStaZeroTime(Utils.format(lStages.get(vnStageSel).getBaseTime(), resDates.getString("format_time")));
-                        }
-                        cEveDesc = voEve.getDescription();
-                    }
-                    //Show the ok message in the status area
-                    lblStatus.setText(resMessages.getString("info_login_ok"));
-                    //Fire the event
-                    cEveId = txtEveId.getText();
-                    cToken = txtToken.getText();
-                    cIdToken = txtIdToken.getText();
-                    oStatus.setcEveId(cEveId);
-                    oStatus.setcEveDesc(cEveDesc);
-                    oStatus.setcToken(cToken);
-                    oStatus.setcIdToken(cIdToken);
-                    if (JClientMain.getoLog()!=null) {
-                        JClientMain.getoLog().info(resMessages.getString("info_login_ok"));
-                        JClientMain.getoLog().info(resMessages.getString("event") + " " + cEveId + " " + cEveDesc);
-                    }
-                    //If there are several stages, status is only login ok
-                    //But, if only one, select it inmediatly
-                    if (!vbOneStage) {
-                        oStatus.setnStatus(ConnBackStatus.LOGIN_OK);
                     } else {
-                        oStatus.setcStaId(cStaId);
-                        oStatus.setcStaDesc(cStaDesc);
-                        oStatus.setnStatus(ConnBackStatus.STAGE_SELECTED);
-                        if (JClientMain.getoLog()!=null)
-                            JClientMain.getoLog().info(resMessages.getString("stage") + " " + 
-                                    cStaId + " " + cStaDesc + " " + oStatus.getcStaDate() + " " + oStatus.getcStaZeroTime());
+                        this.loginNoOk(resMessages.getString("error_nothing_to_do_noevent"));
                     }
-                    this.fireEvent();
                 }catch(Exception eJson) {
                     this.loginNoOk(resMessages.getString("info_data_novalid"));
-                    eJson.printStackTrace();
+                    if (JClientMain.getoLog()!=null)
+                        JClientMain.getoLog().error(eJson);
                 }
             } else {
                 this.loginNoOk(resMessages.getString("info_login_nook"));
+                if (JClientMain.getoLog()!=null)
+                    JClientMain.getoLog().warn("Response Status Code: " + voResp.statusCode());
             }
         } catch (Exception eNet) {
             this.loginNoOk(resMessages.getString("info_login_nook_connection"));
+            if (JClientMain.getoLog()!=null)
+                JClientMain.getoLog().error(eNet);
         }
     }
     /**
