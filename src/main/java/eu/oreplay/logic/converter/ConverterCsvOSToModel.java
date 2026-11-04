@@ -767,11 +767,11 @@ public class ConverterCsvOSToModel extends ConverterToModel{
                         }catch (Exception ePos){
                             //Nothing to do
                         };
-                        voRet.setPosition(vnPosition);
+                        //voRet.setPosition(vnPosition);
                         //Calculates time behind the first of the class
                         BigDecimal vnTimeBehind = this.calculateTimeBehindTeam(vlTea, vnTimeSeconds);
                         //If it has no decimals, stores only the integer part
-                        voRet.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
+                        //voRet.setTimeBehind(Utils.isWhole(vnTimeBehind)?new BigDecimal(vnTimeBehind.longValue()+""):vnTimeBehind);
                         //Add the result to the list
                         if (vlRet.size()==0) {
                             vlRet.add(voRet);
