@@ -951,23 +951,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voSpl.setStation(voSplitTime.getControlCode());
                                                         //Get the time, but only if the status is not missing
                                                         if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
-                                                            try {
-                                                                Date vdSplitTime = new Date((long)voRes.getStartTime().getTime() + (long)(voSplitTime.getTime() * 1000.0));
-                                                                voSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
-                                                                voSpl.setReadingTime(vdSplitTime);
-                                                                BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
-                                                                //If it has no decimals, stores only the integer part
-                                                                voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
-                                                                //Status empty means Ok; for additional values, set Additional
-                                                                if (voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_ADDITIONAL)) {
-                                                                    voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
-                                                                } else {
-                                                                    voSpl.setStatus("");
-                                                                }
-                                                            }catch (Exception eMilli) {
-                                                                voSpl.setReadingMilli(null);
-                                                                voSpl.setTimeSeconds(null);
-                                                            }
+                                                            fillSplitTime(voSpl, voSplitTime, voRes.getStartTime());
                                                         } else {
                                                             voSpl.setReadingMilli(null);
                                                             voSpl.setTimeSeconds(null);
@@ -1345,23 +1329,7 @@ public class ConverterIofToModel extends ConverterToModel {
                                                                 voSpl.setStation(voSplitTime.getControlCode());
                                                                 //Get the time, but only if the status is not missing
                                                                 if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
-                                                                    try {
-                                                                        Date vdSplitTime = new Date((long)voRes.getStartTime().getTime() + (long)(voSplitTime.getTime() * 1000.0));
-                                                                        voSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
-                                                                        voSpl.setReadingTime(vdSplitTime);
-                                                                        BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
-                                                                        //If it has no decimals, stores only the integer part
-                                                                        voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
-                                                                        //Status empty means Ok; for additional values, set Additional
-                                                                        if (voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_ADDITIONAL)) {
-                                                                            voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
-                                                                        } else {
-                                                                            voSpl.setStatus("");
-                                                                        }
-                                                                }catch (Exception eMilli) {
-                                                                        voSpl.setReadingMilli(null);
-                                                                        voSpl.setTimeSeconds(null);
-                                                                    }
+                                                                    fillSplitTime(voSpl, voSplitTime, voRes.getStartTime());
                                                                 } else {
                                                                     voSpl.setReadingMilli(null);
                                                                     voSpl.setTimeSeconds(null);
@@ -1576,4 +1544,31 @@ public class ConverterIofToModel extends ConverterToModel {
         return voEve;
     }
 
+    /**
+     * Fills the time of a punched split. The time from the start comes straight from the
+     * XML, so it is kept even when the runner has no start time; only the reading time of
+     * day needs the start time, and it is left empty without one
+     * @param poSpl eu.oreplay.db.Split Split to fill
+     * @param poSplitTime eu.oreplay.logic.iof.SplitTime Split as read from the XML
+     * @param pdStart Date Start time of the runner, or null if the XML has none
+     */
+    private static void fillSplitTime(eu.oreplay.db.Split poSpl, eu.oreplay.logic.iof.SplitTime poSplitTime, Date pdStart) {
+        //Status empty means Ok; for additional values, set Additional
+        poSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL.equals(poSplitTime.getStatus())?Utils.SPLIT_STATUS_ADDITIONAL:"");
+        if (poSplitTime.getTime()==null) {
+            poSpl.setReadingMilli(null);
+            poSpl.setTimeSeconds(null);
+            return;
+        }
+        BigDecimal vnTimeSeconds = BigDecimal.valueOf(poSplitTime.getTime());
+        //If it has no decimals, stores only the integer part
+        poSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+        if (pdStart!=null) {
+            Date vdSplitTime = new Date(pdStart.getTime() + (long)(poSplitTime.getTime() * 1000.0));
+            poSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
+            poSpl.setReadingTime(vdSplitTime);
+        } else {
+            poSpl.setReadingMilli(null);
+        }
+    }
 }
