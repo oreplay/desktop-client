@@ -687,7 +687,7 @@ public static double formatTimeInSeconds (String pcSrc) {
             String[] vaSrc1 = pcSrc.split("\\.");
             //Computes milliseconds
             if (vaSrc1.length==2) {
-                vnMilli = Long.parseLong(vaSrc1[1].replaceAll("\"", "")) / 1000.0;
+                vnMilli = parseFractionOfSecond(vaSrc1[1]);
             }
             //Computes main part, hh:mm:ss
             if (vaSrc1.length>0) {
@@ -708,6 +708,21 @@ public static double formatTimeInSeconds (String pcSrc) {
         }
     } catch (Exception e) {}
     return vnResul;
+}
+/**
+ * Giving the digits written after the decimal point of a time, it returns the fraction
+ * of a second they represent: "5" and "500" are half a second, "05" is 50 milliseconds
+ * <BR>
+ * The digits are a decimal fraction, not a number of milliseconds, so tenths ("1:23.4")
+ * and hundredths ("1:23.45") must not be read as 4 or 45 milliseconds
+ * @param pcDigits String. Digits after the decimal point, optionally quoted
+ * @return double. Fraction of a second, between 0 (inclusive) and 1 (exclusive)
+ */
+public static double parseFractionOfSecond (String pcDigits) {
+    String vcDigits = pcDigits.replaceAll("\"", "").trim();
+    if (!vcDigits.matches("[0-9]+"))
+        throw new NumberFormatException("Not a fraction of a second: " + pcDigits);
+    return Double.parseDouble("0." + vcDigits);
 }
 /**
  * Giving a long that contains a value of a time in milliseconds,
@@ -825,7 +840,7 @@ public static Date formatRelativeTimeFromBase (String pcSrc, Date poBaseDateTime
             String[] vaSrc1 = pcSrc.split("\\.");
             //Computes milliseconds
             if (vaSrc1.length==2) {
-                vnTime = vnTime + Long.parseLong(vaSrc1[1].replaceAll("\"", ""));
+                vnTime = vnTime + Math.round(parseFractionOfSecond(vaSrc1[1]) * 1000);
             }
             //Computes main part, hh:mm:ss
             if (vaSrc1.length>0) {
