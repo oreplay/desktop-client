@@ -123,6 +123,10 @@ public class Utils {
     //Values for Split Status
     public static final String SPLIT_STATUS_MISSING = "Missing";
     public static final String SPLIT_STATUS_ADDITIONAL = "Additional";
+    //Time a file in the upload folder must stay unmodified before it is read, in milliseconds
+    public static final long FILE_SETTLE_MILLIS = 1000;
+    //Time during which the size of a file must not change before it is read, in milliseconds
+    public static final long FILE_SIZE_CHECK_MILLIS = 200;
     //Strings internal to this class
     private static final String EXCEPTION_1 = "Exception";
         
@@ -1118,6 +1122,57 @@ public static String findFirstFileInDir (String pcPath, String pcExtension, bool
         vcResul = vlResul.get(0);
     }    
     return vcResul;
+}
+/**
+ * Searches for files with a given extension in a given directory and returns the
+ * oldest one that has been completely written, so the files exported by the
+ * timekeeping software are uploaded in the order they were written and a newer
+ * file always lands after an older one
+ * <BR>
+ * A file is taken as completely written when it has not been modified for
+ * FILE_SETTLE_MILLIS and its size does not change during FILE_SIZE_CHECK_MILLIS;
+ * a file still being written is left for a later call instead of being read
+ * half-written and deleted
+ * @param pcPath String Path to search
+ * @param pcExtension String Extension to find
+ * @param pbSubdir boolean flag to indicate if search in subfolders
+ * @return String Name of the oldest completely written file, or null if there is none yet
+ */
+public static String findOldestCompleteFileInDir (String pcPath, String pcExtension, boolean pbSubdir) {
+    List<String> vlFiles = Utils.findFilesInDir(pcPath, pcExtension, pbSubdir);
+    if (vlFiles==null || vlFiles.isEmpty()) {
+        return null;
+    }
+    vlFiles.sort(java.util.Comparator.comparingLong(f -> new File(f).lastModified()));
+    for (String vcFile : vlFiles) {
+        if (isFileCompletelyWritten(new File(vcFile))) {
+            return vcFile;
+        }
+    }
+    return null;
+}
+/**
+ * Checks if a file seems completely written: it has not been modified for
+ * FILE_SETTLE_MILLIS and its size stays the same during FILE_SIZE_CHECK_MILLIS
+ * <BR>
+ * The size check covers files copied into the folder, which can keep the
+ * modification time of their source while the copy is still in progress
+ * @param poFile File File to check
+ * @return boolean True if the file can be read safely
+ */
+public static boolean isFileCompletelyWritten (File poFile) {
+    try {
+        long vnSize = poFile.length();
+        long vnAge = System.currentTimeMillis() - poFile.lastModified();
+        if (vnAge < FILE_SETTLE_MILLIS) {
+            return false;
+        }
+        Thread.sleep(FILE_SIZE_CHECK_MILLIS);
+        return poFile.exists() && poFile.length()==vnSize;
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return false;
+    }
 }
 /**
  * Delete a file it exists
