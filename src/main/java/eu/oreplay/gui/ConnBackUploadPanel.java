@@ -473,7 +473,7 @@ public class ConnBackUploadPanel extends javax.swing.JPanel {
                         //First, find a file with the given extension located at the given folder
                         //If it's not the first time, and the last file was unsuccessful and needs to be uploaded again, don't try to find another file, keep on with the same
                         if (!(vbDeleteFile==false && vcFile!=null && !vcFile.equals(""))) {
-                            vcFile = Utils.findFirstFileInDir(cFolder, cExtension, false);
+                            vcFile = Utils.findOldestCompleteFileInDir(cFolder, cExtension, false);
                             vbSearchNew = true;
                         } else {
                             vbSearchNew = false;
