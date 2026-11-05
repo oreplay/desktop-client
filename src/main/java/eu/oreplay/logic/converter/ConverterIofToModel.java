@@ -942,73 +942,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                     }
                                                 }
                                                 //Now, process Splits, if present
-                                                if (voPrs.getSplitTime()!=null && !voPrs.getSplitTime().isEmpty()) {
-                                                    boolean vbMissing = false; //Set to true if any control is missing; to adjust the status of the not competing
-                                                    int vnSplOrder = 1;
-                                                    ArrayList<eu.oreplay.db.Split> vlSpl = new ArrayList<>();
-                                                    for (eu.oreplay.logic.iof.SplitTime voSplitTime : voPrs.getSplitTime()) {
-                                                        eu.oreplay.db.Split voSpl = new eu.oreplay.db.Split();
-                                                        voSpl.setStation(voSplitTime.getControlCode());
-                                                        //Get the time, but only if the status is not missing
-                                                        if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
-                                                            try {
-                                                                Date vdSplitTime = new Date((long)voRes.getStartTime().getTime() + (long)(voSplitTime.getTime() * 1000.0));
-                                                                voSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
-                                                                voSpl.setReadingTime(vdSplitTime);
-                                                                BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
-                                                                //If it has no decimals, stores only the integer part
-                                                                voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
-                                                                //Status empty means Ok; for additional values, set Additional
-                                                                if (voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_ADDITIONAL)) {
-                                                                    voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
-                                                                } else {
-                                                                    voSpl.setStatus("");
-                                                                }
-                                                            }catch (Exception eMilli) {
-                                                                voSpl.setReadingMilli(null);
-                                                                voSpl.setTimeSeconds(null);
-                                                            }
-                                                        } else {
-                                                            voSpl.setReadingMilli(null);
-                                                            voSpl.setTimeSeconds(null);
-                                                            voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
-                                                            vbMissing = true;   //Set the global missing flag to true in order to adjust status of not competing
-                                                        }
-                                                        voSpl.setBibRunner(voRun.getBibNumber());
-                                                        voSpl.setOrderNumber(vnSplOrder);
-                                                        voSpl.setPoints(0);
-                                                        voSpl.setSicard(voRun.getSicard());
-                                                        voSpl.setStageOrder(voSta.getOrderNumber());
-                                                        if (voPrs.getRaceNumber()!=null) {
-                                                            voSpl.setStageOrder(voPrs.getRaceNumber().intValue());
-                                                        }
-                                                        //Add the object to the list
-                                                        vlSpl.add(voSpl);
-                                                        //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
-                                                        if (vbRadio) {
-                                                            eu.oreplay.db.Control voCon = new eu.oreplay.db.Control();
-                                                            voCon.setStation(voSplitTime.getControlCode());
-                                                            if (!vlStations.containsKey(voSplitTime.getControlCode())) {
-                                                                vlStations.put(voSplitTime.getControlCode(), voSplitTime.getControlCode());
-                                                                vlCon.add(voCon);
-                                                            }
-                                                            //If it's the first runner of the class, add the control to the list of controls of the class
-                                                            if (vnContRun==0) {
-                                                                eu.oreplay.db.ClazzControl voClaCon = new eu.oreplay.db.ClazzControl();
-                                                                voClaCon.setControl(voCon);
-                                                                vlClaCon.add(voClaCon);
-                                                            }
-                                                        }
-                                                        //Increase the counter of the split order
-                                                        vnSplOrder++;
-                                                    }
-                                                    //Add the list of splits to the results
-                                                    voRes.setSplitList(vlSpl);
-                                                    //Finally adjustment of status of not competing
-                                                    if (voRun.getIsNc() && voRes.getStatusCode()==Utils.STATUS_OK_ID && vbMissing) {
-                                                        voRes.setStatusCode(Utils.STATUS_MISSING_ID);
-                                                    }
-                                                }
+                                                addSplits(voPrs.getSplitTime(), voPrs.getRaceNumber(), voRes, voRun, voSta,
+                                                        vbRadio, vlStations, vlCon, vlClaCon, vnContRun);
                                                 //Now, process Answers, if present (Trail-O)
                                                 if (voPrs.getControlAnswer()!=null && !voPrs.getControlAnswer().isEmpty()) {
                                                     int vnAnsOrder = 1;
@@ -1336,73 +1271,8 @@ public class ConverterIofToModel extends ConverterToModel {
                                                         voRes.setTimeNeutralization(BigDecimal.ZERO);
                                                         voRes.setTimePenalty(BigDecimal.ZERO);
                                                         //Now, process Splits, if present
-                                                        if (voPrs.getSplitTime()!=null && !voPrs.getSplitTime().isEmpty()) {
-                                                            boolean vbMissing = false; //Set to true if any control is missing; to adjust the status of the not competing
-                                                            int vnSplOrder = 1;
-                                                            ArrayList<eu.oreplay.db.Split> vlSpl = new ArrayList<>();
-                                                            for (eu.oreplay.logic.iof.SplitTime voSplitTime : voPrs.getSplitTime()) {
-                                                                eu.oreplay.db.Split voSpl = new eu.oreplay.db.Split();
-                                                                voSpl.setStation(voSplitTime.getControlCode());
-                                                                //Get the time, but only if the status is not missing
-                                                                if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
-                                                                    try {
-                                                                        Date vdSplitTime = new Date((long)voRes.getStartTime().getTime() + (long)(voSplitTime.getTime() * 1000.0));
-                                                                        voSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
-                                                                        voSpl.setReadingTime(vdSplitTime);
-                                                                        BigDecimal vnTimeSeconds = BigDecimal.valueOf(voSplitTime.getTime());
-                                                                        //If it has no decimals, stores only the integer part
-                                                                        voSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
-                                                                        //Status empty means Ok; for additional values, set Additional
-                                                                        if (voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_ADDITIONAL)) {
-                                                                            voSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL);
-                                                                        } else {
-                                                                            voSpl.setStatus("");
-                                                                        }
-                                                                }catch (Exception eMilli) {
-                                                                        voSpl.setReadingMilli(null);
-                                                                        voSpl.setTimeSeconds(null);
-                                                                    }
-                                                                } else {
-                                                                    voSpl.setReadingMilli(null);
-                                                                    voSpl.setTimeSeconds(null);
-                                                                    voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
-                                                                    vbMissing = true;   //Set the global missing flag to true in order to adjust status of not competing
-                                                                }
-                                                                voSpl.setBibRunner(voRun.getBibNumber());
-                                                                voSpl.setOrderNumber(vnSplOrder);
-                                                                voSpl.setPoints(0);
-                                                                voSpl.setSicard(voRun.getSicard());
-                                                                voSpl.setStageOrder(voSta.getOrderNumber());
-                                                                if (voPrs.getRaceNumber()!=null) {
-                                                                    voSpl.setStageOrder(voPrs.getRaceNumber().intValue());
-                                                                }
-                                                                //Add the object to the list
-                                                                vlSpl.add(voSpl);
-                                                                //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
-                                                                if (vbRadio) {
-                                                                    eu.oreplay.db.Control voCon = new eu.oreplay.db.Control();
-                                                                    voCon.setStation(voSplitTime.getControlCode());
-                                                                    if (!vlStations.containsKey(voSplitTime.getControlCode())) {
-                                                                        vlStations.put(voSplitTime.getControlCode(), voSplitTime.getControlCode());
-                                                                        vlCon.add(voCon);
-                                                                    }
-                                                                    //If it's the first runner of the class, add the control to the list of controls of the class
-                                                                    if (vnContRun==0) {
-                                                                        eu.oreplay.db.ClazzControl voClaCon = new eu.oreplay.db.ClazzControl();
-                                                                        voClaCon.setControl(voCon);
-                                                                        vlClaCon.add(voClaCon);
-                                                                    }
-                                                                }
-                                                                //Increase the counter of the split order
-                                                                vnSplOrder++;
-                                                            }
-                                                            //Add the list of splits to the results
-                                                            voRes.setSplitList(vlSpl);
-                                                            //Finally adjustment of status of not competing
-                                                            if (voRun.getIsNc() && voRes.getStatusCode()==Utils.STATUS_OK_ID && vbMissing) {
-                                                                voRes.setStatusCode(Utils.STATUS_MISSING_ID);
-                                                            }
-                                                        }
+                                                        addSplits(voPrs.getSplitTime(), voPrs.getRaceNumber(), voRes, voRun, voSta,
+                                                                vbRadio, vlStations, vlCon, vlClaCon, vnContRun);
                                                         //Create or update the team's result from the OverallResult tag
                                                         //The next sentence is moved up to create one array for several TeamResult elements (the accumulated overall of each leg)
                                                         //List<eu.oreplay.db.TeamResult> vlTes = new ArrayList<>();
@@ -1576,4 +1446,103 @@ public class ConverterIofToModel extends ConverterToModel {
         return voEve;
     }
 
+    /**
+     * Adds the splits of a result to it and, for results with radio controls, the controls they
+     * pass to the lists of controls of the stage and of the class; shared by individual and relay
+     * results, whose IOF types differ but carry the same splits
+     * @param plSplitTimes List Splits of the result as read from the XML, or null
+     * @param pnRaceNumber BigInteger Race number of the result, or null
+     * @param voRes eu.oreplay.db.RunnerResult Result the splits are added to
+     * @param voRun eu.oreplay.db.Runner Runner of the result
+     * @param voSta eu.oreplay.db.Stage Stage of the result
+     * @param vbRadio boolean True if the file has radio controls
+     * @param vlStations HashMap Stations already added to the list of controls of the stage
+     * @param vlCon ArrayList Controls of the stage
+     * @param vlClaCon ArrayList Controls of the class
+     * @param vnContRun int Position of the runner in the class; 0 for the first one
+     */
+    private static void addSplits(List<eu.oreplay.logic.iof.SplitTime> plSplitTimes, BigInteger pnRaceNumber,
+            eu.oreplay.db.RunnerResult voRes, eu.oreplay.db.Runner voRun, eu.oreplay.db.Stage voSta,
+            boolean vbRadio, HashMap<String, String> vlStations, ArrayList<eu.oreplay.db.Control> vlCon,
+            ArrayList<eu.oreplay.db.ClazzControl> vlClaCon, int vnContRun) {
+        if (plSplitTimes!=null && !plSplitTimes.isEmpty()) {
+            boolean vbMissing = false; //Set to true if any control is missing; to adjust the status of the not competing
+            int vnSplOrder = 1;
+            ArrayList<eu.oreplay.db.Split> vlSpl = new ArrayList<>();
+            for (eu.oreplay.logic.iof.SplitTime voSplitTime : plSplitTimes) {
+                eu.oreplay.db.Split voSpl = new eu.oreplay.db.Split();
+                voSpl.setStation(voSplitTime.getControlCode());
+                //Get the time, but only if the status is not missing
+                if (!voSplitTime.getStatus().equals(Utils.SPLIT_STATUS_MISSING)) {
+                    fillSplitTime(voSpl, voSplitTime, voRes.getStartTime());
+                } else {
+                    voSpl.setReadingMilli(null);
+                    voSpl.setTimeSeconds(null);
+                    voSpl.setStatus(Utils.SPLIT_STATUS_MISSING);
+                    vbMissing = true;   //Set the global missing flag to true in order to adjust status of not competing
+                }
+                voSpl.setBibRunner(voRun.getBibNumber());
+                voSpl.setOrderNumber(vnSplOrder);
+                voSpl.setPoints(0);
+                voSpl.setSicard(voRun.getSicard());
+                voSpl.setStageOrder(voSta.getOrderNumber());
+                if (pnRaceNumber!=null) {
+                    voSpl.setStageOrder(pnRaceNumber.intValue());
+                }
+                //Add the object to the list
+                vlSpl.add(voSpl);
+                //If it's a result with radiocontrols, compose the whole list of controls and the list of controls of the class
+                if (vbRadio) {
+                    eu.oreplay.db.Control voCon = new eu.oreplay.db.Control();
+                    voCon.setStation(voSplitTime.getControlCode());
+                    if (!vlStations.containsKey(voSplitTime.getControlCode())) {
+                        vlStations.put(voSplitTime.getControlCode(), voSplitTime.getControlCode());
+                        vlCon.add(voCon);
+                    }
+                    //If it's the first runner of the class, add the control to the list of controls of the class
+                    if (vnContRun==0) {
+                        eu.oreplay.db.ClazzControl voClaCon = new eu.oreplay.db.ClazzControl();
+                        voClaCon.setControl(voCon);
+                        vlClaCon.add(voClaCon);
+                    }
+                }
+                //Increase the counter of the split order
+                vnSplOrder++;
+            }
+            //Add the list of splits to the results
+            voRes.setSplitList(vlSpl);
+            //Finally adjustment of status of not competing
+            if (voRun.getIsNc() && voRes.getStatusCode()==Utils.STATUS_OK_ID && vbMissing) {
+                voRes.setStatusCode(Utils.STATUS_MISSING_ID);
+            }
+        }
+    }
+
+    /**
+     * Fills the time of a punched split. The time from the start comes straight from the
+     * XML, so it is kept even when the runner has no start time; only the reading time of
+     * day needs the start time, and it is left empty without one
+     * @param poSpl eu.oreplay.db.Split Split to fill
+     * @param poSplitTime eu.oreplay.logic.iof.SplitTime Split as read from the XML
+     * @param pdStart Date Start time of the runner, or null if the XML has none
+     */
+    private static void fillSplitTime(eu.oreplay.db.Split poSpl, eu.oreplay.logic.iof.SplitTime poSplitTime, Date pdStart) {
+        //Status empty means Ok; for additional values, set Additional
+        poSpl.setStatus(Utils.SPLIT_STATUS_ADDITIONAL.equals(poSplitTime.getStatus())?Utils.SPLIT_STATUS_ADDITIONAL:"");
+        if (poSplitTime.getTime()==null) {
+            poSpl.setReadingMilli(null);
+            poSpl.setTimeSeconds(null);
+            return;
+        }
+        BigDecimal vnTimeSeconds = BigDecimal.valueOf(poSplitTime.getTime());
+        //If it has no decimals, stores only the integer part
+        poSpl.setTimeSeconds(Utils.isWhole(vnTimeSeconds)?new BigDecimal(vnTimeSeconds.longValue()+""):vnTimeSeconds);
+        if (pdStart!=null) {
+            Date vdSplitTime = new Date(pdStart.getTime() + (long)(poSplitTime.getTime() * 1000.0));
+            poSpl.setReadingMilli(new BigInteger(vdSplitTime.getTime()+""));
+            poSpl.setReadingTime(vdSplitTime);
+        } else {
+            poSpl.setReadingMilli(null);
+        }
+    }
 }
